@@ -19,19 +19,17 @@ Visuals speak volumes! Replace these placeholders with actual screenshots to sho
 
 1.  **Clean and Intuitive Chat Interface:**
     ![Screenshot of Kv's Chat Interface](https://github.com/user-attachments/assets/b9366540-2a69-4c2f-8f56-2db66deacd89)
-    *(Demonstrate the user-friendly chat for seamless research conversations.)*
+    
 
 2.  **Deep Research Unleashed - Web Scraping Power:**
     ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/1af98352-e909-44e0-b714-42805dc262c1)
     ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/0ba492bf-6691-4ad2-b27c-1618d84e6724)
     ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/d7cac571-62d8-4d7b-8783-b33cb560942f)
-    *(Highlight the detailed, structured output of Deep Research, emphasizing the breadth of data gathered through web scraping.)*
+
 
 3.  **Options Menu - Total Control at Your Fingertips:**
     ![Screenshot of Options Dropdown](https://github.com/user-attachments/assets/5a7775c4-78a6-4243-9973-d5fd0cffa46e)
-    *(Showcase the customization options - search engines, output formats, data extraction - putting users in command.)*
-
-**Remember to replace `path/to/screenshot-*.png` with your actual screenshot file paths for optimal visual impact!**
+   
 
 ---
 
