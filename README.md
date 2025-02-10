@@ -1,199 +1,201 @@
-# Kv - AI-Powered Deep Research Tool 🚀 - Open Source & Web Scraping Based!
+# Kv - AI-Powered Deep Research Tool 🚀 - Open Source & Web Scraping Based! :star:
 
 [![Project Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/your-github-username/your-repo-name)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/Python->=3.8-blue.svg)](https://www.python.org/downloads/)
+[![Project Founder](https://img.shields.io/badge/Founder-K. Vamsi Krishna-blueviolet)](https://github.com/your-github-username) <!-- Replace with your GitHub profile link -->
 
 **Founder: K. Vamsi Krishna**
 
-**Unleash the Power of Deep Research - Without the API Costs!** Kv is an intelligent AI research companion that leverages **web scraping** to deliver comprehensive analysis, unlike costly API-dependent tools. Dive deep into any topic and extract valuable insights, all while staying completely open-source and cost-effective.
+**Unlock Deep Research for Everyone - Star Us on GitHub! ⭐**
+
+Tired of paywalled research and expensive APIs? **Kv** is your revolutionary, **open-source** AI research companion that breaks down barriers. Leveraging the power of **web scraping**, Kv delivers comprehensive, insightful analysis **without costing you a dime in API fees.**  Dive deep into any topic, uncover hidden knowledge, and empower your research - all while supporting open-source innovation! **If you find Kv valuable, please give us a star!** :pray:
 
 ---
 
-## ✨ Screenshots
+## ✨ Screenshots - See Kv in Action
 
-Showcase your project with compelling visuals! Replace these placeholders with actual screenshots of Kv in action.
+Visuals speak volumes! Replace these placeholders with actual screenshots to showcase Kv's impressive interface and capabilities.
 
-1.  **Chat Interface:**
-    ![image](https://github.com/user-attachments/assets/b9366540-2a69-4c2f-8f56-2db66deacd89)
+1.  **Clean and Intuitive Chat Interface:**
+    ![Screenshot of Kv's Chat Interface](https://github.com/user-attachments/assets/b9366540-2a69-4c2f-8f56-2db66deacd89)
+    *(Demonstrate the user-friendly chat for seamless research conversations.)*
 
-  
+2.  **Deep Research Unleashed - Web Scraping Power:**
+    ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/1af98352-e909-44e0-b714-42805dc262c1)
+    ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/0ba492bf-6691-4ad2-b27c-1618d84e6724)
+    ![Screenshot of Deep Research Output highlighting Web Scraping](https://github.com/user-attachments/assets/d7cac571-62d8-4d7b-8783-b33cb560942f)
+    *(Highlight the detailed, structured output of Deep Research, emphasizing the breadth of data gathered through web scraping.)*
 
-2.  **Deep Research in Action - Web Scraping Power:**
-    ![image](https://github.com/user-attachments/assets/1af98352-e909-44e0-b714-42805dc262c1)
-![image](https://github.com/user-attachments/assets/0ba492bf-6691-4ad2-b27c-1618d84e6724)
-![image](https://github.com/user-attachments/assets/d7cac571-62d8-4d7b-8783-b33cb560942f)
+3.  **Options Menu - Total Control at Your Fingertips:**
+    ![Screenshot of Options Dropdown](https://github.com/user-attachments/assets/5a7775c4-78a6-4243-9973-d5fd0cffa46e)
+    *(Showcase the customization options - search engines, output formats, data extraction - putting users in command.)*
 
-
-3.  **Options Menu - Control & Customization:**
-
-   
-    ![image](https://github.com/user-attachments/assets/5a7775c4-78a6-4243-9973-d5fd0cffa46e)
-
-
+**Remember to replace `path/to/screenshot-*.png` with your actual screenshot file paths for optimal visual impact!**
 
 ---
 
-## 🌟 Key Differentiator: Web Scraping for Cost-Effective Research
+## 🚀 Kv's Game-Changing Advantage: Web Scraping for Free & Open Research
 
-**Kv stands apart from other deep research tools by utilizing direct web scraping techniques instead of relying on expensive Google Search APIs or similar paid services.** This fundamental difference offers significant advantages:
+**Forget restrictive and costly APIs! Kv pioneers a new era of research by directly harnessing the power of web scraping.** This core difference provides unparalleled benefits:
 
-*   **Zero API Costs:**  Eliminate recurring expenses associated with API usage, making deep research accessible to everyone.
-*   **Unrestricted Data Access:** Go beyond API limitations and directly access a wider range of web content for more comprehensive research.
-*   **Open Source & Transparent:**  Benefit from a fully open-source solution where the data acquisition process is transparent and customizable.
-
----
-
-## 💡 Features
-
-Kv is packed with features designed to empower your research workflow and provide unparalleled insights:
-
-*   **Intelligent & Cost-Effective Research Engine:**
-    *   **Web Scraping Powered:** Leverages direct web scraping across multiple search engines, avoiding costly APIs and expanding data access.
-    *   **Multi-Search Engine Support:**  Simultaneously searches Google, DuckDuckGo, Bing, Yahoo, Brave, and LinkedIn for broader coverage.
-    *   **Alternative Query Generation:**  Intelligently refines search queries to maximize results and overcome search engine limitations.
-    *   **Deep Content Analysis:**  Scrapes and analyzes web page content, extracting relevant information and discarding irrelevant data.
-    *   **Comprehensive Summarization:**  Synthesizes detailed summaries from vast amounts of scraped data, identifying key themes and diverse perspectives.
-
-*   **Intuitive Chat Interface:**
-    *   Engage in interactive conversations to guide your research and refine queries.
-    *   Upload images for context-aware analysis and visual research.
-    *   Maintains full conversation history for seamless research sessions.
-    *   Customize system instructions to fine-tune Kv's behavior and output.
-
-*   **Flexible Output & Data Extraction:**
-    *   **Markdown Output (Default):**  Clean, well-formatted Markdown for easy reading and integration into notes and reports.
-    *   **Structured Data Formats:**  JSON and CSV output options for programmatic analysis and data manipulation.
-    *   **Data Extraction Capabilities:**  Optionally extract links and emails from scraped web pages for targeted data gathering.
-    *   **Reference Citations:**  Includes clear references with shortened URLs to easily verify sources and maintain academic rigor.
-    *   **Performance Metrics:**  Provides elapsed time for research tasks, giving insights into processing efficiency.
-
-*   **User-Centric Customization:**
-    *   **Search Engine Selection:**  Choose and prioritize specific search engines to tailor research scope.
-    *   **Output Format Control:** Select Markdown, JSON, or CSV to suit your data needs.
-    *   **Data Extraction Toggle:**  Enable or disable link and email extraction as required.
-    *   **Gemini Model Selection:**  Experiment with different Gemini models for varied response styles.
-    *   **Custom Instructions:**  Inject specific prompts and guidelines for highly tailored AI behavior.
-    *   **Theme Switching:**  Effortlessly toggle between light and dark themes for optimal viewing in any environment.
+*   **Truly Zero API Costs - Research Without Limits:**  Say goodbye to subscription fees and usage-based charges. Kv is completely free from API costs, making deep research accessible to researchers, students, and enthusiasts everywhere.
+*   **Unleash Unrestricted Data - Explore the Entire Web:**  Venture beyond API limitations and tap into the vast expanse of the open web. Kv scrapes directly, providing you with a richer and more comprehensive dataset for your inquiries.
+*   **Open Source Transparency & Control - Research You Can Trust:**  Embrace the power of open source. Kv's transparent web scraping methodology is fully auditable and customizable, ensuring you understand exactly how your research is conducted.
 
 ---
 
+## 💡 Powerhouse Features for Deep Dive Research
 
-## 🚀 Getting Started
+Kv isn't just cost-effective; it's a feature-rich research engine designed for serious exploration:
 
-Experience the power of cost-effective deep research by setting up Kv on your local machine:
+*   **Intelligent, Web Scraping Driven Research Engine:**
+    *   **Next-Gen Web Scraping:**  Engineered for robust and efficient scraping across multiple search engines, bypassing API restrictions and expanding your data universe.
+    *   **Simultaneous Multi-Search Engine Power:**  Harness the combined might of Google, DuckDuckGo, Bing, Yahoo, Brave, and LinkedIn, ensuring unparalleled search coverage.
+    *   **Smart Query Refinement:**  Kv's intelligent algorithms dynamically rephrase queries to overcome search engine biases and maximize relevant results.
+    *   **Deep Content Extraction & Filtering:**  Advanced scraping techniques intelligently extract valuable content from web pages while discarding noise and irrelevant data.
+    *   **Comprehensive, Multi-Perspective Summarization:**  AI-powered summarization synthesizes insights from massive datasets, highlighting key themes, diverse viewpoints, and critical nuances.
 
-### Prerequisites
+*   **Interactive & Intuitive Chat Interface:**
+    *   **Conversational Research Flow:**  Engage in dynamic, natural language conversations with Kv, guiding your research journey and refining your focus in real-time.
+    *   **Visual Research with Image Uploads:**  Upload images directly into the chat to provide context, ask visual questions, and expand your research beyond text.
+    *   **Seamless Context Retention:**  Kv intelligently remembers your conversation history, ensuring context-aware and continuous research sessions.
+    *   **Tailored Research with Custom Instructions:**  Inject specific instructions to fine-tune Kv's behavior, response style, and research priorities, making it truly adaptable to your needs.
 
-*   **Python 3.8 or higher:**  Download from [python.org](https://www.python.org/downloads/).
-*   **pip:** Python's package installer (usually included with Python).
+*   **Flexible Output & Precision Data Extraction:**
+    *   **Beautiful Markdown Output (Default):**  Receive clean, well-structured Markdown summaries, perfect for reports, notes, and seamless integration into your workflow.
+    *   **Structured Data Mastery (JSON & CSV):**  Export your research data in JSON and CSV formats for programmatic analysis, data manipulation, and integration with other tools.
+    *   **Targeted Data Extraction (Links & Emails):**  Precisely extract valuable links and email addresses from scraped web pages, streamlining data gathering for specific research goals.
+    *   **Accurate & Traceable References:**  Every insight is backed by clear references with shortened URLs, ensuring easy source verification and maintaining research integrity.
+    *   **Performance Insights at a Glance:**  Track elapsed time for research tasks, providing valuable data on processing efficiency and optimization.
 
-### Installation
+*   **Unparalleled User Customization & Control:**
+    *   **Curated Search Engine Selection:**  Hand-pick and prioritize specific search engines to align your research with your desired data sources and perspectives.
+    *   **Output Format Freedom:**  Choose Markdown, JSON, or CSV output formats, tailoring Kv to your specific data handling and analysis preferences.
+    *   **Granular Data Extraction Control:**  Toggle link and email extraction on or off, focusing data gathering on your precise needs.
+    *   **Gemini Model Exploration:**  Experiment with different Gemini models to discover the response styles and analytical approaches that best suit your research style.
+    *   **Highly Specific Custom Instructions:**  Leverage custom instructions to inject detailed prompts, guidelines, and constraints, achieving truly tailored AI research assistance.
+    *   **Visually Optimized Theme Switching:**  Effortlessly switch between light and dark themes, ensuring comfortable and productive research sessions in any lighting conditions.
 
-1.  **Clone the repository:**
+---
+
+
+## 🚀 Getting Started - Your Journey to Deep Research Begins Now!
+
+Ready to experience the future of open-source, cost-effective deep research? Setting up Kv is quick and easy:
+
+### Prerequisites - What You'll Need
+
+*   **Python 3.8+:**  Download the latest version from [python.org](https://www.python.org/downloads/) - it's research essential!
+*   **pip (Python Package Installer):**  Usually comes bundled with Python – ensure it's ready to go.
+
+### Installation - Step-by-Step Simplicity
+
+1.  **Clone Kv to Your Machine:**
 
     ```bash
     git clone https://github.com/kvcops/Deep-Research-using-Gemini-api.git
     cd Deep-Research-using-Gemini-api
-
     ```
 
-2.  **Create a virtual environment (recommended):**
+2.  **Isolate Your Environment (Virtual Environment - Recommended):**
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # Linux/macOS
-    venv\Scripts\activate  # Windows
+    python -m venv venv  # Create the virtual environment
+    source venv/bin/activate  # Activate on Linux/macOS
+    venv\Scripts\activate  # Activate on Windows
     ```
 
-3.  **Install dependencies:**
+3.  **Fuel Kv with Dependencies:**
 
     ```bash
-    pip install -r requirements.txt
+    pip install -r requirements.txt # Install all necessary Python packages
     ```
 
-4.  **Set up API Key:**
-    *   Get a Google Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
-    *   Create a `.env` file in the project root.
-    *   Add your API key:
+4.  **Unlock Gemini's Intelligence - Set Up Your API Key:**
+    *   Get your **FREE** Google Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+    *   Create a file named `.env` in the root directory of your Kv project.
+    *   Securely add your API key to `.env`:
 
         ```env
-        GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY
+        GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY # Replace with your Gemini API Key
         ```
 
-### Running Kv
+### Running Kv - Launch Your Research Powerhouse
 
-1.  **Start the Flask app:**
+1.  **Start the Flask Application - Ignite the Engine:**
 
     ```bash
-    python app.py
+    python app.py # Launch Kv and get ready to research!
     ```
 
-2.  **Open Kv in your browser:** `http://127.0.0.1:5000/`
+2.  **Access Kv in Your Browser - Open the Portal to Knowledge:**  Navigate to `http://127.0.0.1:5000/` in your favorite web browser.
+
+**Congratulations! Kv is now live and ready to empower your research!**
 
 ---
 
-## 🧑‍💻 Usage
+## 🧑‍💻 Usage - Researching with Kv is a Breeze
 
-Kv's interface is designed for ease of use and efficient research:
+Kv's intuitive design ensures efficient and productive research sessions:
 
-1.  **Chat Interaction:**  Type messages, send with "Send" or Enter. Use "Clear Chat" in Options to reset. Upload images using the image icon.
+1.  **Interactive Chat Research:**  Type your questions and queries directly into the chat box. Hit "Send" or press Enter to engage with Kv. Use "Clear Chat" in the Options menu to begin a fresh research session.  Need visual context? Simply upload images using the convenient image icon.
 
-2.  **Web Search:** Enter query, click "Web" for summarized results and references.
+2.  **Instant Web Search Insights:**  Enter any search query and click "Web." Kv will swiftly perform an online search, delivering concise summaries and relevant references directly to your chat.
 
-3.  **Deep Research:** Input research topic, click "Deep Dive" for comprehensive analysis (may take longer).
+3.  **Deep Dive Research - Unleash the Power:**  Input your research topic or complex query and click "Deep Dive." Kv will initiate an in-depth investigation, providing you with a comprehensive analysis. (Note: Deep Research may take longer due to its extensive nature).
 
-4.  **Customize Options (Dropdown Menu):**
-    *   **Model:** Select Gemini model.
-    *   **Custom Instructions:** Tailor Kv's behavior with specific prompts.
-    *   **Search Engines:** Choose engines for web searches and deep research.
-    *   **Output Format:** Select Markdown, JSON, or CSV for Deep Research.
-    *   **Data Extraction:** Enable link/email extraction (JSON output recommended).
+4.  **Customize Your Research Experience - The Options Menu:**  Click "Options" in the header to unlock a world of customization:
+    *   **Gemini Model Selection:** Choose from available Gemini models to experiment with different AI response styles and analytical approaches.
+    *   **Precision Custom Instructions:**  Inject specific prompts and guidelines to tailor Kv's behavior and output precisely to your research needs.
+    *   **Strategic Search Engine Selection:**  Select and prioritize specific search engines to focus your research and target desired data sources.
+    *   **Versatile Output Format Control:**  Choose Markdown, JSON, or CSV output for Deep Research results, optimizing data for your specific analysis and workflow.
+    *   **Targeted Data Extraction:**  Enable or disable link and email extraction to streamline data gathering and focus on the information that matters most to you.
 
-5.  **Theme Toggle:**  Switch between light/dark themes with the header icon.
-
----
-
-## 🤝 Contributing - Help Shape the Future of Open-Source Research!
-
-Kv is a community-driven project, and your contributions are highly valued! We believe in making powerful research tools accessible to everyone, and your help is crucial to achieving this vision.
-
-**Ways to Contribute:**
-
-*   **Code Contributions:**  Implement new features, improve existing functionality, fix bugs, enhance scraping robustness, optimize performance, and expand data extraction capabilities.
-*   **Documentation Improvements:**  Enhance the README, create tutorials, improve code comments, and build comprehensive user guides.
-*   **Testing & Bug Reporting:**  Thoroughly test Kv, identify bugs, and provide detailed bug reports to help improve stability and reliability.
-*   **Feature Suggestions:**  Share your ideas for new features and enhancements to make Kv even more powerful and user-friendly.
-*   **UI/UX Design:**  Contribute to improving the user interface and user experience to make Kv even more intuitive and visually appealing.
-*   **Spread the Word:**  Share Kv with your network, write blog posts, create demos, and help grow the community!
-
-**Ready to contribute?**
-
-1.  **Fork the repository.**
-2.  **Create a feature branch.**
-3.  **Code your amazing contribution!**
-4.  **Submit a pull request with a clear description of your changes.**
-
-Let's build the future of open-source, cost-effective deep research together!
+5.  **Theme Toggle - Research in Comfort:**  Switch between Light and Dark themes instantly using the moon/sun icon in the header, ensuring optimal viewing comfort in any environment.
 
 ---
 
-## 📜 License
+## 🤝 Contribute - Become a Pioneer of Open-Source Research!
 
-Kv is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.  This means you are free to use, modify, and distribute Kv for both commercial and non-commercial purposes.
+**Kv is more than just a tool; it's a community-driven movement to democratize deep research.** Your contributions are vital to shaping its future and empowering researchers worldwide!
+
+**Join the Kv Community and Contribute In Ways Big and Small:**
+
+*   **Code Crusader:**  Develop groundbreaking new features, refine existing functionalities, squash bugs, enhance web scraping robustness, optimize performance, and expand Kv's data extraction prowess.
+*   **Documentation Dynamo:**  Elevate the documentation! Enhance the README, craft insightful tutorials, enrich code comments, and build comprehensive user guides to empower new users.
+*   **Testing Titan & Bug Hunter:**  Become a testing champion! Rigorously test Kv, identify edge cases, and provide detailed bug reports to ensure rock-solid stability and reliability.
+*   **Feature Visionary:**  Share your brilliant ideas for new features and enhancements! Help shape Kv's roadmap and make it even more powerful and user-centric.
+*   **UI/UX Architect:**  Contribute your design expertise! Refine the user interface and user experience, making Kv even more intuitive, accessible, and visually captivating.
+*   **Evangelist & Community Builder:**  Spread the word about Kv! Share it with your network, write insightful blog posts, create compelling demos, and help us grow a vibrant and supportive community.
+
+**Ready to Make Your Mark? It's Easy to Get Involved!**
+
+1.  **Fork this Repository - Claim Your Territory!**
+2.  **Create Your Feature Branch - Plant Your Flag!**
+3.  **Code Your Masterpiece - Build the Future of Research!**
+4.  **Submit Your Pull Request - Share Your Genius with the World!**
+
+**Together, let's forge a future where deep research is open, accessible, and empowering for everyone!**
 
 ---
 
-## 📞 Contact & Support
+## 📜 License - Research Freedom for All
 
-For questions, feedback, bug reports, or feature requests:
-
-*   **GitHub Issues:**  [https://github.com/kvcops/Deep-Research-using-Gemini-api/issues]
-*   **Email (Optional):** 21131A05C6@gvpce.ac.in
-*   **Project Founder - K. Vamsi Krishna:** https://www.linkedin.com/in/karri-vamsi-krishna-966537251/
-
-Your input is invaluable in shaping Kv's future. We are committed to building a robust and accessible research tool for the global community!
+Kv is proudly licensed under the **MIT License**.  For complete details, see the [LICENSE](LICENSE) file. This powerful, permissive license grants you the freedom to use, modify, and distribute Kv for any purpose – commercial or non-commercial – without restriction.
 
 ---
 
-**Thank you for joining the Kv journey! Let's democratize deep research!** 📚
+## 📞 Get in Touch & Support the Kv Movement
+
+Have questions, feedback, bug reports, or brilliant feature ideas? We're eager to hear from you!
+
+*   **GitHub Issues - The Heart of Collaboration:**  [https://github.com/kvcops/Deep-Research-using-Gemini-api/issues]
+*   **Email (Optional) - Direct Line of Communication:** 21131A05C6@gvpce.ac.in
+*   **Project Founder - Connect with K. Vamsi Krishna:** [https://www.linkedin.com/in/karri-vamsi-krishna-966537251/]
+
+**Your feedback fuels our progress, and your support empowers us to make Kv even better. Join the Kv community and help us democratize deep research for the benefit of all!**
+
+---
+
+**Thank You for Embarking on the Kv Journey! Let's Revolutionize Deep Research Together!** 📚 **Give us a Star if you believe in open, accessible knowledge!** :sparkles:
