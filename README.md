@@ -94,7 +94,8 @@ Experience the power of cost-effective deep research by setting up Kv on your lo
 
     ```bash
     git clone https://github.com/kvcops/Deep-Research-using-Gemini-api.git
-    cd your-repo-name
+    cd Deep-Research-using-Gemini-api
+
     ```
 
 2.  **Create a virtual environment (recommended):**
