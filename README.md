@@ -78,29 +78,6 @@ Kv is packed with features designed to empower your research workflow and provid
 
 ---
 
-## 🎬 Demo
-
-While a fully interactive online demo is in development, you can get a firsthand feel for Kv's capabilities by setting it up locally (see "Getting Started" below).
-
-**Simulated Demo -  See Kv in Action!**
-
-*(Replace these placeholders with actual demo screenshots showcasing different functionalities)*
-
-1.  **Example Chat Conversation:**
-    ![Demo Screenshot - Chat Conversation](path/to/demo-screenshot-chat.png)
-    *(Show a short chat interaction, highlighting natural language understanding.)*
-
-2.  **Web Search Results Example:**
-    ![Demo Screenshot - Web Search Results](path/to/demo-screenshot-web-search.png)
-    *(Demonstrate a web search query and the summarized output with references.)*
-
-3.  **Deep Research Output Sample:**
-    ![Demo Screenshot - Deep Research Output](path/to/demo-screenshot-deep-research.png)
-    *(Showcase a snippet of structured deep research output, emphasizing analysis and formatting.)*
-
-**Remember to replace `path/to/demo-screenshot-*.png` with actual demo screenshot paths!**
-
----
 
 ## 🚀 Getting Started
 
