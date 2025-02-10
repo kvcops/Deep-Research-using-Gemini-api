@@ -3,7 +3,7 @@
 [![Project Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/your-github-username/your-repo-name)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/Python->=3.8-blue.svg)](https://www.python.org/downloads/)
-[![Project Founder](https://img.shields.io/badge/Founder-K. Vamsi Krishna-blueviolet)](https://github.com/kvcops) <!-- Replace with your GitHub profile link -->
+
 
 **Founder: K. Vamsi Krishna**
 
