@@ -28,6 +28,8 @@ Visuals speak volumes! Replace these placeholders with actual screenshots to sho
 
 
 3.  **Options Menu - Total Control at Your Fingertips:**
+
+   
     ![Screenshot of Options Dropdown](https://github.com/user-attachments/assets/5a7775c4-78a6-4243-9973-d5fd0cffa46e)
    
 
