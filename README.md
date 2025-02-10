@@ -3,7 +3,6 @@
 [![Project Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/your-github-username/your-repo-name)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/Python->=3.8-blue.svg)](https://www.python.org/downloads/)
-[![Project Founder](https://img.shields.io/badge/Founder-K. Vamsi Krishna-blueviolet)](https://github.com/kvcops) <!-- Replace with your GitHub profile link -->
 
 **Founder: K. Vamsi Krishna**
 
@@ -16,18 +15,20 @@
 Showcase your project with compelling visuals! Replace these placeholders with actual screenshots of Kv in action.
 
 1.  **Chat Interface:**
-    ![Screenshot of Kv's Chat Interface](path/to/screenshot-chat-interface.png)
-    *(Demonstrate the clean and intuitive chat interface for interacting with Kv.)*
+    ![image](https://github.com/user-attachments/assets/b9366540-2a69-4c2f-8f56-2db66deacd89)
+
+  
 
 2.  **Deep Research in Action - Web Scraping Power:**
-    ![Screenshot of Deep Research Output highlighting Web Scraping](path/to/screenshot-deep-research-scraping.png)
-    *(Showcase the detailed output from a deep research query, emphasizing the breadth of scraped data and cost-effectiveness.)*
+    ![image](https://github.com/user-attachments/assets/1af98352-e909-44e0-b714-42805dc262c1)
+![image](https://github.com/user-attachments/assets/0ba492bf-6691-4ad2-b27c-1618d84e6724)
+![image](https://github.com/user-attachments/assets/d7cac571-62d8-4d7b-8783-b33cb560942f)
+
 
 3.  **Options Menu - Control & Customization:**
-    ![Screenshot of Options Dropdown](path/to/screenshot-options-menu.png)
-    *(Highlight the options menu, demonstrating user control over search engines, output formats, and data extraction – all without API limitations.)*
+    ![image](https://github.com/user-attachments/assets/5a7775c4-78a6-4243-9973-d5fd0cffa46e)
 
-**Remember to replace `path/to/screenshot-*.png` with the actual paths to your screenshot images in the repository!  Consider adding a screenshot specifically highlighting the *cost-saving web scraping approach* if possible.**
+
 
 ---
 
