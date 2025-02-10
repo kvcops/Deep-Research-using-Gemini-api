@@ -112,7 +112,7 @@ Experience the power of cost-effective deep research by setting up Kv on your lo
     ```
 
 4.  **Set up API Key:**
-    *   Get a Google Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey).
+    *   Get a Google Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
     *   Create a `.env` file in the project root.
     *   Add your API key:
 
@@ -187,9 +187,9 @@ Kv is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.  T
 
 For questions, feedback, bug reports, or feature requests:
 
-*   **GitHub Issues:**  [Link to your repository's Issues page]
-*   **Email (Optional):** [Your Email Address if you want to provide it]
-*   **Project Founder - K. Vamsi Krishna:** [Link to your GitHub profile or social media if desired]
+*   **GitHub Issues:**  [https://github.com/kvcops/Deep-Research-using-Gemini-api/issues]
+*   **Email (Optional):** 21131A05C6@gvpce.ac.in
+*   **Project Founder - K. Vamsi Krishna:** https://www.linkedin.com/in/karri-vamsi-krishna-966537251/
 
 Your input is invaluable in shaping Kv's future. We are committed to building a robust and accessible research tool for the global community!
 
