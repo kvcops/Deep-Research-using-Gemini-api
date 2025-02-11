@@ -10,41 +10,41 @@
 
         :root {
             /* --- Light Theme --- */
-            --primary-color: #5e5ce6;  /* Vibrant Purple */
-            --secondary-color: #817cff; /* Lighter Purple */
+            --primary-color: #6f42c1; /*  Darker vibrant purple */
+            --secondary-color: #a076e2;
             --bg-primary: #f8f9fa;
             --bg-secondary: #e9ecef;
-            --text-primary: #343a40;
-            --text-secondary: #6c757d;
-            --accent-light: #d0cffc;
-            --border-color: #dee2e6;
-            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --text-primary: #212529; /* Darker text for better contrast */
+            --text-secondary: #495057;
+            --accent-light: #e5d8fc; /* Muted light purple accent */
+            --border-color: #ced4da; /*  Slightly darker border */
+            --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1); /* Medium shadow more pronounced */
+            --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow for depth */
             --success-color: #28a745;
             --error-color: #dc3545;
-            --gradient-primary: linear-gradient(145deg, #5e5ce6, #817cff);
-            --gradient-secondary: linear-gradient(145deg, #817cff, #a5a0ff);
+            --gradient-primary: linear-gradient(145deg, #6f42c1, #a076e2); /* Updated gradients to match primary */
+            --gradient-secondary: linear-gradient(145deg, #a076e2, #cbb2e9);
 
             /* --- Dark Theme --- */
-            --dark-primary-color: #7879f1;
-            --dark-secondary-color: #9796f0;
-            --dark-bg-primary: #1a1a1d;
-            --dark-bg-secondary: #232327;
-            --dark-text-primary: #f8f9fa;
-            --dark-text-secondary: #ced4da;
-            --dark-accent-light: #393b41;
-            --dark-border-color: #495057;
-            --dark-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.4);
-            --dark-shadow-md: 0 4px 10px rgba(0, 0, 0, 0.5);
-            --dark-shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.6);
-            --dark-gradient-primary: linear-gradient(145deg, #7879f1, #9796f0);
-             --dark-gradient-secondary: linear-gradient(to right, #2c3e50, #34495e);
+            --dark-primary-color: #957bbe; /* Lighter purple for dark mode */
+            --dark-secondary-color: #b9a2d8;
+            --dark-bg-primary: #1e1e24; /* Deeper dark background */
+            --dark-bg-secondary: #2c2c32;
+            --dark-text-primary: #e0e0e0; /* Softer white for text */
+            --dark-text-secondary: #b0b0b0;
+            --dark-accent-light: #3a3a40; /*  Darker accent */
+            --dark-border-color: #55555b; /* Darker border for dark mode */
+            --dark-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.5); /* Shadows more visible in dark mode */
+            --dark-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+            --dark-shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.7);
+            --dark-gradient-primary: linear-gradient(145deg, #957bbe, #b9a2d8); /* Updated dark gradients */
+            --dark-gradient-secondary: linear-gradient(to right, #2c3e50, #34495e);
+
             /* --- Animation --- */
             --typing-speed: 1.5s;
-            --typing-steps: 20; /* Number of steps in typing animation */
+            --typing-steps: 20;
         }
-
 
         * {
             margin: 0;
@@ -55,65 +55,60 @@
         body {
             font-family: 'Nunito', sans-serif;
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.7; /* Slightly increased line height for readability */
             overflow: hidden;
-            /* Use the provided image URL */
             background-image: url("https://images.unsplash.com/photo-1712397943847-e104395a1a8b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Keeps the background fixed during scroll */
+            background-attachment: fixed;
             transition: background 0.4s ease;
-
         }
 
         body[data-theme="dark"] {
             background: var(--dark-bg-primary);
             color: var(--dark-text-primary);
-             /* Darker overlay for dark theme*/
-             background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://images.unsplash.com/photo-1712397943847-e104395a1a8b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url("https://images.unsplash.com/photo-1712397943847-e104395a1a8b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
         }
 
         .app-container {
             display: grid;
             grid-template-rows: auto 1fr auto;
             height: 100vh;
-           background: rgba(255, 255, 255, 0);  /*Slightly transparent for a modern feel */
-           backdrop-filter: blur(10px); /* Apply backdrop filter */
-           border-radius: 15px;
-            overflow: hidden; /* Hide scrollbars on the main container */
-
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 18px; /* Slightly more rounded corners */
+            overflow: hidden;
+            box-shadow: var(--shadow-lg); /* More prominent shadow for container */
         }
-         [data-theme="dark"] .app-container{
-              background: rgba(0, 0, 0, 0.4); /* Darker transparency */
-            backdrop-filter: blur(10px);
-         }
+
+        [data-theme="dark"] .app-container{
+            background: rgba(0, 0, 0, 0.5);
+        }
 
         /* --- Header --- */
         .header {
-            padding: 1rem 1.5rem;
+            padding: 1.2rem 1.8rem; /*  Increased padding for header */
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
-             background: rgba(255, 255, 255, 0.04); /* Slight transparency */
-
-
+            background: rgba(255, 255, 255, 0.08);
         }
+
         [data-theme="dark"] .header {
-             background: rgba(0, 0, 0, 0.7);  /*Darker for dark theme*/
-             border-bottom: 1px solid var(--dark-border-color);
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid var(--dark-border-color);
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 2rem; /* Increased gap */
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 2.2rem; /* Slightly larger logo */
             font-weight: 800;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
@@ -121,49 +116,50 @@
             display: flex;
             align-items: center;
             transition: transform 0.3s ease;
-
         }
+
         [data-theme="dark"] .logo{
-          background: var(--dark-gradient-primary);
+            background: var(--dark-gradient-primary);
         }
 
         .logo:hover {
-           transform: scale(1.05);
-
+            transform: scale(1.08); /* More prominent scale on hover */
         }
 
         .logo i {
-            margin-right: 0.5rem;
+            margin-right: 0.6rem; /*  Increased margin for logo icon */
         }
 
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem; /*  Increased gap for header actions */
         }
 
         .theme-toggle {
             background: none;
             border: none;
-            font-size: 1.4rem;
+            font-size: 1.5rem; /*  Slightly larger icon */
             cursor: pointer;
             transition: color 0.3s ease, transform 0.3s ease;
             color: var(--text-secondary);
-             padding: 0.5rem;
+            padding: 0.6rem; /* Increased padding */
             border-radius: 50%;
         }
 
         .theme-toggle:hover {
             color: var(--primary-color);
-             transform: rotate(360deg);
-             background-color: var(--accent-light);
+            transform: rotate(360deg);
+            background-color: var(--accent-light);
         }
-         [data-theme="dark"] .theme-toggle:hover {
-             color: var(--dark-primary-color);
-               background-color: var(--dark-accent-light);
-         }
-           [data-theme="dark"] .theme-toggle{
-              color: var(--dark-text-secondary)
-           }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            color: var(--dark-primary-color);
+            background-color: var(--dark-accent-light);
+        }
+
+        [data-theme="dark"] .theme-toggle{
+            color: var(--dark-text-secondary)
+        }
 
         /* --- Navigation Dropdown --- */
         .nav-dropdown {
@@ -171,25 +167,27 @@
             display: inline-block;
         }
 
-          .nav-dropdown-button {
-             background: transparent;
+        .nav-dropdown-button {
+            background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            font-size: 1.1rem; /* Slightly larger font */
+            padding: 0.6rem 1.2rem; /* Increased padding */
+            border-radius: 10px; /* More rounded */
             transition: background-color 0.3s ease, color 0.3s ease;
-
         }
+
         .nav-dropdown-button:hover {
-             background-color: var(--accent-light);
+            background-color: var(--accent-light);
             color:var(--primary-color)
         }
+
         [data-theme="dark"] .nav-dropdown-button{
             color: var(--dark-text-secondary);
         }
-         [data-theme="dark"] .nav-dropdown-button:hover{
+
+        [data-theme="dark"] .nav-dropdown-button:hover{
             background-color: var(--dark-accent-light);
             color:var(--dark-primary-color)
         }
@@ -198,21 +196,20 @@
             display: none;
             position: absolute;
             background-color: var(--bg-primary);
-            min-width: 280px;
+            min-width: 300px; /*  Slightly wider dropdown */
             box-shadow: var(--shadow-md);
             z-index: 101;
             top: 100%;
             left: 0;
-            border-radius: 10px;
+            border-radius: 12px; /* More rounded dropdown */
             overflow: hidden;
             border: 1px solid var(--border-color);
-            padding: 1rem; /* Added padding to the dropdown content */
+            padding: 1.2rem; /* Increased padding for content */
         }
 
         [data-theme="dark"] .nav-dropdown-content {
             background-color: var(--dark-bg-primary);
-             border: 1px solid var(--dark-border-color);
-
+            border: 1px solid var(--dark-border-color);
         }
 
         .nav-dropdown-content.show {
@@ -220,71 +217,77 @@
             animation: slideDown 0.3s ease;
         }
 
-        .nav-dropdown-section-title { /* Style for section titles in dropdown */
+        .nav-dropdown-section-title {
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem; /* Increased margin */
             color: var(--text-secondary);
+            font-size: 1.05rem; /* Slightly larger section title */
         }
+
         [data-theme="dark"] .nav-dropdown-section-title {
             color: var(--dark-text-secondary);
         }
 
-
         .nav-dropdown-content textarea {
             width: 100%;
-            padding: 0.8rem; /* Reduced padding for textarea */
+            padding: 1rem; /* Increased padding */
             border: none;
             background: transparent;
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 1.05rem; /* Slightly larger font in textarea */
             resize: vertical;
-            min-height: 80px; /* Reduced min-height */
+            min-height: 100px; /* Slightly increased min-height */
             border-bottom: 1px solid var(--border-color);
             outline: none;
-            margin-bottom: 1rem; /* Added margin */
+            margin-bottom: 1.2rem; /* Increased margin */
+            border-radius: 8px; /* Rounded corners for textarea */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Inset shadow */
         }
-         [data-theme="dark"] .nav-dropdown-content textarea{
-             color: var(--dark-text-primary);
-             border-bottom: 1px solid var(--dark-border-color);
 
-         }
+        [data-theme="dark"] .nav-dropdown-content textarea{
+            color: var(--dark-text-primary);
+            border-bottom: 1px solid var(--dark-border-color);
+        }
 
         .nav-dropdown-checkbox-group,
         .nav-dropdown-select-group {
-            margin-bottom: 1rem; /* Spacing between groups */
+            margin-bottom: 1.2rem; /* Increased spacing */
         }
 
         .nav-dropdown-checkbox-group label,
         .nav-dropdown-select-group label {
-            display: block; /* Ensure labels are block-level */
-            margin-bottom: 0.3rem; /* Space between label and input */
+            display: block;
+            margin-bottom: 0.4rem; /*  Increased margin */
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 1.05rem; /* Slightly larger label */
+            font-weight: 500; /*  Slightly bolder labels */
         }
+
         [data-theme="dark"] .nav-dropdown-checkbox-group label,
         [data-theme="dark"] .nav-dropdown-select-group label {
             color: var(--dark-text-primary);
         }
 
-
         .nav-dropdown-checkbox {
-            margin-right: 0.5rem;
+            margin-right: 0.6rem; /*  Increased margin */
             vertical-align: middle;
         }
-
 
         .nav-dropdown-content select,
         .nav-dropdown-content button {
             width: 100%;
-            padding: 0.8rem 1.2rem; /* Reduced padding for select and button */
+            padding: 1rem 1.5rem; /* Increased padding */
             text-align: left;
             border: none;
-            background: transparent;
+            background: var(--bg-secondary); /* Slightly darker background */
             color: var(--text-primary);
             cursor: pointer;
             transition: background-color 0.2s;
-            font-size: 1rem;
+            font-size: 1.05rem; /*  Slightly larger font */
+            border-radius: 10px; /* Rounded select/buttons */
+            margin-bottom: 0.4rem; /* Spacing between items */
+            box-shadow: var(--shadow-sm); /* Add subtle shadow */
         }
 
         .nav-dropdown-content select:hover,
@@ -292,76 +295,90 @@
             background-color: var(--accent-light);
             color:var(--primary-color)
         }
-        [data-theme="dark"] .nav-dropdown-content select, [data-theme="dark"] .nav-dropdown-content button{
-             color: var(--dark-text-primary);
+
+        [data-theme="dark"] .nav-dropdown-content select,
+        [data-theme="dark"] .nav-dropdown-content button{
+            background: var(--dark-bg-secondary); /* Dark background for dark mode dropdown items */
+            color: var(--dark-text-primary);
         }
-          [data-theme="dark"] .nav-dropdown-content select:hover, [data-theme="dark"] .nav-dropdown-content button:hover{
-             background-color: var(--dark-accent-light);
-              color: var(--dark-primary-color)
-          }
+
+        [data-theme="dark"] .nav-dropdown-content select:hover,
+        [data-theme="dark"] .nav-dropdown-content button:hover{
+            background-color: var(--dark-accent-light);
+            color: var(--dark-primary-color)
+        }
 
         /* --- Chat Container --- */
         .chat-container {
-            padding: 2rem;
+            padding: 2.5rem; /* Increased padding for chat container */
             overflow-y: auto;
-            background: transparent; /* Ensure transparency */
+            background: transparent;
             scroll-behavior: smooth;
             position: relative;
-
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center messages */
         }
 
-
         /* --- Message Wrapper --- */
-       .message-wrapper {
-            max-width: 750px;
-            margin: 0 auto 1.5rem;
+        .message-wrapper {
+            max-width: 800px; /* Increased max width of message area */
+            margin-bottom: 2rem; /* Increased bottom margin between messages */
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px); /* Increased translateY */
             animation: messageAppear 0.5s ease forwards;
+            width: 100%; /* Take full width of chat container to center align */
+            display: flex;
+            justify-content: flex-start; /* Align messages to the start (left-align in LTR languages) */
+        }
+
+        .message-wrapper.user-message {
+            justify-content: flex-end; /* Align user messages to the end (right-align in LTR languages) */
         }
 
 
         /* --- Message --- */
         .message {
-             background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-            padding: 1.2rem 1.5rem;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
+            padding: 1.5rem 2rem; /*  Increased padding */
+            border-radius: 25px; /* More rounded messages */
             box-shadow: var(--shadow-sm);
             display: flex;
-            gap: 1.2rem;
+            gap: 1.5rem; /*  Increased gap */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 1px solid var(--border-color);
-            position: relative; /* For typing indicator */
-
+            position: relative;
         }
 
         [data-theme="dark"] .message {
-              background: rgba(0, 0, 0, 0.7);  /*Semi-transparent black*/
-             border: 1px solid var(--dark-border-color);
-
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--dark-border-color);
         }
 
         .message:hover {
-            transform: translateY(-5px);
+            transform: translateY(-7px); /* More pronounced hover lift */
             box-shadow: var(--shadow-md);
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
+            width: 55px; /* Slightly larger avatar */
+            height: 55px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.8rem; /* Larger avatar icon */
             background: var(--gradient-primary);
             color: white;
             flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-md); /*  More prominent avatar shadow */
+            border: 2px solid rgba(255, 255, 255, 0.5); /*  White border for avatar */
         }
-         [data-theme="dark"] .avatar{
+
+        [data-theme='dark'] .avatar{
             background: var(--dark-gradient-primary);
-         }
+            border: 2px solid rgba(0, 0, 0, 0.8);
+        }
 
         .user-avatar {
             background: var(--success-color);
@@ -375,34 +392,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.8rem; /* Increased margin */
         }
 
         .message-sender {
             font-weight: 700;
             color: var(--text-primary);
+            font-size: 1.1rem; /*  Slightly larger sender name */
         }
-         [data-theme="dark"] .message-sender{
-           color: var(--dark-text-primary);
-         }
+
+        [data-theme="dark"] .message-sender{
+            color: var(--dark-text-primary);
+        }
 
         .message-time {
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.9rem; /* Slightly larger time */
+            font-style: italic; /*  Italicize time for softer appearance */
         }
-         [data-theme="dark"] .message-time{
-             color: var(--dark-text-secondary);
-         }
+
+        [data-theme="dark"] .message-time{
+            color: var(--dark-text-secondary);
+        }
 
         .message-text {
             color: var(--text-primary);
-            font-size: 1.05rem;
-            line-height: 1.7;
+            font-size: 1.1rem; /* Slightly larger text */
+            line-height: 1.8; /* Slightly increased line height in message text */
             word-wrap: break-word;
         }
-         [data-theme="dark"] .message-text {
-           color: var(--dark-text-primary);
-         }
+
+        [data-theme="dark"] .message-text {
+            color: var(--dark-text-primary);
+        }
 
         /* --- Typing Indicator --- */
         .typing-indicator {
@@ -413,16 +435,17 @@
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 9px; /* Slightly larger typing dots */
+            height: 9px;
             border-radius: 50%;
             background-color: var(--text-secondary);
-            margin: 0 2px;
+            margin: 0 3px; /* Slightly more spacing */
             animation: pulse var(--typing-speed) infinite;
-            opacity: 0.4;
+            opacity: 0.5; /* Slightly more opaque dots */
         }
+
         [data-theme='dark'] .typing-dot{
-          background-color: var(--dark-text-secondary)
+            background-color: var(--dark-text-secondary)
         }
 
         .typing-dot:nth-child(2) {
@@ -435,24 +458,23 @@
 
         @keyframes pulse {
             0% {
-                opacity: 0.4;
+                opacity: 0.5;
             }
             50% {
                 opacity: 1;
             }
             100% {
-                opacity: 0.4;
+                opacity: 0.5;
             }
         }
-
 
         /* --- Message Image --- */
         .message-image {
             max-width: 100%;
-            max-height: 350px;
-            border-radius: 15px;
-            margin-top: 1rem;
-            box-shadow: var(--shadow-sm);
+            max-height: 400px; /*  Increased max height for images */
+            border-radius: 20px; /* More rounded image corners */
+            margin-top: 1.2rem; /* Increased top margin for images */
+            box-shadow: var(--shadow-md); /* More prominent image shadow */
             transition: transform 0.3s ease;
             cursor: pointer;
             display: block;
@@ -460,42 +482,47 @@
         }
 
         .message-image:hover {
-            transform: scale(1.04);
+            transform: scale(1.05); /* More prominent scale on hover */
         }
 
         /* --- References --- */
         .references-section {
-            margin-top: 1.2rem;
-            padding-top: 1.2rem;
+            margin-top: 1.5rem; /* Increased margin */
+            padding-top: 1.5rem;
             border-top: 1px dashed var(--border-color);
         }
-         [data-theme="dark"] .references-section{
+
+        [data-theme="dark"] .references-section{
             border-top: 1px dashed var(--dark-border-color);
-         }
+        }
 
         .references-header {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem; /* Increased gap */
             cursor: pointer;
             color: var(--text-secondary);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.8rem; /* Increased margin */
             transition: color 0.3s ease;
         }
 
         .references-header:hover {
             color: var(--primary-color);
         }
-         [data-theme="dark"] .references-header{
+
+        [data-theme="dark"] .references-header{
             color: var(--dark-text-secondary);
-         }
-          [data-theme="dark"] .references-header:hover{
-             color: var(--dark-primary-color)
-          }
+        }
+
+        [data-theme="dark"] .references-header:hover{
+            color: var(--dark-primary-color)
+        }
 
         .references-content {
             display: none;
-            padding-left: 1.5rem;
+            padding-left: 2rem; /* Increased padding */
+            font-size: 1rem; /*  Slightly larger font for references */
+            line-height: 1.7; /* Slightly increased line height for references */
         }
 
         .references-content.show {
@@ -507,59 +534,66 @@
             color: var(--secondary-color);
             text-decoration: none;
             transition: color 0.3s ease, text-decoration 0.3s ease;
-            display: inline-block; /*For better line breaks*/
-            margin-bottom: 0.3rem;
+            display: inline-block;
+            margin-bottom: 0.4rem; /* Increased margin */
         }
 
         .references-content a:hover {
             color: var(--primary-color);
             text-decoration: underline;
         }
-         [data-theme="dark"] .references-content a{
+
+        [data-theme="dark"] .references-content a{
             color: var(--dark-secondary-color)
-         }
-         [data-theme="dark"] .references-content a:hover{
+        }
+
+        [data-theme="dark"] .references-content a:hover{
             color: var(--dark-primary-color);
-         }
+        }
 
         /* --- Input Area --- */
         .input-container {
             background:rgba(52, 91, 145, 0);
             border-top: 1px solid var(--border-color);
-            padding: 0.7rem;
+            padding: 1rem; /* Increased padding */
             position: sticky;
             bottom: 0;
             z-index: 10;
-            box-shadow: 0 -5px 10px rgba(20, 82, 118, 0.01);
+            box-shadow: 0 -6px 12px rgba(20, 82, 118, 0.02); /* More pronounced input shadow */
         }
-         [data-theme="dark"] .input-container{
+
+        [data-theme="dark"] .input-container{
             background: var(--dark-bg-primary);
             border-top: 1px solid var(--dark-border-color);
-             box-shadow: 0 -5px 10px rgba(19, 127, 186, 0.27);
-         }
+            box-shadow: 0 -6px 12px rgba(19, 127, 186, 0.3);
+        }
 
         .input-wrapper {
-            max-width: 750px;
+            max-width: 800px; /* Match chat container width */
             margin: 0 auto;
         }
 
         .input-box {
-            background: rgb(31, 177, 167); /* Semi-transparent white */
-            border-radius: 25px;
-            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9); /* Slightly less transparent input */
+            border-radius: 30px; /* More rounded input box */
+            padding: 1.2rem 2rem; /*  Increased padding */
             box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem; /* Increased gap */
             transition: box-shadow 0.3s ease;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem; /* Increased margin */
+            border: 1px solid var(--border-color); /* Add border to input box */
         }
-         [data-theme="dark"] .input-box{
-            background: rgba(0, 0, 0, 0);  /*Semi-transparent black*/
-         }
+
+        [data-theme="dark"] .input-box{
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--dark-border-color);
+        }
 
         .input-box:focus-within {
-            box-shadow: 0 0 0 3px var(--primary-color);
+            box-shadow: 0 0 0 4px var(--primary-color); /* More pronounced focus shadow */
+            border-color: var(--primary-color); /* Change border on focus */
         }
 
         .input-box textarea {
@@ -568,14 +602,16 @@
             border: none;
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 1.1rem;
+            font-size: 1.15rem; /* Slightly larger input text */
             resize: none;
             outline: none;
             padding: 0;
+            line-height: 1.7; /* Line height in input area */
         }
-         [data-theme="dark"] .input-box textarea{
+
+        [data-theme="dark"] .input-box textarea{
             color: var(--dark-text-primary);
-         }
+        }
 
         /* --- Image Preview --- */
         .input-box#image-preview-box {
@@ -598,77 +634,88 @@
         .close-image-button {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.7rem; /* Slightly larger close button */
             color: var(--text-secondary);
             cursor: pointer;
             transition: color 0.3s ease;
-            padding: 0.5rem;
+            padding: 0.6rem; /* Increased padding */
             border-radius: 50%;
             align-self: flex-start;
+            opacity: 0.7; /* Slightly transparent close button */
         }
 
         .close-image-button:hover {
             color: var(--error-color);
+            opacity: 1; /* Fully opaque on hover */
         }
-         [data-theme="dark"] .close-image-button{
+
+        [data-theme="dark"] .close-image-button{
             color: var(--dark-text-secondary);
-         }
+        }
 
         /* --- Action Buttons --- */
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.2rem; /* Increased gap between buttons */
             justify-content: center;
-            margin-top: 1.2rem;
+            margin-top: 1.5rem; /* Increased top margin */
         }
 
         .button {
-            padding: 1rem 1.8rem;
+            padding: 1.1rem 2rem; /* Increased button padding */
             border: none;
-            border-radius: 25px;
+            border-radius: 30px; /* More rounded buttons */
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1.1rem; /* Slightly larger button text */
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
+            gap: 0.8rem; /*  Increased gap in buttons */
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             position: relative;
             overflow: hidden;
             white-space: nowrap;
+            box-shadow: var(--shadow-sm); /* Subtle button shadow */
+            border: 1px solid transparent; /*  Default transparent border */
         }
 
         .primary-button {
             background: var(--gradient-primary);
             color: white;
-              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
+            box-shadow: var(--shadow-md); /* More prominent primary button shadow */
         }
+
         [data-theme="dark"] .primary-button{
             background: var(--dark-gradient-primary);
         }
 
         .secondary-button {
-             background: var(--bg-secondary);
+            background: var(--bg-secondary); /* Slightly darker secondary button */
             color: var(--text-primary);
             border: 1px solid var(--border-color);
         }
-         [data-theme="dark"] .secondary-button{
-           background: var(--dark-bg-secondary);
+
+        [data-theme="dark"] .secondary-button{
+            background: var(--dark-bg-secondary);
             color: var(--dark-text-primary);
             border: 1px solid var(--dark-border-color);
-
-         }
+        }
 
         .button:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px); /* More pronounced hover effect */
             box-shadow: var(--shadow-md);
+            border-color: var(--primary-color); /* Border on hover */
+        }
+        .primary-button:hover {
+            border-color: transparent; /* No border on primary button hover */
+        }
+        [data-theme="dark"] .secondary-button:hover{
+            border-color: var(--dark-primary-color); /* Border for dark mode secondary hover */
         }
 
         .button:active::before {
-            /* Ripple Effect */
             content: '';
             position: absolute;
             top: 50%;
@@ -688,7 +735,7 @@
         }
 
         .button i {
-            margin-right: 0.5rem;
+            margin-right: 0.6rem; /*  Increased icon margin */
         }
 
         /* --- Animations --- */
@@ -702,7 +749,7 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-15px);
+                transform: translateY(-20px); /* Increased slide distance */
             }
 
             to {
@@ -719,8 +766,8 @@
             }
 
             100% {
-                width: 250px;
-                height: 250px;
+                width: 280px; /* Increased ripple size */
+                height: 280px;
                 opacity: 0;
             }
         }
@@ -728,26 +775,27 @@
         /* --- Responsive --- */
         @media (max-width: 768px) {
             .header {
-                padding: 0.8rem 1rem;
+                padding: 1rem 1.2rem;
             }
 
             .logo {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .chat-container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
 
             .message {
-                padding: 1rem 1.2rem;
-                gap: 1rem;
+                padding: 1.2rem 1.5rem;
+                gap: 1.2rem;
+                border-radius: 20px; /* Slightly less rounded messages on mobile */
             }
 
             .avatar {
-                width: 45px;
-                height: 45px;
-                font-size: 1.4rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.6rem;
             }
 
             .input-container {
@@ -755,501 +803,568 @@
             }
 
             .input-box {
-                padding: 0.8rem 1.2rem;
-                border-radius: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 25px; /* Slightly less rounded input on mobile */
             }
-             .input-box textarea{
-                font-size: 1rem;
-             }
+
+            .input-box textarea{
+                font-size: 1.05rem;
+            }
 
             .button {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
+                padding: 1rem 1.8rem;
+                font-size: 1.05rem;
+                border-radius: 25px; /* Slightly less rounded buttons on mobile */
             }
 
             .nav-dropdown-content {
-                min-width: 90vw;
+                min-width: 95vw; /* Wider dropdown on mobile */
                 left: 50%;
                 transform: translateX(-50%);
+                border-radius: 15px; /* Slightly less rounded dropdown mobile */
             }
-             .nav-dropdown-content textarea,
-             .nav-dropdown-content select,
-             .nav-dropdown-content button{
-                font-size: 0.9rem;
-             }
-            .message-wrapper{
-              margin-bottom: 1rem;
-            }
-             .message-text{
-               font-size: 1rem;
-             }
 
+            .nav-dropdown-content textarea,
+            .nav-dropdown-content select,
+            .nav-dropdown-content button{
+                font-size: 1rem;
+            }
+
+            .message-wrapper{
+                margin-bottom: 1.5rem;
+            }
+
+            .message-text{
+                font-size: 1.05rem;
+            }
+
+            .action-buttons {
+                gap: 0.8rem; /* Reduced gap between buttons on mobile */
+            }
         }
     </style>
 </head>
-<body>
-    <div class="app-container">
-        <header class="header">
-            <div class="header-left">
-                <div class="logo">
-                    <i class="fas fa-robot"></i>
-                    Kv
-                </div>
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-button" id="nav-dropdown-toggle">
-                        Options <i class="fas fa-caret-down"></i>
-                    </button>
-                    <div class="nav-dropdown-content" id="nav-dropdown-menu">
+ <body>
+     <div class="app-container">
+         <header class="header">
+             <div class="header-left">
+                 <div class="logo">
+                     <i class="fas fa-robot"></i>
+                     Kv
+                 </div>
+                 <div class="nav-dropdown">
+                     <button class="nav-dropdown-button" id="nav-dropdown-toggle">
+                         Options <i class="fas fa-caret-down"></i>
+                     </button>
+                     <div class="nav-dropdown-content" id="nav-dropdown-menu">
 
-                        <div class="nav-dropdown-section-title">Model Options</div>
-                        <select id="model-select" class="nav-dropdown-select-group">
-                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-                            <option value="gemini-2.0-flash-exp">Gemini 2.0 (Experimental)</option>
-                        </select>
-                        <textarea id="custom-instruction" placeholder="Enter custom instructions..." class="nav-dropdown-select-group"></textarea>
-
-
-                        <div class="nav-dropdown-section-title">Search Options</div>
-                        <div class="nav-dropdown-checkbox-group" id="search-engines-group">
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="google" checked> Google</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="duckduckgo" checked> DuckDuckGo</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="bing" checked> Bing</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="yahoo" checked> Yahoo</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="brave" checked> Brave</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="linkedin" checked> LinkedIn</label>
-                        </div>
-
-                        <div class="nav-dropdown-select-group">
-                            <label for="output-format-select">Output Format:</label>
-                            <select id="output-format-select">
-                                <option value="markdown" selected>Markdown</option>
-                                <option value="json">JSON</option>
-                                <option value="csv">CSV</option>
-                            </select>
-                        </div>
-
-                        <div class="nav-dropdown-checkbox-group">
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-links-checkbox"> Extract Links</label>
-                            <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-emails-checkbox"> Extract Emails</label>
-                        </div>
+                         <div class="nav-dropdown-section-title">Model Options</div>
+                         <select id="model-select" class="nav-dropdown-select-group">
+                             <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                             <option value="gemini-2.0-flash-exp">Gemini 2.0 (Experimental)</option>
+                         </select>
+                         <textarea id="custom-instruction" placeholder="Enter custom instructions..." class="nav-dropdown-select-group"></textarea>
 
 
-                        <button id="clear-button"><i class="fas fa-trash"></i> Clear Chat</button>
-                    </div>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-        </header>
+                         <div class="nav-dropdown-section-title">Search Options</div>
+                         <div class="nav-dropdown-checkbox-group" id="search-engines-group">
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="google" checked> Google</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="duckduckgo" checked> DuckDuckGo</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="bing" checked> Bing</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="yahoo" checked> Yahoo</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="brave" checked> Brave</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" name="search_engine" value="linkedin" checked> LinkedIn</label>
+                         </div>
 
-        <main class="chat-container" id="chat-area"></main>
+                         <div class="nav-dropdown-select-group">
+                             <label for="output-format-select">Output Format:</label>
+                             <select id="output-format-select">
+                                 <option value="markdown" selected>Markdown</option>
+                                 <option value="json">JSON</option>
+                                 <option value="csv">CSV</option>
+                             </select>
+                         </div>
 
-        <div class="input-container">
-            <div class="input-wrapper">
-                <div class="input-box" id="image-preview-box">
-                    <img id="image-preview" class="message-image" src="" alt="Image Preview">
-                    <button class="close-image-button" id="close-image-button">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <div class="input-box">
-                    <textarea id="user-input" placeholder="Message Kv..." rows="1"></textarea>
-                     <label class="button secondary-button" for="image-upload" style="margin-bottom: 0; padding: 0.4rem 0.8rem;">
-                        <i class="fas fa-image"></i>
-                    </label>
-                </div>
-
-                <div class="action-buttons">
-                    <button class="button primary-button" id="send-button">
-                        <i class="fas fa-paper-plane"></i> Send
-                    </button>
-                    <button class="button secondary-button" id="online-search-button">
-                        <i class="fas fa-search"></i> Web
-                    </button>
-                    <button class="button secondary-button" id="deep-research-button">
-                        <i class="fas fa-brain"></i> Deep Dive
-                    </button>
-                </div>
-                <input type="file" id="image-upload" accept="image/*">
-            </div>
-        </div>
-    </div>
-
-    <script>
-
-    // --- DOM Element References ---
-    const chatArea = document.getElementById('chat-area');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-    const clearButton = document.getElementById('clear-button');
-    const imageUpload = document.getElementById('image-upload');
-    const imagePreview = document.getElementById('image-preview');
-    const onlineSearchButton = document.getElementById('online-search-button');
-    const deepResearchButton = document.getElementById('deep-research-button');
-    const customInstruction = document.getElementById('custom-instruction');
-    const modelSelect = document.getElementById('model-select');
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('i');
-    const navDropdownToggle = document.getElementById('nav-dropdown-toggle');
-    const navDropdownMenu = document.getElementById('nav-dropdown-menu');
-    const closeImageButton = document.getElementById('close-image-button');
-    const imagePreviewBox = document.getElementById('image-preview-box');
-
-    // NEW DOM REFERENCES
-    const searchEnginesGroup = document.getElementById('search-engines-group');
-    const outputFormatSelect = document.getElementById('output-format-select');
-    const extractLinksCheckbox = document.getElementById('extract-links-checkbox');
-    const extractEmailsCheckbox = document.getElementById('extract-emails-checkbox');
+                         <div class="nav-dropdown-checkbox-group">
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-links-checkbox"> Extract Links</label>
+                             <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-emails-checkbox"> Extract Emails</label>
+                         </div>
 
 
-    let base64Image = null;
+                         <button id="clear-button"><i class="fas fa-trash"></i> Clear Chat</button>
+                     </div>
+                 </div>
+             </div>
+             <div class="header-actions">
+                 <button class="theme-toggle" id="theme-toggle">
+                     <i class="fas fa-moon"></i>
+                 </button>
+             </div>
+         </header>
 
-    // --- Helper Functions ---
+         <main class="chat-container" id="chat-area"></main>
 
-    // Theme Toggle
-    function toggleTheme() {
-        const currentTheme = document.body.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.body.setAttribute('data-theme', newTheme);
-        themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        localStorage.setItem('theme', newTheme);
-    }
+         <div class="input-container">
+             <div class="input-wrapper">
+                 <div class="input-box" id="image-preview-box">
+                     <img id="image-preview" class="message-image" src="" alt="Image Preview">
+                     <button class="close-image-button" id="close-image-button">
+                         <i class="fas fa-times"></i>
+                     </button>
+                 </div>
+
+                 <div class="input-box">
+                     <textarea id="user-input" placeholder="Message Kv..." rows="1"></textarea>
+                      <label class="button secondary-button" for="image-upload" style="margin-bottom: 0; padding: 0.5rem 1rem;">
+                         <i class="fas fa-image"></i>
+                     </label>
+                 </div>
+
+                 <div class="action-buttons">
+                     <button class="button primary-button" id="send-button">
+                         <i class="fas fa-paper-plane"></i> Send
+                     </button>
+                     <button class="button secondary-button" id="online-search-button">
+                         <i class="fas fa-search"></i> Web Search
+                     </button>
+                     <button class="button secondary-button" id="deep-research-button">
+                         <i class="fas fa-brain"></i> Deep Dive & PDF</button> <!-- Modified Deep Dive button text -->
+                 </div>
+                 <input type="file" id="image-upload" accept="image/*">
+             </div>
+         </div>
+     </div>
+
+     <script>
+
+     // --- DOM Element References ---
+     const chatArea = document.getElementById('chat-area');
+     const userInput = document.getElementById('user-input');
+     const sendButton = document.getElementById('send-button');
+     const clearButton = document.getElementById('clear-button');
+     const imageUpload = document.getElementById('image-upload');
+     const imagePreview = document.getElementById('image-preview');
+     const onlineSearchButton = document.getElementById('online-search-button');
+     const deepResearchButton = document.getElementById('deep-research-button');
+     const customInstruction = document.getElementById('custom-instruction');
+     const modelSelect = document.getElementById('model-select');
+     const themeToggle = document.getElementById('theme-toggle');
+     const themeIcon = themeToggle.querySelector('i');
+     const navDropdownToggle = document.getElementById('nav-dropdown-toggle');
+     const navDropdownMenu = document.getElementById('nav-dropdown-menu');
+     const closeImageButton = document.getElementById('close-image-button');
+     const imagePreviewBox = document.getElementById('image-preview-box');
+
+     // NEW DOM REFERENCES
+     const searchEnginesGroup = document.getElementById('search-engines-group');
+     const outputFormatSelect = document.getElementById('output-format-select');
+     const extractLinksCheckbox = document.getElementById('extract-links-checkbox');
+     const extractEmailsCheckbox = document.getElementById('extract-emails-checkbox');
+
+     let base64Image = null;
+
+     // --- Helper Functions ---
+
+     // Theme Toggle
+     function toggleTheme() {
+         const currentTheme = document.body.getAttribute('data-theme');
+         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+         document.body.setAttribute('data-theme', newTheme);
+         themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+         localStorage.setItem('theme', newTheme);
+     }
+
+     // --- Message Creation (with Typing Indicator) ---
+     function createMessageElement(message, sender, isTyping = false) {
+         const wrapper = document.createElement('div');
+         wrapper.className = `message-wrapper ${sender}-message`; // Added sender-message class for alignment
+
+         const messageDiv = document.createElement('div');
+         messageDiv.className = 'message';
+
+         const avatar = document.createElement('div');
+         avatar.className = `avatar ${sender}-avatar`;
+         avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+         const content = document.createElement('div');
+         content.className = 'message-content';
+
+         const header = document.createElement('div');
+         header.className = 'message-header';
+
+         const senderName = document.createElement('div');
+         senderName.className = 'message-sender';
+         senderName.textContent = sender === 'user' ? 'You' : 'Kv';
+
+         const time = document.createElement('div');
+         time.className = 'message-time';
+         time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+         header.appendChild(senderName);
+         header.appendChild(time);
+         content.appendChild(header);
+
+         const text = document.createElement('div');
+         text.className = 'message-text';
+
+         // Typing indicator (only for AI messages)
+         if (isTyping && sender === 'ai') {
+             const typingIndicator = document.createElement('div');
+             typingIndicator.className = 'typing-indicator';
+             typingIndicator.innerHTML = `
+                 <span class="typing-dot"></span>
+                 <span class="typing-dot"></span>
+                 <span class="typing-dot"></span>
+             `;
+             content.appendChild(typingIndicator);
+         } else {
+              // Handle markdown and references
+             let formattedMessage = message;
+             const referencesMatch = message.match(/\*\*References:\*\*([\s\S]*?)(?=\n\n|$)/);
+
+             if (referencesMatch) {
+                 formattedMessage = message.replace(referencesMatch[0], '');
+
+                 const referencesSection = document.createElement('div');
+                 referencesSection.className = 'references-section';
+
+                 const referencesHeader = document.createElement('div');
+                 referencesHeader.className = 'references-header';
+                 referencesHeader.innerHTML = '<i class="fas fa-chevron-right"></i> References';
+
+                 const referencesContent = document.createElement('div');
+                 referencesContent.className = 'references-content';
+                 referencesContent.innerHTML = referencesMatch[1].trim().split('\n').map(ref => {
+                     const match = ref.match(/\[(.*?)\]\((.*?)\)/);
+                     return match ? `<a href="${match[2]}" target="_blank" rel="noopener noreferrer">${match[1]}</a><br>` : ref + '<br>';
+                 }).join('');
+
+                 referencesHeader.addEventListener('click', () => {
+                     referencesContent.classList.toggle('show');
+                     referencesHeader.querySelector('i').style.transform = referencesContent.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
+                 });
+
+                 referencesSection.appendChild(referencesHeader);
+                 referencesSection.appendChild(referencesContent);
+                 content.appendChild(referencesSection);
+             }
+
+             formattedMessage = formattedMessage
+                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                 .replace(/```(.*?)```/gs, (match, p1) => `<pre style="white-space: pre-wrap; word-wrap: break-word;"><code>${p1.trim()}</code></pre>`) //Improved code block handling
+                 .replace(/`(.*?)`/g, '<code>$1</code>')
+                 .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+                 .replace(/\n/g, '<br>');
+
+             text.innerHTML = formattedMessage;
+              content.appendChild(text);
+         }
+
+         // Image (only for user messages)
+         if (base64Image && sender === 'user') {
+             const image = document.createElement('img');
+             image.src = base64Image;
+             image.className = 'message-image';
+             image.alt = 'Attached Image';
+             content.appendChild(image);
+
+             image.addEventListener('click', () => {
+                 const previewOverlay = document.createElement('div');
+                 previewOverlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1001; display: flex; justify-content: center; align-items: center;`;
+                 const previewImage = document.createElement('img');
+                 previewImage.src = base64Image;
+                 previewImage.style.cssText = `max-width: 90%; max-height: 90%; border-radius: 15px;`;
+                 previewOverlay.appendChild(previewImage);
+                 document.body.appendChild(previewOverlay);
+                 previewOverlay.addEventListener('click', () => document.body.removeChild(previewOverlay));
+             });
+         }
+
+         messageDiv.appendChild(avatar);
+         messageDiv.appendChild(content);
+         wrapper.appendChild(messageDiv);
+
+         return wrapper;
+     }
+
+     function addMessage(message, sender, isTyping = false) {
+         const messageElement = createMessageElement(message, sender, isTyping);
+         chatArea.appendChild(messageElement);
+         chatArea.scrollTop = chatArea.scrollHeight;
+     }
+
+     // --- Clear Chat ---
+     function clearChat() {
+         if (!confirm("Clear chat history?")) return;
+
+         chatArea.querySelectorAll('.message-wrapper').forEach((msg, index) => {
+             setTimeout(() => {
+                 msg.style.opacity = '0';
+                 msg.style.transform = 'translateY(-30px)';
+             }, index * 50);
+         });
+
+         setTimeout(() => {
+             chatArea.innerHTML = '';
+             fetch('/api/clear', { method: 'POST' })
+                 .then(response => response.json())
+                 .then(data => { if (data.message) console.log("History cleared"); })
+                 .catch(error => console.error('Error:', error));
+
+             base64Image = null;
+             imagePreview.src = '';
+             imagePreviewBox.classList.remove('active');
+             customInstruction.value = "";
+             addMessage('Hello! How can I assist you today?', 'ai');
+         }, 500);
+     }
+
+     // --- Handle Search ---
+     function handleSearch(endpoint, prefix = '') {
+         const query = userInput.value.trim();
+         if (!query) return;
+
+         addMessage(`${prefix}${query}`, 'user');
+         userInput.value = '';
+         userInput.style.height = 'auto';
+
+         const typingMessage = createMessageElement('', 'ai', true);
+         chatArea.appendChild(typingMessage);
+         chatArea.scrollTop = chatArea.scrollHeight;
+
+         const selectedSearchEngines = Array.from(searchEnginesGroup.querySelectorAll('input[name="search_engine"]:checked'))
+                                             .map(checkbox => checkbox.value);
+         const outputFormat = outputFormatSelect.value;
+         const extractLinks = extractLinksCheckbox.checked;
+         const extractEmails = extractEmailsCheckbox.checked;
+         const downloadPdf = endpoint === 'deep_research';
 
 
-    // --- Message Creation (with Typing Indicator) ---
-    function createMessageElement(message, sender, isTyping = false) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'message-wrapper';
+         fetch(`/api/${endpoint}`, {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+                 query: query,
+                 search_engines: selectedSearchEngines,
+                 output_format: outputFormat,
+                 extract_links: extractLinks,
+                 extract_emails: extractEmails,
+                 download_pdf: downloadPdf
+             })
+         })
+       .then(response => {
+         if (endpoint === 'deep_research' && downloadPdf) {
+            if (response.ok) {
+                 response.blob().then(blob => {
+                     const url = window.URL.createObjectURL(blob);
+                     const a = document.createElement('a');
+                     a.style.display = 'none';
+                     a.href = url;
+                     a.download = `deep_research_${query.replace(' ', '_')}.pdf`;
+                     document.body.appendChild(a);
+                     a.click();
+                     window.URL.revokeObjectURL(url);
 
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message';
+                     typingMessage.remove();
+                     addMessage('Deep research report downloaded successfully!\n\n' + '**Displaying report content below:**', 'ai'); // Added display message
 
-        const avatar = document.createElement('div');
-        avatar.className = `avatar ${sender}-avatar`;
-        avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+                     response.text().then(reportText => { //fetch text content for display in chat
+                          fetch(`/api/${endpoint}`, { // Re-fetch JSON response to get explanation for chat
+                               method: 'POST',
+                               headers: { 'Content-Type': 'application/json' },
+                               body: JSON.stringify({
+                                   query: query,
+                                   search_engines: selectedSearchEngines,
+                                   output_format: outputFormat,
+                                   extract_links: extractLinks,
+                                   extract_emails: extractEmails,
+                                   download_pdf: false // important to set download_pdf to false this time
+                               })
+                           })
+                           .then(res => res.json())
+                           .then(chatData => {
+                              if (chatData.explanation) {
+                                  addMessage(chatData.explanation, 'ai'); // display report in chat after download
+                                   if (chatData.references && chatData.references.length > 0) {
+                                        const formattedRefs = "**References:**\n" + chatData.references.map(ref => `- [${ref}](${ref})`).join('\n');
+                                        addMessage(formattedRefs, 'ai');
+                                    }
+                                    if (chatData.elapsed_time) {
+                                        addMessage(`_Time taken: ${chatData.elapsed_time}_`, 'ai');
+                                    }
+                                    if (chatData.extracted_data) {
+                                        console.log("Extracted Data:", chatData.extracted_data);
+                                    }
+                               } else if (chatData.error) {
+                                    addMessage(`Error displaying report content: ${chatData.error}`, 'ai');
+                                }
+                           });
 
-        const content = document.createElement('div');
-        content.className = 'message-content';
 
-        const header = document.createElement('div');
-        header.className = 'message-header';
+                     });
 
-        const senderName = document.createElement('div');
-        senderName.className = 'message-sender';
-        senderName.textContent = sender === 'user' ? 'You' : 'Kv';
 
-        const time = document.createElement('div');
-        time.className = 'message-time';
-        time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                 });
+            } else {
+                 response.json().then(data => {
+                    typingMessage.remove();
+                    addMessage(`Error: ${data.error || 'Failed to download PDF'}`, 'ai');
 
-        header.appendChild(senderName);
-        header.appendChild(time);
-        content.appendChild(header);
-
-        const text = document.createElement('div');
-        text.className = 'message-text';
-
-        // Typing indicator (only for AI messages)
-        if (isTyping && sender === 'ai') {
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'typing-indicator';
-            typingIndicator.innerHTML = `
-                <span class="typing-dot"></span>
-                <span class="typing-dot"></span>
-                <span class="typing-dot"></span>
-            `;
-            content.appendChild(typingIndicator);
-        } else {
-             // Handle markdown and references
-            let formattedMessage = message;
-            const referencesMatch = message.match(/\*\*References:\*\*([\s\S]*?)(?=\n\n|$)/);
-
-            if (referencesMatch) {
-                formattedMessage = message.replace(referencesMatch[0], '');
-
-                const referencesSection = document.createElement('div');
-                referencesSection.className = 'references-section';
-
-                const referencesHeader = document.createElement('div');
-                referencesHeader.className = 'references-header';
-                referencesHeader.innerHTML = '<i class="fas fa-chevron-right"></i> References';
-
-                const referencesContent = document.createElement('div');
-                referencesContent.className = 'references-content';
-                referencesContent.innerHTML = referencesMatch[1].trim().split('\n').map(ref => {
-                    const match = ref.match(/\[(.*?)\]\((.*?)\)/);
-                    return match ? `<a href="${match[2]}" target="_blank" rel="noopener noreferrer">${match[1]}</a><br>` : ref + '<br>';
-                }).join('');
-
-                referencesHeader.addEventListener('click', () => {
-                    referencesContent.classList.toggle('show');
-                    referencesHeader.querySelector('i').style.transform = referencesContent.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
-                });
-
-                referencesSection.appendChild(referencesHeader);
-                referencesSection.appendChild(referencesContent);
-                content.appendChild(referencesSection);
+                 }).catch(() => {
+                    typingMessage.remove();
+                     addMessage('Error: Failed to download PDF', 'ai');
+                 });
             }
+             return;
+         }
+           return response.json();
+       })
+       .then(data => {
+         if(!data) return;
 
-            formattedMessage = formattedMessage
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/```(.*?)```/gs, (match, p1) => `<pre><code>${p1.trim()}</code></pre>`)
-                .replace(/`(.*?)`/g, '<code>$1</code>')
-                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-                .replace(/\n/g, '<br>');
+         typingMessage.remove();
+         if (data.explanation) {
+             addMessage(data.explanation, 'ai');
+             if (data.references && data.references.length > 0) {
+                 const formattedRefs = "**References:**\n" + data.references.map(ref => `- [${ref}](${ref})`).join('\n');
+                 addMessage(formattedRefs, 'ai');
+             }
+              if (data.elapsed_time) {
+               addMessage(`_Time taken: ${data.elapsed_time}_`, 'ai');
+             }
+             if (data.extracted_data) {
+                 console.log("Extracted Data:", data.extracted_data);
+             }
+         }
+         if (data.error) {
+             addMessage(`Error: ${data.error}`, 'ai');
+         }
+     })
+     .catch(error => {
+          typingMessage.remove();
+         console.error('Error:', error);
+         addMessage('An unexpected error occurred.', 'ai');
+     });
+ }
 
-            text.innerHTML = formattedMessage;
-             content.appendChild(text);
-        }
+     // --- Send Message ---
+     function sendMessage() {
+         const message = userInput.value.trim();
+         if (!message && !base64Image) return;
 
+         addMessage(message, 'user');
+         userInput.value = '';
+         userInput.style.height = 'auto';
 
-
-        // Image (only for user messages)
-        if (base64Image && sender === 'user') {
-            const image = document.createElement('img');
-            image.src = base64Image;
-            image.className = 'message-image';
-            image.alt = 'Attached Image';
-            content.appendChild(image);
-
-            image.addEventListener('click', () => {
-                const previewOverlay = document.createElement('div');
-                previewOverlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1001; display: flex; justify-content: center; align-items: center;`;
-                const previewImage = document.createElement('img');
-                previewImage.src = base64Image;
-                previewImage.style.cssText = `max-width: 90%; max-height: 90%; border-radius: 15px;`;
-                previewOverlay.appendChild(previewImage);
-                document.body.appendChild(previewOverlay);
-                previewOverlay.addEventListener('click', () => document.body.removeChild(previewOverlay));
-            });
-        }
-
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(content);
-        wrapper.appendChild(messageDiv);
-
-        return wrapper;
-    }
-
-    function addMessage(message, sender, isTyping = false) {
-        const messageElement = createMessageElement(message, sender, isTyping);
-        chatArea.appendChild(messageElement);
-        chatArea.scrollTop = chatArea.scrollHeight;
-    }
-
-    // --- Clear Chat ---
-    function clearChat() {
-        if (!confirm("Clear chat history?")) return;
-
-        chatArea.querySelectorAll('.message-wrapper').forEach((msg, index) => {
-            setTimeout(() => {
-                msg.style.opacity = '0';
-                msg.style.transform = 'translateY(-30px)';
-            }, index * 50);
-        });
-
-        setTimeout(() => {
-            chatArea.innerHTML = '';
-            fetch('/api/clear', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => { if (data.message) console.log("History cleared"); })
-                .catch(error => console.error('Error:', error));
-
-            base64Image = null;
-            imagePreview.src = '';
-            imagePreviewBox.classList.remove('active');
-            customInstruction.value = "";
-            addMessage('Hello! How can I assist you today?', 'ai');
-        }, 500); // Shortened delay
-    }
-
-    // --- Handle Search ---
-    function handleSearch(endpoint, prefix = '') {
-        const query = userInput.value.trim();
-        if (!query) return;
-
-        addMessage(`${prefix}${query}`, 'user');
-        userInput.value = '';
-        userInput.style.height = 'auto';
-
-        // Add typing indicator *before* fetch
-        const typingMessage = createMessageElement('', 'ai', true);
-        chatArea.appendChild(typingMessage);
-        chatArea.scrollTop = chatArea.scrollHeight;
-
-        // --- NEW: Collect search options ---
-        const selectedSearchEngines = Array.from(searchEnginesGroup.querySelectorAll('input[name="search_engine"]:checked'))
-                                            .map(checkbox => checkbox.value);
-        const outputFormat = outputFormatSelect.value;
-        const extractLinks = extractLinksCheckbox.checked;
-        const extractEmails = extractEmailsCheckbox.checked;
+         const typingMessage = createMessageElement('', 'ai', true);
+         chatArea.appendChild(typingMessage);
+         chatArea.scrollTop = chatArea.scrollHeight;
 
 
-        fetch(`/api/${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query: query,
-                search_engines: selectedSearchEngines, // Send selected engines
-                output_format: outputFormat,         // Send output format
-                extract_links: extractLinks,         // Send extract links option
-                extract_emails: extractEmails        // Send extract emails option
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-                // Remove typing indicator
-                typingMessage.remove();
+         const requestData = {
+             message: message,
+             image: base64Image,
+             custom_instruction: customInstruction.value,
+             model_name: modelSelect.value,
+         };
 
-            if (data.explanation) {
-                addMessage(data.explanation, 'ai');
-                if (data.references && data.references.length > 0) {
-                    const formattedRefs = "**References:**\n" + data.references.map(ref => `- [${ref}](${ref})`).join('\n');
-                    addMessage(formattedRefs, 'ai');
-                }
-                 if (data.elapsed_time) {
-                  addMessage(`_Time taken: ${data.elapsed_time}_`, 'ai');
-                }
-                if (data.extracted_data) { // NEW: Handle extracted data
-                    console.log("Extracted Data:", data.extracted_data); // Log extracted data to console for now
-                    // In a real application, you'd display this data in a user-friendly way
-                }
-            }
-            if (data.error) {
-                addMessage(`Error: ${data.error}`, 'ai');
-            }
-        })
-        .catch(error => {
-             typingMessage.remove(); // Remove on error
-            console.error('Error:', error);
-            addMessage('An unexpected error occurred.', 'ai');
-        });
-    }
+         fetch('/api/chat', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(requestData),
+         })
+         .then(response => response.json())
+         .then(data => {
+            typingMessage.remove();
 
-    // --- Send Message ---
-    function sendMessage() {
-        const message = userInput.value.trim();
-        if (!message && !base64Image) return;
+             if (data.response) {
+                 addMessage(data.response, 'ai');
+             }
+             if (data.error) {
+                 addMessage(`Error: ${data.error}`, 'ai');
+             }
+             base64Image = null;
+             imagePreview.src = '';
+             imagePreviewBox.classList.remove('active');
 
-        addMessage(message, 'user');
-        userInput.value = '';
-        userInput.style.height = 'auto';
+         })
+         .catch(error => {
+              typingMessage.remove();
+             console.error('Error:', error);
+             addMessage('An unexpected error occurred.', 'ai');
+               base64Image = null;
+             imagePreview.src = '';
+             imagePreviewBox.classList.remove('active');
+         });
+     }
 
-        // Add typing indicator *before* fetch
-        const typingMessage = createMessageElement('', 'ai', true);
-        chatArea.appendChild(typingMessage);
-        chatArea.scrollTop = chatArea.scrollHeight;
+     // --- Event Listeners ---
+     sendButton.addEventListener('click', sendMessage);
+     clearButton.addEventListener('click', clearChat);
+     onlineSearchButton.addEventListener('click', () => handleSearch('online', 'Web Search: '));
+     deepResearchButton.addEventListener('click', () => handleSearch('deep_research', 'Deep Research: '));
 
+     [userInput, customInstruction].forEach(textarea => {
+         textarea.addEventListener('input', () => {
+             textarea.style.height = 'auto';
+             textarea.style.height = Math.min(textarea.scrollHeight, 220) + 'px';
+         });
+     });
 
-        const requestData = {
-            message: message,
-            image: base64Image,
-            custom_instruction: customInstruction.value,
-            model_name: modelSelect.value,
-        };
+     imageUpload.addEventListener('change', (event) => {
+         const file = event.target.files[0];
+         if (!file) return;
+         if (file.size > 5 * 1024 * 1024) {
+             alert('Image size exceeds 5MB.');
+             imageUpload.value = '';
+             return;
+         }
+         const reader = new  FileReader();
+         reader.onload = (e) => {
+             base64Image = e.target.result;
+             imagePreview.src = base64Image;
+             imagePreviewBox.classList.add('active');
+         };
+         reader.readAsDataURL(file);
+     });
 
-        fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData),
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Remove typing indicator
-           typingMessage.remove();
+     closeImageButton.addEventListener('click', () => {
+         base64Image = null;
+         imagePreview.src = '';
+         imagePreviewBox.classList.remove('active');
+         imageUpload.value = '';
+     });
 
-            if (data.response) {
-                addMessage(data.response, 'ai');
-            }
-            if (data.error) {
-                addMessage(`Error: ${data.error}`, 'ai');
-            }
-            base64Image = null;
-            imagePreview.src = '';
-            imagePreviewBox.classList.remove('active');
+     userInput.addEventListener('keypress', (event) => {
+         if (event.key === 'Enter' && !event.shiftKey) {
+             event.preventDefault();
+             sendMessage();
+         }
+     });
 
-        })
-        .catch(error => {
-             typingMessage.remove();  // Remove on error
-            console.error('Error:', error);
-            addMessage('An unexpected error occurred.', 'ai');
-              base64Image = null;
-            imagePreview.src = '';
-            imagePreviewBox.classList.remove('active');
-        });
-    }
+     navDropdownToggle.addEventListener('click', () => {
+         navDropdownMenu.classList.toggle('show');
+     });
 
-    // --- Event Listeners ---
-    sendButton.addEventListener('click', sendMessage);
-    clearButton.addEventListener('click', clearChat);
-    onlineSearchButton.addEventListener('click', () => handleSearch('online', 'Web Search: '));
-    deepResearchButton.addEventListener('click', () => handleSearch('deep_research', 'Deep Research: '));
+     window.addEventListener('click', (event) => {
+         if (!event.target.matches('.nav-dropdown-button') && !event.target.closest('.nav-dropdown')) {
+             if (navDropdownMenu.classList.contains('show')) {
+                 navDropdownMenu.classList.remove('show');
+             }
+         }
+     });
 
-    [userInput, customInstruction].forEach(textarea => {
-        textarea.addEventListener('input', () => {
-            textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 220) + 'px'; // Limit height
-        });
-    });
+     themeToggle.addEventListener('click', toggleTheme);
 
-    imageUpload.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Image size exceeds 5MB.');
-            imageUpload.value = '';
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            base64Image = e.target.result;
-            imagePreview.src = base64Image;
-            imagePreviewBox.classList.add('active');
-        };
-        reader.readAsDataURL(file);
-    });
+     const savedTheme = localStorage.getItem('theme');
+     if (savedTheme) {
+         document.body.setAttribute('data-theme', savedTheme);
+         themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+     }
 
-    closeImageButton.addEventListener('click', () => {
-        base64Image = null;
-        imagePreview.src = '';
-        imagePreviewBox.classList.remove('active');
-        imageUpload.value = '';
-    });
+     addMessage('Hello! How can I assist you today?', 'ai');
 
-    userInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
-    navDropdownToggle.addEventListener('click', () => {
-        navDropdownMenu.classList.toggle('show');
-    });
-
-    window.addEventListener('click', (event) => {
-        if (!event.target.matches('.nav-dropdown-button') && !event.target.closest('.nav-dropdown')) {
-            if (navDropdownMenu.classList.contains('show')) {
-                navDropdownMenu.classList.remove('show');
-            }
-        }
-    });
-
-    themeToggle.addEventListener('click', toggleTheme);
-
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        document.body.setAttribute('data-theme', savedTheme);
-        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    }
-
-    addMessage('Hello! How can I assist you today?', 'ai'); // Initial message
-
-    </script>
-</body>
-</html>
+     </script>
+ </body>
+ </html>
