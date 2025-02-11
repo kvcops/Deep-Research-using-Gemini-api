@@ -151,6 +151,6 @@ Kv is proudly open-source and licensed under the MIT License. See the `LICENSE` 
 
 ## 📞 Contact & Support
 📧 **Email:** 21131A05C6@gvpce.ac.in  
-👨‍💻 **Founder:** Connect with K. Vamsi Krishna on LinkedIn  
+👨‍💻 **Founder:** Connect with K. Vamsi Krishna on LinkedIn : ⭐ https://www.linkedin.com/in/karri-vamsi-krishna-966537251/ ⭐
 
 ✨ Thank you for using Kv! Don't forget to star the repository if you find it helpful! ⭐ 🚀
