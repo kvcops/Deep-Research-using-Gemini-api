@@ -14,18 +14,19 @@ import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
 import time
 from urllib.parse import urlparse, urljoin
-from functools import lru_cache
+# from functools import lru_cache, wraps # Removed lru_cache
+from functools import wraps
 import asyncio
 import aiohttp
 import chardet
 import json
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, PageBreak, Table, TableStyle #Imported Table and TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
-from reportlab.lib.colors import HexColor
+from reportlab.lib.colors import HexColor, black #Imported colors
 
 load_dotenv()
 
@@ -46,6 +47,7 @@ class Config:
         'Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1'
     ]
     SEARCH_ENGINES = ["google", "duckduckgo", "bing", "yahoo", "brave", "linkedin"]
+    # MAX_ITERATIONS = 10 # Removed max iterations  -- Now taken from user input
 
 config = Config()
 
@@ -72,7 +74,8 @@ def process_base64_image(base64_string):
         logging.error(f"Error processing image: {e}")
         return None
 
-@lru_cache(maxsize=128)
+# Removed @lru_cache
+# @lru_cache(maxsize=128)
 async def async_get_shortened_url(session, url):
     try:
         parsed_url = urlparse(url)
@@ -84,10 +87,10 @@ async def async_get_shortened_url(session, url):
                 return await response.text()
             else:
                 logging.warning(f"TinyURL API error {response.status} for URL: {url}")
-                return url
+                return url  # Return the original URL on error
     except Exception as e:
         logging.error(f"Error shortening URL '{url}': {e}")
-        return url
+        return url  # Return the original URL on error
 
 def fix_url(url):
     try:
@@ -561,7 +564,7 @@ async def online_search_endpoint():
 
         prompt = (
             f"Analyze web content to concisely summarize information for query: '{search_query}'. "
-            f"Extract key facts statistics, and details. Prioritize clarity and avoid speculation. "
+            f"Extract key facts, statistics, and details. Prioritize clarity and avoid speculation. "
             f"Content:\n\n{combined_content}\n\n"
             "Provide a fact-based summary solely from given content."
         )
@@ -579,6 +582,9 @@ async def online_search_endpoint():
         logging.exception(f"Error in online search: {e}")
         return jsonify({"error": str(e)}), 500
 
+
+
+
 @app.route('/api/deep_research', methods=['POST'])
 async def deep_research_endpoint():
     try:
@@ -588,57 +594,92 @@ async def deep_research_endpoint():
             return jsonify({"error": "No query provided"}), 400
 
         start_time = time.time()
-
         search_engines_requested = data.get('search_engines', config.SEARCH_ENGINES)
         output_format = data.get('output_format', 'markdown')
         extract_links = data.get('extract_links', False)
         extract_emails = data.get('extract_emails', False)
         download_pdf = data.get('download_pdf', True)
+        # Get max_iterations from the request, use a default value if not provided.
+        max_iterations = data.get('max_iterations', 3)  # Use 3 as the default
+        # Ensure max_iterations is an integer.
+        max_iterations = int(max_iterations)
 
-        search_results = []
-        for engine in search_engines_requested:
-            engine_results = await scrape_search_engine(search_query, engine)
-            search_results.extend(engine_results[:30] if engine != 'linkedin' else engine_results[:20]) # Limit results per engine
 
-        # Generate and use alternative queries
-        alternative_queries = generate_alternative_queries(search_query)
-        if alternative_queries:
-            logging.info(f"Alternative queries generated: {alternative_queries}")
-            for alt_query in alternative_queries:
+        all_summaries = []
+        all_references = []
+        all_extracted_data = []
+        current_query = search_query
+
+        async with aiohttp.ClientSession() as session:  # Create session OUTSIDE the loop
+            for iteration in range(max_iterations): # Use the value from the request
+                logging.info(f"Starting iteration {iteration + 1} with query: {current_query}")
+                search_results = []
+
+                # Perform searches
                 for engine in search_engines_requested:
-                    alt_engine_results = await scrape_search_engine(alt_query, engine)
-                    search_results.extend(alt_engine_results[:20] if engine != 'linkedin' else alt_engine_results[:10])  # Limit alt query results
+                    engine_results = await scrape_search_engine(current_query, engine)
+                    search_results.extend(engine_results[:30] if engine != 'linkedin' else engine_results[:20])
 
-        unique_search_results = list(set(search_results))  # Remove duplicate URLs
-        logging.debug(f"Unique URLs to fetch: {unique_search_results}")
+                # Remove duplicates and prepare for fetching
+                unique_search_results = list(set(search_results))
+                logging.debug(f"Iteration {iteration + 1}: Unique URLs to fetch: {unique_search_results}")
 
-        fetch_options = {'extract_links': extract_links, 'extract_emails': extract_emails}
-        chunk_summaries, references, extracted_data_all = await process_in_chunks(
-            unique_search_results,
-            search_query,
-            prompt_prefix=(
-                "Analyze web page snippets for research query. "
-                "Extract key facts, figures, arguments, insights. Ignore ads, navigation. "
-                "State if snippet is irrelevant/low quality. Prioritize reputable sources. Be concise with key points.\n\n"
-                f"Research Query: '{search_query}'\n\nContent Snippets:"
-            ),
-            fetch_options=fetch_options
-        )
+                # Fetch and process content in chunks
+                fetch_options = {'extract_links': extract_links, 'extract_emails': extract_emails}
+                prompt_prefix = (
+                    "Analyze web page snippets. Extract key facts, figures, and insights. "
+                    "Ignore irrelevant content. Be concise.\n\n"
+                    f"Research Query: '{current_query}'\n\nContent Snippets:"
+                )
+                chunk_summaries, references, extracted_data = await process_in_chunks(
+                    unique_search_results, current_query, prompt_prefix, fetch_options
+                )
 
-        if chunk_summaries:
-            final_prompt = (
-                "DEEP RESEARCH REPORT: Synthesize a detailed report from web research summaries on: '{search_query}'. "
-                "Integrate info from sources, identify themes, compare viewpoints, provide balanced analysis. "
-                "Ensure insightful, informative, structured, and clear sections. Discard redundancy. "
-                "Aim for detailed, concise overview (5-7 pages PDF).\n\n"
-                "Research Summaries:\n"
-                + "\n\n".join(chunk_summaries) + "\n\n"
-                "Generate DEEP RESEARCH REPORT in markdown for PDF."
-            )
+                all_summaries.extend(chunk_summaries)
+                all_extracted_data.extend(extracted_data)  # Accumulate extracted data
 
-            final_explanation = await async_generate_gemini_response(final_prompt, response_format=output_format)
-        else:
-            final_explanation = "No relevant content found for deep research report."
+                # Shorten URLs *within* the iteration, while the session is active
+                shortened_references_iteration = await asyncio.gather(
+                    *[async_get_shortened_url(session, ref) for ref in references]
+                )
+                all_references.extend(shortened_references_iteration) # accumulate all the references
+
+
+                if iteration < max_iterations - 1:  # Don't refine if it's the last iteration
+                    if all_summaries:
+                        # Refine query with Gemini
+                        refinement_prompt = (
+                            "Analyze the following research summaries to identify key themes, concepts, and entities. "
+                            "Suggest 3-5 new, more specific search queries to deepen the research. "
+                            "Also, identify any gaps or areas needing further investigation.\n\n"
+                            "Research Summaries:\n" + "\n\n".join(all_summaries) + "\n\n"
+                            "Provide refined search queries and identify gaps."
+                        )
+                        refined_response = await async_generate_gemini_response(refinement_prompt)
+                        # Extract new queries (basic splitting, can be improved with more robust parsing)
+                        new_queries = [q.strip() for q in refined_response.split('\n') if q.strip()]
+                        current_query = " ".join(new_queries[:3])  # Use top 3 queries for next iteration
+                    else:
+                        logging.info("No summaries available for refinement. Skipping to next iteration.")
+                        break  # Skip to the next iteration immediately if no summaries
+
+            # --- Final Synthesis (OUTSIDE the iteration loop, but INSIDE the session) ---
+            if all_summaries:
+                final_prompt = (
+                    "DEEP RESEARCH REPORT: Synthesize a detailed report from web research summaries on: '{search_query}'. "
+                    "Integrate information from all iterations, identify overarching themes, compare different viewpoints, "
+                    "and provide a balanced, comprehensive analysis.  Ensure the report is insightful, informative, "
+                    "well-structured, and clear. Discard any redundant information. "
+                    "Aim for a detailed yet concise overview (suitable for a 5-7 page PDF).\n\n"
+                    "Research Summaries (from all iterations):\n"
+                    + "\n\n".join(all_summaries) + "\n\n"
+                    "Generate a DEEP RESEARCH REPORT in Markdown format suitable for PDF conversion."
+                )
+                final_explanation = await async_generate_gemini_response(final_prompt, response_format=output_format)
+            else:
+                final_explanation = "No relevant content found for deep research report."
+
+            # --- End of 'async with' block: session is closed here ---
 
         global conversation_history
         conversation_history.append({"role": "user", "parts": [f"Deep research query: {search_query}"]})
@@ -646,12 +687,11 @@ async def deep_research_endpoint():
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        async with aiohttp.ClientSession() as session:
-            shortened_references = [await async_get_shortened_url(session, ref) for ref in references]
 
+        # NO aiohttp requests here! Session is closed.
 
         if download_pdf:
-            pdf_buffer = await generate_pdf(search_query, final_explanation, shortened_references)
+            pdf_buffer = await generate_pdf(search_query, final_explanation, all_references) # Pass the all_references here
             return send_file(
                 pdf_buffer,
                 as_attachment=True,
@@ -661,18 +701,40 @@ async def deep_research_endpoint():
 
         response_data = {
             "explanation": final_explanation,
-            "references": shortened_references,
+            "references": all_references,
             "history": conversation_history,
-            "elapsed_time": f"{elapsed_time:.2f} seconds"
+            "elapsed_time": f"{elapsed_time:.2f} seconds",
+            "extracted_data": all_extracted_data
         }
-        if extracted_data_all:
-            response_data["extracted_data"] = extracted_data_all  # Include extracted data
 
         return jsonify(response_data)
 
     except Exception as e:
         logging.exception(f"Error in deep research: {e}")
         return jsonify({"error": str(e)}), 500
+
+def parse_markdown_table(markdown_table_string):
+    """Parses a Markdown table string and returns data as a list of lists."""
+    lines = markdown_table_string.strip().split('\n')
+    header = [s.strip() for s in lines[0].split('|') if s.strip()]
+    data = []
+
+    # Check if there's a separator line (required for valid Markdown tables)
+    if len(lines) > 1 and set(lines[1].replace('|', '').replace('-', '').strip()) == set():
+        for line in lines[2:]:
+            row = [s.strip() for s in line.split('|') if s.strip()]
+            # Ensure consistent number of columns
+            if len(row) == len(header):
+                data.append(row)
+    else:  # Handle cases without a separator line (treat all lines as data)
+        for line in lines:
+            row = [s.strip() for s in line.split('|') if s.strip()]
+            if len(row) == len(header): # Only add the row if col length is same.
+                data.append(row)
+
+
+    return [header] + data  # Return header and data rows
+
 
 async def generate_pdf(report_title, content, references):
     buffer = BytesIO()
@@ -768,7 +830,7 @@ async def generate_pdf(report_title, content, references):
     story.append(Paragraph(report_title, title_style))
     story.append(Spacer(1, 0.5*inch))
 
-    # Process the Markdown content
+   # Process the Markdown content
     for line in content.splitlines():
         line = line.strip()
         if line.startswith('# '):  # Heading 1
@@ -783,16 +845,33 @@ async def generate_pdf(report_title, content, references):
 
         elif line.startswith('* '):  # Bullet point
             story.append(Paragraph(line.lstrip('* '), bullet_style, bulletText='•'))
+        elif line.startswith('|'): # Table
+            # Check if the next line looks like a separator line
+            table_data = parse_markdown_table(content)
+            if table_data:
+                table = Table(table_data)
+                table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), HexColor("#f2f2f2")),  # Header background
+                    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor("#333333")),  # Header text color
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align all cells
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold header
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Header padding
+                    ('GRID', (0, 0), (-1, -1), 1, black),  # Grid lines
+                    ('FONTSIZE', (0, 0), (-1, -1), 10) #Set font size
+                ]))
+                story.append(table)
+                story.append(Spacer(1, 0.2*inch))
+            continue  # Skip to the next line after processing the table
 
         elif line: # Regular Paragraph
 
-             formatted_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
-             formatted_line = re.sub(r'\*(.*?)\*', r'<i>\1</i>', formatted_line)
-             formatted_line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', formatted_line) # Handle links
+            formatted_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
+            formatted_line = re.sub(r'\*(.*?)\*', r'<i>\1</i>', formatted_line)
+            formatted_line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', formatted_line) # Handle links
 
-             p = Paragraph(formatted_line, paragraph_style)
-             story.append(p)
-             story.append(Spacer(1, 0.1*inch)) # Add space after each paragraph
+            p = Paragraph(formatted_line, paragraph_style)
+            story.append(p)
+            story.append(Spacer(1, 0.1*inch)) # Add space after each paragraph
 
 
     # Add references (if any)
