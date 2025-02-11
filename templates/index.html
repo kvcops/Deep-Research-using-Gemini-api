@@ -273,6 +273,23 @@
             margin-right: 0.6rem; /*  Increased margin */
             vertical-align: middle;
         }
+		.nav-dropdown-number-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .nav-dropdown-number-input {
+            background: var(--dark-bg-secondary);
+            color: var(--dark-text-primary);
+            border: 1px solid var(--dark-border-color);
+        }
 
         .nav-dropdown-content select,
         .nav-dropdown-content button {
@@ -571,20 +588,27 @@
         .input-wrapper {
             max-width: 800px; /* Match chat container width */
             margin: 0 auto;
+            display: flex; /* Use flexbox for layout */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 1rem; /* Space between items */
+            align-items: center; /* Vertically center items */
         }
 
-        .input-box {
-            background: rgba(255, 255, 255, 0.9); /* Slightly less transparent input */
-            border-radius: 30px; /* More rounded input box */
-            padding: 1.2rem 2rem; /*  Increased padding */
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            gap: 1.2rem; /* Increased gap */
-            transition: box-shadow 0.3s ease;
-            margin-bottom: 1.2rem; /* Increased margin */
-            border: 1px solid var(--border-color); /* Add border to input box */
-        }
+.input-box {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 30px;
+    padding: 1.2rem 2rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--border-color);
+    flex: 1; /* Grow to fill available space */
+    min-width: 0; /* Needed for flex item to shrink correctly */
+}
+
 
         [data-theme="dark"] .input-box{
             background: rgba(0, 0, 0, 0.85);
@@ -652,6 +676,42 @@
         [data-theme="dark"] .close-image-button{
             color: var(--dark-text-secondary);
         }
+/* Iteration input styles */
+        .iteration-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Space between label and input */
+            margin-bottom: 1rem;
+
+        }
+    .iteration-input-group label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 1rem;
+        white-space: nowrap; /* Prevent label wrapping */
+    }
+
+        [data-theme="dark"] .iteration-input-group label{
+            color: var(--dark-text-secondary)
+        }
+
+    .iteration-input-group input[type="number"] {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 20px; /* Match other input styles */
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--text-primary);
+        font-size: 1rem;
+        width: 80px; /* Control the width */
+        text-align: center; /* Center the number */
+    }
+
+    [data-theme="dark"] .iteration-input-group input[type="number"] {
+        background: rgba(0, 0, 0, 0.85);
+        border-color: var(--dark-border-color);
+        color: var(--dark-text-primary);
+    }
+
 
         /* --- Action Buttons --- */
         .action-buttons {
@@ -810,6 +870,10 @@
             .input-box textarea{
                 font-size: 1.05rem;
             }
+          .iteration-input-group input[type="number"] {
+              width: 60px; /* Smaller on mobile */
+          }
+
 
             .button {
                 padding: 1rem 1.8rem;
@@ -889,8 +953,6 @@
                              <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-links-checkbox"> Extract Links</label>
                              <label><input type="checkbox" class="nav-dropdown-checkbox" id="extract-emails-checkbox"> Extract Emails</label>
                          </div>
-
-
                          <button id="clear-button"><i class="fas fa-trash"></i> Clear Chat</button>
                      </div>
                  </div>
@@ -905,34 +967,42 @@
          <main class="chat-container" id="chat-area"></main>
 
          <div class="input-container">
-             <div class="input-wrapper">
-                 <div class="input-box" id="image-preview-box">
-                     <img id="image-preview" class="message-image" src="" alt="Image Preview">
-                     <button class="close-image-button" id="close-image-button">
-                         <i class="fas fa-times"></i>
-                     </button>
-                 </div>
+            <div class="input-wrapper">
+                <div class="input-box" id="image-preview-box">
+                    <img id="image-preview" class="message-image" src="" alt="Image Preview">
+                    <button class="close-image-button" id="close-image-button">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
 
-                 <div class="input-box">
-                     <textarea id="user-input" placeholder="Message Kv..." rows="1"></textarea>
-                      <label class="button secondary-button" for="image-upload" style="margin-bottom: 0; padding: 0.5rem 1rem;">
-                         <i class="fas fa-image"></i>
-                     </label>
-                 </div>
+                <div class="input-box">
+                    <textarea id="user-input" placeholder="Message Kv..." rows="1"></textarea>
+                    <label class="button secondary-button" for="image-upload" style="margin-bottom: 0; padding: 0.5rem 1rem;">
+                        <i class="fas fa-image"></i>
+                    </label>
+                </div>
 
-                 <div class="action-buttons">
-                     <button class="button primary-button" id="send-button">
-                         <i class="fas fa-paper-plane"></i> Send
-                     </button>
-                     <button class="button secondary-button" id="online-search-button">
-                         <i class="fas fa-search"></i> Web Search
-                     </button>
-                     <button class="button secondary-button" id="deep-research-button">
-                         <i class="fas fa-brain"></i> Deep Dive & PDF</button> <!-- Modified Deep Dive button text -->
-                 </div>
-                 <input type="file" id="image-upload" accept="image/*">
-             </div>
-         </div>
+                <!-- Iteration Count Input Group -->
+                <div class="iteration-input-group">
+                    <label for="iteration-count">Iterations:</label>
+                    <input type="number" id="iteration-count" value="3" min="1" max="10">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="button primary-button" id="send-button">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                    <button class="button secondary-button" id="online-search-button">
+                        <i class="fas fa-search"></i> Web Search
+                    </button>
+                    <button class="button secondary-button" id="deep-research-button">
+                        <i class="fas fa-brain"></i> Deep Dive & PDF
+                    </button>
+                </div>
+                <input type="file" id="image-upload" accept="image/*">
+            </div>
+        </div>
+
      </div>
 
      <script>
@@ -960,6 +1030,7 @@
      const outputFormatSelect = document.getElementById('output-format-select');
      const extractLinksCheckbox = document.getElementById('extract-links-checkbox');
      const extractEmailsCheckbox = document.getElementById('extract-emails-checkbox');
+     const iterationCountInput = document.getElementById('iteration-count'); // NEW
 
      let base64Image = null;
 
@@ -1139,6 +1210,7 @@
          const extractLinks = extractLinksCheckbox.checked;
          const extractEmails = extractEmailsCheckbox.checked;
          const downloadPdf = endpoint === 'deep_research';
+         const iterationCount = parseInt(iterationCountInput.value, 10); // Get iteration count
 
 
          fetch(`/api/${endpoint}`, {
@@ -1150,7 +1222,8 @@
                  output_format: outputFormat,
                  extract_links: extractLinks,
                  extract_emails: extractEmails,
-                 download_pdf: downloadPdf
+                 download_pdf: downloadPdf,
+                 max_iterations: iterationCount, // Send iteration count
              })
          })
        .then(response => {
@@ -1179,7 +1252,8 @@
                                    output_format: outputFormat,
                                    extract_links: extractLinks,
                                    extract_emails: extractEmails,
-                                   download_pdf: false // important to set download_pdf to false this time
+                                   download_pdf: false, // important to set download_pdf to false this time
+                                   max_iterations: iterationCount,
                                })
                            })
                            .then(res => res.json())
