@@ -13,8 +13,7 @@ import random
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential
 import time
-from urllib.parse import urlparse, urljoin
-# from functools import lru_cache, wraps # Removed lru_cache
+from urllib.parse import urlparse, urljoin, quote_plus
 from functools import wraps
 import asyncio
 import aiohttp
@@ -22,11 +21,13 @@ import chardet
 import json
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, PageBreak, Table, TableStyle #Imported Table and TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image as RLImage, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
-from reportlab.lib.colors import HexColor, black #Imported colors
+from reportlab.lib.colors import HexColor, black
+import csv
+from datetime import date
 
 load_dotenv()
 
@@ -36,9 +37,9 @@ CORS(app)
 class Config:
     API_KEY = os.getenv("GEMINI_API_KEY")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG").upper()
-    SNIPPET_LENGTH = 5000  # For general online search
-    DEEP_RESEARCH_SNIPPET_LENGTH = 10000  # For deep research, fetch more initially
-    MAX_TOKENS_PER_CHUNK = 100000  # Control chunk size for Gemini
+    SNIPPET_LENGTH = 5000
+    DEEP_RESEARCH_SNIPPET_LENGTH = 10000
+    MAX_TOKENS_PER_CHUNK = 100000
     USER_AGENTS = [
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15',
@@ -47,13 +48,35 @@ class Config:
         'Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1'
     ]
     SEARCH_ENGINES = ["google", "duckduckgo", "bing", "yahoo", "brave", "linkedin"]
-    # MAX_ITERATIONS = 10 # Removed max iterations  -- Now taken from user input
+
 
 config = Config()
 
 logging.basicConfig(level=config.LOG_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
 genai.configure(api_key=config.API_KEY)
 conversation_history = []
+
+# Rate limiting for deep research
+deep_research_rate_limits = {
+    "gemini-2.0-flash": {"requests_per_minute": 15, "last_request": 0},
+    "gemini-2.0-flash-thinking-exp-01-21": {"requests_per_minute": 10, "last_request": 0}
+}
+DEFAULT_DEEP_RESEARCH_MODEL = "gemini-2.0-flash"
+
+def is_rate_limited(model_name):
+    if model_name not in deep_research_rate_limits:
+        return False
+
+    now = time.time()
+    rate_limit_data = deep_research_rate_limits[model_name]
+    time_since_last_request = now - rate_limit_data["last_request"]
+    if time_since_last_request < 60 / rate_limit_data["requests_per_minute"]:
+        return True
+    return False
+
+def update_last_request_time(model_name):
+    if model_name in deep_research_rate_limits:
+        deep_research_rate_limits[model_name]["last_request"] = time.time()
 
 def get_random_user_agent():
     return random.choice(config.USER_AGENTS)
@@ -74,8 +97,8 @@ def process_base64_image(base64_string):
         logging.error(f"Error processing image: {e}")
         return None
 
-# Removed @lru_cache
-# @lru_cache(maxsize=128)
+
+
 async def async_get_shortened_url(session, url):
     try:
         parsed_url = urlparse(url)
@@ -87,10 +110,10 @@ async def async_get_shortened_url(session, url):
                 return await response.text()
             else:
                 logging.warning(f"TinyURL API error {response.status} for URL: {url}")
-                return url  # Return the original URL on error
+                return url
     except Exception as e:
         logging.error(f"Error shortening URL '{url}': {e}")
-        return url  # Return the original URL on error
+        return url
 
 def fix_url(url):
     try:
@@ -365,14 +388,14 @@ def generate_alternative_queries(original_query):
         "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
         "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
     }
-    model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+    model = genai.GenerativeModel(model_name="gemini-2.0-flash")
     response = model.generate_content(parts, safety_settings=safety_settings)
     alternative_queries = [q.strip() for q in response.text.split('\n') if q.strip()]
     return alternative_queries
 
 
 @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(3))
-async def async_generate_gemini_response(prompt, model_name="gemini-1.5-flash", response_format="markdown"):
+async def async_generate_gemini_response(prompt, model_name="gemini-2.0-flash", response_format="markdown"):
     parts = [{"role": "user", "parts": [{"text": prompt}]}]
     safety_settings = {
         "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
@@ -390,14 +413,21 @@ async def async_generate_gemini_response(prompt, model_name="gemini-1.5-flash", 
                 return json.loads(text_response)
             except json.JSONDecodeError:
                 logging.warning("Gemini response was not valid JSON, returning raw text.")
-                return text_response
+                return {"error": "Invalid JSON response", "raw_text": text_response}
         elif response_format == "csv":
-            lines = text_response.strip().split('\n')
-            return [line.split(',') for line in lines]
+            try:
+                csv_data = io.StringIO(text_response)
+                reader = csv.reader(csv_data, delimiter=',', quotechar='"')
+                return list(reader)
+            except Exception as e:
+                logging.warning(f"Gemini response was not valid CSV: {e}")
+                return {"error": "Invalid CSV response", "raw_text": text_response}
+
         else:
             text_response = re.sub(r'\n+', '\n\n', text_response)
             text_response = re.sub(r'  +', ' ', text_response)
             text_response = re.sub(r'^- ', '* ', text_response, flags=re.MULTILINE)
+            text_response = text_response.replace("```markdown", "")
             return text_response
     except Exception as e:
         logging.error(f"Error generating Gemini response: {e}")
@@ -415,7 +445,7 @@ async def chat():
         user_message = data.get('message', '')
         image_data = data.get('image')
         custom_instruction = data.get('custom_instruction')
-        model_name = data.get('model_name', 'gemini-1.5-flash')
+        model_name = data.get('model_name', 'gemini-2.0-flash')
 
         safety_settings = {
             "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
@@ -440,7 +470,7 @@ async def chat():
             else:
                 return jsonify({"error": "Failed to process image"}), 400
 
-        model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        model = genai.GenerativeModel(model_name=model_name)
         response = model.generate_content(parts, safety_settings=safety_settings)
         response_text = response.text
         response_text = re.sub(r'\n+', '\n\n', response_text)
@@ -479,9 +509,8 @@ async def process_in_chunks(search_results, search_query, prompt_prefix="", fetc
                 extracted_data_all.append({'url': url, 'data': extracted_data})
 
                 for snippet in page_snippets:
-                    estimated_tokens = len(snippet) // 4  # Estimate tokens
+                    estimated_tokens = len(snippet) // 4
                     if processed_tokens + estimated_tokens > config.MAX_TOKENS_PER_CHUNK:
-                        # Process the current chunk
                         combined_content = "\n\n".join(current_chunk_content)
                         if combined_content.strip():
                             summary_prompt = f"{prompt_prefix}\n\n{combined_content}"
@@ -495,9 +524,8 @@ async def process_in_chunks(search_results, search_query, prompt_prefix="", fetc
 
             except Exception as e:
                 logging.error(f"Error processing URL {url}: {e}")
-                continue  # Continue to the next URL
+                continue
 
-        # Process any remaining content in the last chunk
         if current_chunk_content:
             combined_content = "\n\n".join(current_chunk_content)
             if combined_content.strip():
@@ -542,7 +570,7 @@ async def online_search_endpoint():
 
         unique_search_results = {}
         for url in search_results:
-            unique_search_results[url] = 'general' # type of result could be added here
+            unique_search_results[url] = 'general'
 
         logging.debug(f"Unique URLs to fetch: {unique_search_results.keys()}")
 
@@ -555,12 +583,11 @@ async def online_search_endpoint():
                 logging.error(f"Error during fetching: {result}")
                 continue
 
-            page_snippets, page_refs, _ = result  # Unpack the result
+            page_snippets, page_refs, _ = result
             content_snippets.extend(page_snippets)
             references.extend(page_refs)
 
         combined_content = "\n\n".join(content_snippets)
-
 
         prompt = (
             f"Analyze web content to concisely summarize information for query: '{search_query}'. "
@@ -583,8 +610,6 @@ async def online_search_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
-
-
 @app.route('/api/deep_research', methods=['POST'])
 async def deep_research_endpoint():
     try:
@@ -593,93 +618,78 @@ async def deep_research_endpoint():
         if not search_query:
             return jsonify({"error": "No query provided"}), 400
 
+        model_name = data.get('model_name', DEFAULT_DEEP_RESEARCH_MODEL)
+        if is_rate_limited(model_name):
+            rate_limit_data = deep_research_rate_limits[model_name]
+            wait_time = 60 / rate_limit_data["requests_per_minute"] - (time.time() - rate_limit_data["last_request"])
+            return jsonify({"error": f"Rate limit exceeded. Wait {wait_time:.1f}s.", "retry_after": wait_time}), 429
+
         start_time = time.time()
         search_engines_requested = data.get('search_engines', config.SEARCH_ENGINES)
         output_format = data.get('output_format', 'markdown')
         extract_links = data.get('extract_links', False)
         extract_emails = data.get('extract_emails', False)
         download_pdf = data.get('download_pdf', True)
-        # Get max_iterations from the request, use a default value if not provided.
-        max_iterations = data.get('max_iterations', 3)  # Use 3 as the default
-        # Ensure max_iterations is an integer.
-        max_iterations = int(max_iterations)
-
+        max_iterations = int(data.get('max_iterations', 3))
 
         all_summaries = []
         all_references = []
         all_extracted_data = []
         current_query = search_query
 
-        async with aiohttp.ClientSession() as session:  # Create session OUTSIDE the loop
-            for iteration in range(max_iterations): # Use the value from the request
-                logging.info(f"Starting iteration {iteration + 1} with query: {current_query}")
+        async with aiohttp.ClientSession() as session:
+            for iteration in range(max_iterations):
+                logging.info(f"Iteration {iteration + 1}: {current_query}")
                 search_results = []
 
-                # Perform searches
                 for engine in search_engines_requested:
-                    engine_results = await scrape_search_engine(current_query, engine)
-                    search_results.extend(engine_results[:30] if engine != 'linkedin' else engine_results[:20])
+                    search_results.extend(await scrape_search_engine(current_query, engine))
 
-                # Remove duplicates and prepare for fetching
-                unique_search_results = list(set(search_results))
-                logging.debug(f"Iteration {iteration + 1}: Unique URLs to fetch: {unique_search_results}")
+                unique_results = list(set(search_results))
+                logging.debug(f"Iteration {iteration + 1} - URLs: {unique_results}")
 
-                # Fetch and process content in chunks
-                fetch_options = {'extract_links': extract_links, 'extract_emails': extract_emails}
                 prompt_prefix = (
-                    "Analyze web page snippets. Extract key facts, figures, and insights. "
-                    "Ignore irrelevant content. Be concise.\n\n"
-                    f"Research Query: '{current_query}'\n\nContent Snippets:"
+                    f"Analyze snippets for: '{current_query}'. Extract key facts, figures, and insights. "
+                    "Be concise, ignore irrelevant content, and prioritize authoritative sources. "
+                    "Focus on the main topic and avoid discussing the research process itself.\n\nContent Snippets:"
                 )
-                chunk_summaries, references, extracted_data = await process_in_chunks(
-                    unique_search_results, current_query, prompt_prefix, fetch_options
-                )
-
+                fetch_options = {'extract_links': extract_links, 'extract_emails': extract_emails}
+                chunk_summaries, refs, extracted = await process_in_chunks(unique_results, current_query, prompt_prefix, fetch_options)
                 all_summaries.extend(chunk_summaries)
-                all_extracted_data.extend(extracted_data)  # Accumulate extracted data
+                all_references.extend(refs)
+                all_extracted_data.extend(extracted)
 
-                # Shorten URLs *within* the iteration, while the session is active
-                shortened_references_iteration = await asyncio.gather(
-                    *[async_get_shortened_url(session, ref) for ref in references]
-                )
-                all_references.extend(shortened_references_iteration) # accumulate all the references
-
-
-                if iteration < max_iterations - 1:  # Don't refine if it's the last iteration
+                if iteration < max_iterations - 1:
                     if all_summaries:
-                        # Refine query with Gemini
                         refinement_prompt = (
-                            "Analyze the following research summaries to identify key themes, concepts, and entities. "
-                            "Suggest 3-5 new, more specific search queries to deepen the research. "
-                            "Also, identify any gaps or areas needing further investigation.\n\n"
-                            "Research Summaries:\n" + "\n\n".join(all_summaries) + "\n\n"
-                            "Provide refined search queries and identify gaps."
+                            "Analyze the following research summaries to identify key themes and entities. "
+                            "Suggest 3-5 new, more specific search queries that are *directly related* to the original topic. "
+                            "Identify any gaps in the current research and suggest queries to address those gaps. "
+                            "Do not suggest overly broad or generic queries. Focus on refining the search.\n\n"
+                            "Research Summaries:\n" + "\n".join(all_summaries) + "\n\n"
+                            "Provide refined search queries."
                         )
-                        refined_response = await async_generate_gemini_response(refinement_prompt)
-                        # Extract new queries (basic splitting, can be improved with more robust parsing)
+                        refined_response = await async_generate_gemini_response(refinement_prompt, model_name=model_name)
                         new_queries = [q.strip() for q in refined_response.split('\n') if q.strip()]
-                        current_query = " ".join(new_queries[:3])  # Use top 3 queries for next iteration
+                        current_query = " ".join(new_queries[:3])  # Use top queries
                     else:
-                        logging.info("No summaries available for refinement. Skipping to next iteration.")
-                        break  # Skip to the next iteration immediately if no summaries
+                        logging.info("No summaries for refinement. Skipping to next iteration.")
+                        break  # or continue, depending on whether you want *any* result
 
-            # --- Final Synthesis (OUTSIDE the iteration loop, but INSIDE the session) ---
+            # --- Final Report Generation ---
             if all_summaries:
                 final_prompt = (
-                    "DEEP RESEARCH REPORT: Synthesize a detailed report from web research summaries on: '{search_query}'. "
-                    "Integrate information from all iterations, identify overarching themes, compare different viewpoints, "
-                    "and provide a balanced, comprehensive analysis.  Ensure the report is insightful, informative, "
-                    "well-structured, and clear. Discard any redundant information. "
-                    "Aim for a detailed yet concise overview (suitable for a 5-7 page PDF).\n\n"
-                    "Research Summaries (from all iterations):\n"
-                    + "\n\n".join(all_summaries) + "\n\n"
-                    "Generate a DEEP RESEARCH REPORT in Markdown format suitable for PDF conversion."
+                    "DEEP RESEARCH REPORT: Synthesize a comprehensive report from web research on the topic: '{search_query}'. "
+                    "Integrate information from all iterations, identify major themes, compare different viewpoints, and provide a balanced and objective analysis. "
+                    "Discard any redundant or irrelevant information.  Prioritize clarity and conciseness. "
+                    "Aim for a well-structured report suitable for conversion to a 5-7 page PDF. "
+                    "Do *not* include any discussion of the research methods or tools used – focus solely on the findings.\n\n"
+                    "Research Summaries (from all iterations):\n" + "\n\n".join(all_summaries) + "\n\n"
+                    "Generate the report in Markdown format."
                 )
-                final_explanation = await async_generate_gemini_response(final_prompt, response_format=output_format)
+                final_explanation = await async_generate_gemini_response(final_prompt, response_format=output_format, model_name=model_name)
             else:
-                final_explanation = "No relevant content found for deep research report."
-
-            # --- End of 'async with' block: session is closed here ---
+                final_explanation = "No relevant content found for the given query."
 
         global conversation_history
         conversation_history.append({"role": "user", "parts": [f"Deep research query: {search_query}"]})
@@ -688,52 +698,92 @@ async def deep_research_endpoint():
         end_time = time.time()
         elapsed_time = end_time - start_time
 
-        # NO aiohttp requests here! Session is closed.
-
         if download_pdf:
-            pdf_buffer = await generate_pdf(search_query, final_explanation, all_references) # Pass the all_references here
+            pdf_buffer = await generate_pdf(search_query, final_explanation, all_references)
+            update_last_request_time(model_name)
+            sanitized_filename = quote_plus(search_query)
             return send_file(
                 pdf_buffer,
                 as_attachment=True,
-                download_name=f"deep_research_{search_query.replace(' ', '_')}.pdf",
+                download_name=f"deep_research_{sanitized_filename}.pdf",
                 mimetype='application/pdf'
             )
 
+        # --- JSON, CSV, and Markdown Responses (Similar to before) ---
         response_data = {
             "explanation": final_explanation,
             "references": all_references,
             "history": conversation_history,
             "elapsed_time": f"{elapsed_time:.2f} seconds",
-            "extracted_data": all_extracted_data
+            "extracted_data": all_extracted_data,
         }
 
+        if output_format == 'json':
+            if isinstance(final_explanation, dict):  # Handle potential JSON error
+                response_data = final_explanation
+            else:
+                response_data = {"explanation": final_explanation} #Ensure it's a dict.
+            response_data.update({
+                "references": all_references,
+                "history": conversation_history,
+                "elapsed_time": f"{elapsed_time:.2f} seconds",
+                "extracted_data": all_extracted_data
+            })
+            update_last_request_time(model_name)
+            return jsonify(response_data)
+
+        elif output_format == 'csv':
+            if isinstance(final_explanation, list):
+                response_data = {"explanation": final_explanation}
+            elif isinstance(final_explanation, dict) and "raw_text" in final_explanation:
+                response_data = {"explanation": final_explanation["raw_text"]}
+            else:
+                response_data = {"explanation": final_explanation}
+            response_data.update({
+                "references": all_references,
+                "history": conversation_history,
+                "elapsed_time": f"{elapsed_time:.2f} seconds",
+                "extracted_data": all_extracted_data
+            })
+            update_last_request_time(model_name)
+            return jsonify(response_data)
+
+
+        update_last_request_time(model_name)  # Update after successful response
         return jsonify(response_data)
 
+
     except Exception as e:
-        logging.exception(f"Error in deep research: {e}")
+        logging.exception(f"Error in deep research: {e}")  # Log full traceback
         return jsonify({"error": str(e)}), 500
 
+
+
 def parse_markdown_table(markdown_table_string):
-    """Parses a Markdown table string and returns data as a list of lists."""
+    """
+    Parses a Markdown table string and returns data as a list of lists.
+    Handles tables with or without separator lines.
+    """
     lines = markdown_table_string.strip().split('\n')
-    header = [s.strip() for s in lines[0].split('|') if s.strip()]
     data = []
 
-    # Check if there's a separator line (required for valid Markdown tables)
-    if len(lines) > 1 and set(lines[1].replace('|', '').replace('-', '').strip()) == set():
-        for line in lines[2:]:
-            row = [s.strip() for s in line.split('|') if s.strip()]
-            # Ensure consistent number of columns
-            if len(row) == len(header):
-                data.append(row)
-    else:  # Handle cases without a separator line (treat all lines as data)
-        for line in lines:
-            row = [s.strip() for s in line.split('|') if s.strip()]
-            if len(row) == len(header): # Only add the row if col length is same.
-                data.append(row)
+    for line in lines:
+        row = [s.strip() for s in line.split('|') if s.strip()]
+        if row:  # Ignore empty rows
+            data.append(row)
 
+    # If there's a separator line, remove it.  But we don't *require* it.
+    if len(data) > 1 and all(set(c) <= set('-| ') for c in data[1]):
+        data.pop(1)
 
-    return [header] + data  # Return header and data rows
+    # Handle inconsistent column counts (fill with empty strings)
+    if data:  # Make sure data is not empty
+      max_cols = max(len(row) for row in data)
+      for row in data:
+          while len(row) < max_cols:
+              row.append('')  # Pad with empty strings
+
+    return data
 
 
 async def generate_pdf(report_title, content, references):
@@ -743,6 +793,10 @@ async def generate_pdf(report_title, content, references):
                             topMargin=0.7*inch, bottomMargin=0.7*inch)
     styles = getSampleStyleSheet()
 
+    # --- Dynamic Date ---
+    today = date.today()
+    formatted_date = today.strftime("%B %d, %Y")
+
     # Define custom styles
     title_style = ParagraphStyle(
         'TitleStyle',
@@ -751,30 +805,30 @@ async def generate_pdf(report_title, content, references):
         leading=36,
         spaceAfter=24,
         alignment=TA_CENTER,
-        textColor=HexColor("#343a40"),  # Dark gray
+        textColor=HexColor("#343a40"),
         fontName='Helvetica-Bold'
     )
 
     heading1_style = ParagraphStyle(
         'Heading1Style',
         parent=styles['Heading1'],
-        fontSize=18,
-        leading=24,
-        spaceBefore=18,
-        spaceAfter=12,
-        textColor=HexColor("#5e5ce6"),  # Darker blue
+        fontSize=20,
+        leading=26,
+        spaceBefore=20,
+        spaceAfter=14,
+        textColor=HexColor("#0056b3"),
         fontName='Helvetica-Bold',
-        keepWithNext=True  # Keep headings with the following paragraph
+        keepWithNext=True
     )
 
     heading2_style = ParagraphStyle(
         'Heading2Style',
         parent=styles['Heading2'],
-        fontSize=14,
-        leading=18,
-        spaceBefore=12,
-        spaceAfter=6,
-        textColor=HexColor("#495057"),  # Dark gray
+        fontSize=16,
+        leading=20,
+        spaceBefore=14,
+        spaceAfter=8,
+        textColor=HexColor("#007bff"),
         fontName='Helvetica-Bold',
         keepWithNext=True
     )
@@ -786,8 +840,8 @@ async def generate_pdf(report_title, content, references):
         leading=18,
         spaceAfter=12,
         alignment=TA_JUSTIFY,
-        textColor=HexColor("#343a40"),  # Dark gray
-        firstLineIndent=0.5*inch # Add first line indentation
+        textColor=HexColor("#212529"),
+        firstLineIndent=0.5*inch
     )
 
     bullet_style = ParagraphStyle(
@@ -795,12 +849,12 @@ async def generate_pdf(report_title, content, references):
         parent=styles['Normal'],
         fontSize=12,
         leading=18,
-        spaceAfter=6,
-        leftIndent=36,  # Indent for bullet points
+        spaceAfter=8,
+        leftIndent=36,
         bulletFontName='Helvetica',
         bulletFontSize=12,
-        bulletColor=HexColor("#5e5ce6"),  # Darker blue
-        textColor=HexColor("#343a40"),  # Dark gray
+        bulletColor=HexColor("#007bff"),
+        textColor=HexColor("#212529"),
         firstLineIndent=0.5*inch
     )
 
@@ -810,7 +864,7 @@ async def generate_pdf(report_title, content, references):
         fontSize=11,
         leading=14,
         spaceAfter=6,
-        textColor=HexColor("#5e5ce6"), # Darker Blue
+        textColor=HexColor("#0056b3"),
         underline=True,
         alignment=TA_LEFT,
         leftIndent=36
@@ -821,75 +875,88 @@ async def generate_pdf(report_title, content, references):
         parent=styles['Italic'],
         fontSize=10,
         alignment=TA_CENTER,
-        textColor=HexColor("#777777"),  # Gray
-        spaceBefore=36,  # Add space before the footer
+        textColor=HexColor("#6c757d"),
+        spaceBefore=36,
     )
+
+    # --- Table Styles (using TableStyle object) ---
+    table_base_style = [
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, HexColor("#d9d9d9")),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 6),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+    ]
+
+    table_header_style = table_base_style + [
+        ('BACKGROUND', (0, 0), (-1, 0), HexColor("#007bff")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), HexColor("#ffffff")),
+    ]
 
 
     story = []
-    story.append(Paragraph(report_title, title_style))
+    story.append(Paragraph(f"{report_title} - {formatted_date}", title_style))
     story.append(Spacer(1, 0.5*inch))
 
-   # Process the Markdown content
-    for line in content.splitlines():
-        line = line.strip()
-        if line.startswith('# '):  # Heading 1
-            section_title = line.replace('# ', '').strip()
-            story.append(Paragraph(section_title, heading1_style))
-            story.append(Spacer(1, 0.1*inch)) # Add space after heading
 
-        elif line.startswith('## '): # Heading 2
-             sub_section_title = line.replace('## ', '').strip()
-             story.append(Paragraph(sub_section_title, heading2_style))
-             story.append(Spacer(1, 0.1*inch))
 
-        elif line.startswith('* '):  # Bullet point
-            story.append(Paragraph(line.lstrip('* '), bullet_style, bulletText='•'))
-        elif line.startswith('|'): # Table
-            # Check if the next line looks like a separator line
-            table_data = parse_markdown_table(content)
+    # --- Improved Markdown Parsing and Table Handling ---
+    paragraphs = content.split('\n\n')
+    for paragraph_text in paragraphs:
+        # --- Table Handling (FIRST) ---
+        if paragraph_text.strip().startswith('|'):
+            table_data = parse_markdown_table(paragraph_text)
             if table_data:
                 table = Table(table_data)
-                table.setStyle(TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), HexColor("#f2f2f2")),  # Header background
-                    ('TEXTCOLOR', (0, 0), (-1, 0), HexColor("#333333")),  # Header text color
-                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align all cells
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold header
-                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Header padding
-                    ('GRID', (0, 0), (-1, -1), 1, black),  # Grid lines
-                    ('FONTSIZE', (0, 0), (-1, -1), 10) #Set font size
-                ]))
+                if len(table_data) > 1:
+                    table.setStyle(TableStyle(table_header_style))
+                else:
+                    table.setStyle(TableStyle(table_base_style))
                 story.append(table)
-                story.append(Spacer(1, 0.2*inch))
-            continue  # Skip to the next line after processing the table
-
-        elif line: # Regular Paragraph
-
-            formatted_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
-            formatted_line = re.sub(r'\*(.*?)\*', r'<i>\1</i>', formatted_line)
-            formatted_line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', formatted_line) # Handle links
-
-            p = Paragraph(formatted_line, paragraph_style)
-            story.append(p)
-            story.append(Spacer(1, 0.1*inch)) # Add space after each paragraph
+                story.append(Spacer(1, 0.2 * inch))
+            continue
 
 
-    # Add references (if any)
+        # ---  Process *non-table* Markdown elements ---
+        lines = paragraph_text.splitlines()
+        for line in lines:
+            line = line.strip()
+            if line.startswith('# '):
+                story.append(Paragraph(line[2:].strip(), heading1_style))
+                story.append(Spacer(1, 0.1*inch))
+            elif line.startswith('## '):
+                story.append(Paragraph(line[3:].strip(), heading2_style))
+                story.append(Spacer(1, 0.1*inch))
+
+            elif line.startswith('* '):
+                story.append(Paragraph(line.lstrip('* ').replace('*', ''), bullet_style, bulletText='•'))
+            elif line:
+                formatted_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
+                formatted_line = re.sub(r'\*(.*?)\*', r'<i>\1</i>', formatted_line)
+                formatted_line = re.sub(r'[*]', '', formatted_line)
+                formatted_line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', formatted_line)
+                story.append(Paragraph(formatted_line, paragraph_style))
+                story.append(Spacer(1, 0.1*inch))
+
     if references:
-        story.append(PageBreak())  # New page for references
+        story.append(PageBreak())
         story.append(Paragraph("References", heading1_style))
         story.append(Spacer(1, 0.2*inch))
         for i, ref in enumerate(references, 1):
             story.append(Paragraph(f"[{i}] <a href=\"{ref}\">{ref}</a>", ref_style))
             story.append(Spacer(1, 0.1*inch))
 
-    current_year = time.localtime().tm_year
-    footer_text = Paragraph(f"Generated by Kv - AI Companion & Deep Research Tool - {current_year}", footer_style)
+    footer_text = Paragraph(f"Generated by Kv - AI Companion & Deep Research Tool - {today.year}", footer_style)
     story.append(footer_text)
 
     doc.build(story)
     buffer.seek(0)
     return buffer
+
 
 
 @app.route('/api/scrape_product', methods=['POST'])
@@ -1090,11 +1157,11 @@ async def scrape_news_from_site(news_url):
             async with session.get(news_url, headers={'User-Agent': get_random_user_agent()}, timeout=10) as news_resp:
                 if news_resp.status == 200:
                     news_soup = BeautifulSoup(await news_resp.text(), 'html.parser')
-                    headlines = news_soup.find_all('h2', limit=30) # Limiting to 30 headlines
+                    headlines = news_soup.find_all('h2', limit=30)
                     for headline in headlines:
                         link_tag = headline.find('a')
                         if link_tag and link_tag.has_attr('href'):
-                            article_link = urljoin(news_url, link_tag['href'])  # Correctly handle relative URLs
+                            article_link = urljoin(news_url, link_tag['href'])
                             articles.append({
                                 "title": headline.text.strip(),
                                 "link": article_link
