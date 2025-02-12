@@ -30,7 +30,7 @@
             --dark-primary-color: #957bbe; /* Lighter purple for dark mode */
             --dark-secondary-color: #b9a2d8;
             --dark-bg-primary: #1e1e24; /* Deeper dark background */
-            --dark-bg-secondary: #2c2c32;
+            --dark-bg-secondary: #2c2c33; /* Slightly lighter secondary background */
             --dark-text-primary: #e0e0e0; /* Softer white for text */
             --dark-text-secondary: #b0b0b0;
             --dark-accent-light: #3a3a40; /*  Darker accent */
@@ -924,8 +924,8 @@
 
                          <div class="nav-dropdown-section-title">Model Options</div>
                          <select id="model-select" class="nav-dropdown-select-group">
-                             <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-                             <option value="gemini-2.0-flash-exp">Gemini 2.0 (Experimental)</option>
+                             <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                             <option value="gemini-2.0-flash-thinking-exp-01-21">Gemini 2.0 Flash (Thinking)</option>
                          </select>
                          <textarea id="custom-instruction" placeholder="Enter custom instructions..." class="nav-dropdown-select-group"></textarea>
 
@@ -985,7 +985,7 @@
                 <!-- Iteration Count Input Group -->
                 <div class="iteration-input-group">
                     <label for="iteration-count">Iterations:</label>
-                    <input type="number" id="iteration-count" value="3" min="1" max="10">
+                    <input type="number" id="iteration-count" value="3" min="1" max="20">
                 </div>
 
                 <div class="action-buttons">
@@ -1046,91 +1046,127 @@
      }
 
      // --- Message Creation (with Typing Indicator) ---
-     function createMessageElement(message, sender, isTyping = false) {
-         const wrapper = document.createElement('div');
-         wrapper.className = `message-wrapper ${sender}-message`; // Added sender-message class for alignment
+    function createMessageElement(message, sender, isTyping = false, outputFormat = 'markdown') {
+        const wrapper = document.createElement('div');
+        wrapper.className = `message-wrapper ${sender}-message`;
 
-         const messageDiv = document.createElement('div');
-         messageDiv.className = 'message';
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
 
-         const avatar = document.createElement('div');
-         avatar.className = `avatar ${sender}-avatar`;
-         avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+        const avatar = document.createElement('div');
+        avatar.className = `avatar ${sender}-avatar`;
+        avatar.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
 
-         const content = document.createElement('div');
-         content.className = 'message-content';
+        const content = document.createElement('div');
+        content.className = 'message-content';
 
-         const header = document.createElement('div');
-         header.className = 'message-header';
+        const header = document.createElement('div');
+        header.className = 'message-header';
 
-         const senderName = document.createElement('div');
-         senderName.className = 'message-sender';
-         senderName.textContent = sender === 'user' ? 'You' : 'Kv';
+        const senderName = document.createElement('div');
+        senderName.className = 'message-sender';
+        senderName.textContent = sender === 'user' ? 'You' : 'Kv';
 
-         const time = document.createElement('div');
-         time.className = 'message-time';
-         time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-         header.appendChild(senderName);
-         header.appendChild(time);
-         content.appendChild(header);
+        header.appendChild(senderName);
+        header.appendChild(time);
+        content.appendChild(header);
 
-         const text = document.createElement('div');
-         text.className = 'message-text';
+        const text = document.createElement('div');
+        text.className = 'message-text';
 
-         // Typing indicator (only for AI messages)
-         if (isTyping && sender === 'ai') {
-             const typingIndicator = document.createElement('div');
-             typingIndicator.className = 'typing-indicator';
-             typingIndicator.innerHTML = `
-                 <span class="typing-dot"></span>
-                 <span class="typing-dot"></span>
-                 <span class="typing-dot"></span>
-             `;
-             content.appendChild(typingIndicator);
-         } else {
-              // Handle markdown and references
-             let formattedMessage = message;
-             const referencesMatch = message.match(/\*\*References:\*\*([\s\S]*?)(?=\n\n|$)/);
 
-             if (referencesMatch) {
-                 formattedMessage = message.replace(referencesMatch[0], '');
+        // Typing indicator (only for AI messages)
+        if (isTyping && sender === 'ai') {
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = `
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            `;
+            content.appendChild(typingIndicator);
+        } else {
+             if (outputFormat === 'json') {
+                // Handle JSON output (display as pretty-printed JSON)
+                try {
+                    const jsonObject = JSON.parse(message);
+                    text.innerHTML = `<pre>${JSON.stringify(jsonObject, null, 2)}</pre>`;
+                } catch (e) {
+                    text.textContent = `Error: Invalid JSON response: ${message}`;
+                }
+            } else if (outputFormat === 'csv') {
+                    // Handle CSV output (display as a simple HTML table)
+                const table = document.createElement('table');
+                table.style.borderCollapse = 'collapse';
+                table.style.width = '100%';
 
-                 const referencesSection = document.createElement('div');
-                 referencesSection.className = 'references-section';
+                const rows = message.split('\n').filter(row => row.trim() !== ''); // Split by lines, remove empty lines
+                rows.forEach(row => {
+                    const cells = row.split(',').map(cell => cell.trim());  //split by commas
+                    const tr = document.createElement('tr');
+                    cells.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell;
+                        td.style.border = '1px solid #ddd'; // Add border
+                        td.style.padding = '8px';
+                        tr.appendChild(td);
+                    });
+                    table.appendChild(tr);
 
-                 const referencesHeader = document.createElement('div');
-                 referencesHeader.className = 'references-header';
-                 referencesHeader.innerHTML = '<i class="fas fa-chevron-right"></i> References';
+                });
 
-                 const referencesContent = document.createElement('div');
-                 referencesContent.className = 'references-content';
-                 referencesContent.innerHTML = referencesMatch[1].trim().split('\n').map(ref => {
-                     const match = ref.match(/\[(.*?)\]\((.*?)\)/);
-                     return match ? `<a href="${match[2]}" target="_blank" rel="noopener noreferrer">${match[1]}</a><br>` : ref + '<br>';
-                 }).join('');
+                text.appendChild(table);
 
-                 referencesHeader.addEventListener('click', () => {
-                     referencesContent.classList.toggle('show');
-                     referencesHeader.querySelector('i').style.transform = referencesContent.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
-                 });
 
-                 referencesSection.appendChild(referencesHeader);
-                 referencesSection.appendChild(referencesContent);
-                 content.appendChild(referencesSection);
-             }
+            } else {
+                // Handle markdown (default) and references
+                let formattedMessage = message;
+                const referencesMatch = message.match(/\*\*References:\*\*([\s\S]*?)(?=\n\n|$)/);
 
-             formattedMessage = formattedMessage
-                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                 .replace(/```(.*?)```/gs, (match, p1) => `<pre style="white-space: pre-wrap; word-wrap: break-word;"><code>${p1.trim()}</code></pre>`) //Improved code block handling
-                 .replace(/`(.*?)`/g, '<code>$1</code>')
-                 .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-                 .replace(/\n/g, '<br>');
+                if (referencesMatch) {
+                    formattedMessage = message.replace(referencesMatch[0], '');
 
-             text.innerHTML = formattedMessage;
-              content.appendChild(text);
-         }
+                    const referencesSection = document.createElement('div');
+                    referencesSection.className = 'references-section';
+
+                    const referencesHeader = document.createElement('div');
+                    referencesHeader.className = 'references-header';
+                    referencesHeader.innerHTML = '<i class="fas fa-chevron-right"></i> References';
+
+                    const referencesContent = document.createElement('div');
+                    referencesContent.className = 'references-content';
+                    referencesContent.innerHTML = referencesMatch[1].trim().split('\n').map(ref => {
+                        const match = ref.match(/\[(.*?)\]\((.*?)\)/);
+                        return match ? `<a href="${match[2]}" target="_blank" rel="noopener noreferrer">${match[1]}</a><br>` : ref + '<br>';
+                    }).join('');
+
+                    referencesHeader.addEventListener('click', () => {
+                        referencesContent.classList.toggle('show');
+                        referencesHeader.querySelector('i').style.transform = referencesContent.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
+                    });
+
+                    referencesSection.appendChild(referencesHeader);
+                    referencesSection.appendChild(referencesContent);
+                    content.appendChild(referencesSection);
+                }
+
+                formattedMessage = formattedMessage
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/```(.*?)```/gs, (match, p1) => `<pre style="white-space: pre-wrap; word-wrap: break-word;"><code>${p1.trim()}</code></pre>`) //Improved code block handling
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
+                    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+                    .replace(/\n/g, '<br>');
+
+                text.innerHTML = formattedMessage;
+            }
+            content.appendChild(text);
+        }
+
 
          // Image (only for user messages)
          if (base64Image && sender === 'user') {
@@ -1159,11 +1195,11 @@
          return wrapper;
      }
 
-     function addMessage(message, sender, isTyping = false) {
-         const messageElement = createMessageElement(message, sender, isTyping);
-         chatArea.appendChild(messageElement);
-         chatArea.scrollTop = chatArea.scrollHeight;
-     }
+    function addMessage(message, sender, isTyping = false, outputFormat = 'markdown') {
+        const messageElement = createMessageElement(message, sender, isTyping, outputFormat);
+        chatArea.appendChild(messageElement);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
 
      // --- Clear Chat ---
      function clearChat() {
@@ -1192,135 +1228,135 @@
      }
 
      // --- Handle Search ---
-     function handleSearch(endpoint, prefix = '') {
-         const query = userInput.value.trim();
-         if (!query) return;
+    function handleSearch(endpoint, prefix = '') {
+        const query = userInput.value.trim();
+        if (!query) return;
 
-         addMessage(`${prefix}${query}`, 'user');
-         userInput.value = '';
-         userInput.style.height = 'auto';
+        addMessage(`${prefix}${query}`, 'user');
+        userInput.value = '';
+        userInput.style.height = 'auto';
 
-         const typingMessage = createMessageElement('', 'ai', true);
-         chatArea.appendChild(typingMessage);
-         chatArea.scrollTop = chatArea.scrollHeight;
+        const typingMessage = createMessageElement('', 'ai', true);
+        chatArea.appendChild(typingMessage);
+        chatArea.scrollTop = chatArea.scrollHeight;
 
-         const selectedSearchEngines = Array.from(searchEnginesGroup.querySelectorAll('input[name="search_engine"]:checked'))
-                                             .map(checkbox => checkbox.value);
-         const outputFormat = outputFormatSelect.value;
-         const extractLinks = extractLinksCheckbox.checked;
-         const extractEmails = extractEmailsCheckbox.checked;
-         const downloadPdf = endpoint === 'deep_research';
-         const iterationCount = parseInt(iterationCountInput.value, 10); // Get iteration count
-
-
-         fetch(`/api/${endpoint}`, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({
-                 query: query,
-                 search_engines: selectedSearchEngines,
-                 output_format: outputFormat,
-                 extract_links: extractLinks,
-                 extract_emails: extractEmails,
-                 download_pdf: downloadPdf,
-                 max_iterations: iterationCount, // Send iteration count
-             })
-         })
-       .then(response => {
-         if (endpoint === 'deep_research' && downloadPdf) {
-            if (response.ok) {
-                 response.blob().then(blob => {
-                     const url = window.URL.createObjectURL(blob);
-                     const a = document.createElement('a');
-                     a.style.display = 'none';
-                     a.href = url;
-                     a.download = `deep_research_${query.replace(' ', '_')}.pdf`;
-                     document.body.appendChild(a);
-                     a.click();
-                     window.URL.revokeObjectURL(url);
-
-                     typingMessage.remove();
-                     addMessage('Deep research report downloaded successfully!\n\n' + '**Displaying report content below:**', 'ai'); // Added display message
-
-                     response.text().then(reportText => { //fetch text content for display in chat
-                          fetch(`/api/${endpoint}`, { // Re-fetch JSON response to get explanation for chat
-                               method: 'POST',
-                               headers: { 'Content-Type': 'application/json' },
-                               body: JSON.stringify({
-                                   query: query,
-                                   search_engines: selectedSearchEngines,
-                                   output_format: outputFormat,
-                                   extract_links: extractLinks,
-                                   extract_emails: extractEmails,
-                                   download_pdf: false, // important to set download_pdf to false this time
-                                   max_iterations: iterationCount,
-                               })
-                           })
-                           .then(res => res.json())
-                           .then(chatData => {
-                              if (chatData.explanation) {
-                                  addMessage(chatData.explanation, 'ai'); // display report in chat after download
-                                   if (chatData.references && chatData.references.length > 0) {
-                                        const formattedRefs = "**References:**\n" + chatData.references.map(ref => `- [${ref}](${ref})`).join('\n');
-                                        addMessage(formattedRefs, 'ai');
-                                    }
-                                    if (chatData.elapsed_time) {
-                                        addMessage(`_Time taken: ${chatData.elapsed_time}_`, 'ai');
-                                    }
-                                    if (chatData.extracted_data) {
-                                        console.log("Extracted Data:", chatData.extracted_data);
-                                    }
-                               } else if (chatData.error) {
-                                    addMessage(`Error displaying report content: ${chatData.error}`, 'ai');
-                                }
-                           });
+        const selectedSearchEngines = Array.from(searchEnginesGroup.querySelectorAll('input[name="search_engine"]:checked'))
+                                            .map(checkbox => checkbox.value);
+        const outputFormat = outputFormatSelect.value;
+        const extractLinks = extractLinksCheckbox.checked;
+        const extractEmails = extractEmailsCheckbox.checked;
+        const downloadPdf = endpoint === 'deep_research';
+        const iterationCount = parseInt(iterationCountInput.value, 10); // Get iteration count
 
 
-                     });
+        fetch(`/api/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                query: query,
+                search_engines: selectedSearchEngines,
+                output_format: outputFormat,
+                extract_links: extractLinks,
+                extract_emails: extractEmails,
+                download_pdf: downloadPdf,
+                max_iterations: iterationCount, // Send iteration count
+            })
+        })
+      .then(response => {
+        if (endpoint === 'deep_research' && downloadPdf) {
+           if (response.ok) {
+                response.blob().then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = `deep_research_${query.replace(' ', '_')}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
 
-
-                 });
-            } else {
-                 response.json().then(data => {
                     typingMessage.remove();
-                    addMessage(`Error: ${data.error || 'Failed to download PDF'}`, 'ai');
+                    addMessage('Deep research report downloaded successfully!\n', 'ai'); // Added display message
 
-                 }).catch(() => {
-                    typingMessage.remove();
-                     addMessage('Error: Failed to download PDF', 'ai');
-                 });
+                    response.text().then(reportText => { //fetch text content for display in chat
+                         fetch(`/api/${endpoint}`, { // Re-fetch JSON response to get explanation for chat
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                  query: query,
+                                  search_engines: selectedSearchEngines,
+                                  output_format: outputFormat, //keep output format
+                                  extract_links: extractLinks,
+                                  extract_emails: extractEmails,
+                                  download_pdf: false, // important to set download_pdf to false this time
+                                  max_iterations: iterationCount,
+                              })
+                          })
+                          .then(res => res.json())
+                          .then(chatData => {
+                             if (chatData.explanation) {
+                                 addMessage(chatData.explanation, 'ai', false, outputFormat); // Pass outputFormat
+                                  if (chatData.references && chatData.references.length > 0) {
+                                       const formattedRefs = "**References:**\n" + chatData.references.map(ref => `- [${ref}](${ref})`).join('\n');
+                                       addMessage(formattedRefs, 'ai');
+                                   }
+                                   if (chatData.elapsed_time) {
+                                       addMessage(`_Time taken: ${chatData.elapsed_time}_`, 'ai');
+                                   }
+                                   if (chatData.extracted_data) {
+                                       console.log("Extracted Data:", chatData.extracted_data);
+                                   }
+                              } else if (chatData.error) {
+                                   addMessage(`Error displaying report content: ${chatData.error}`, 'ai');
+                               }
+                          });
+
+
+                    });
+
+
+                });
+           } else {
+                response.json().then(data => {
+                   typingMessage.remove();
+                   addMessage(`Error: ${data.error || 'Failed to download PDF'}`, 'ai');
+
+                }).catch(() => {
+                   typingMessage.remove();
+                    addMessage('Error: Failed to download PDF', 'ai');
+                });
+           }
+            return;
+        }
+          return response.json();
+      })
+      .then(data => {
+        if(!data) return;
+
+        typingMessage.remove();
+        if (data.explanation) {
+            addMessage(data.explanation, 'ai', false, outputFormat); // Pass outputFormat
+            if (data.references && data.references.length > 0) {
+                const formattedRefs = "**References:**\n" + data.references.map(ref => `- [${ref}](${ref})`).join('\n');
+                addMessage(formattedRefs, 'ai');
             }
-             return;
-         }
-           return response.json();
-       })
-       .then(data => {
-         if(!data) return;
-
+             if (data.elapsed_time) {
+              addMessage(`_Time taken: ${data.elapsed_time}_`, 'ai');
+            }
+            if (data.extracted_data) {
+                console.log("Extracted Data:", data.extracted_data);
+            }
+        }
+        if (data.error) {
+            addMessage(`Error: ${data.error}`, 'ai');
+        }
+    })
+    .catch(error => {
          typingMessage.remove();
-         if (data.explanation) {
-             addMessage(data.explanation, 'ai');
-             if (data.references && data.references.length > 0) {
-                 const formattedRefs = "**References:**\n" + data.references.map(ref => `- [${ref}](${ref})`).join('\n');
-                 addMessage(formattedRefs, 'ai');
-             }
-              if (data.elapsed_time) {
-               addMessage(`_Time taken: ${data.elapsed_time}_`, 'ai');
-             }
-             if (data.extracted_data) {
-                 console.log("Extracted Data:", data.extracted_data);
-             }
-         }
-         if (data.error) {
-             addMessage(`Error: ${data.error}`, 'ai');
-         }
-     })
-     .catch(error => {
-          typingMessage.remove();
-         console.error('Error:', error);
-         addMessage('An unexpected error occurred.', 'ai');
-     });
- }
+        console.error('Error:', error);
+        addMessage('An unexpected error occurred.', 'ai');
+    });
+}
 
      // --- Send Message ---
      function sendMessage() {
