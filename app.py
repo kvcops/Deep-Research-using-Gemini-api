@@ -28,6 +28,7 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 from reportlab.lib.colors import HexColor, black
 import csv
 from datetime import date
+import math
 
 load_dotenv()
 
@@ -58,25 +59,30 @@ conversation_history = []
 
 # Rate limiting for deep research
 deep_research_rate_limits = {
-    "gemini-2.0-flash": {"requests_per_minute": 15, "last_request": 0},
-    "gemini-2.0-flash-thinking-exp-01-21": {"requests_per_minute": 10, "last_request": 0}
+    "gemini-2.0-flash": {"requests_per_minute": 15, "last_request": 0, "lock": asyncio.Lock()},
+    "gemini-2.0-flash-thinking-exp-01-21": {"requests_per_minute": 10, "last_request": 0, "lock": asyncio.Lock()}
 }
 DEFAULT_DEEP_RESEARCH_MODEL = "gemini-2.0-flash"
 
-def is_rate_limited(model_name):
+
+async def rate_limit_model(model_name):
+    """Applies rate limiting to the specified Gemini model using a token bucket algorithm."""
     if model_name not in deep_research_rate_limits:
-        return False
+        return  # No rate limiting for this model
 
-    now = time.time()
     rate_limit_data = deep_research_rate_limits[model_name]
-    time_since_last_request = now - rate_limit_data["last_request"]
-    if time_since_last_request < 60 / rate_limit_data["requests_per_minute"]:
-        return True
-    return False
+    async with rate_limit_data["lock"]:  # Use asyncio.Lock
+        now = time.time()
+        time_since_last_request = now - rate_limit_data["last_request"]
+        requests_per_minute = rate_limit_data["requests_per_minute"]
+        wait_time = max(0, 60 / requests_per_minute - time_since_last_request)
 
-def update_last_request_time(model_name):
-    if model_name in deep_research_rate_limits:
-        deep_research_rate_limits[model_name]["last_request"] = time.time()
+        if wait_time > 0:
+            logging.info(f"Rate limiting {model_name}, waiting for {wait_time:.2f} seconds")
+            await asyncio.sleep(wait_time)
+
+        rate_limit_data["last_request"] = time.time()
+
 
 def get_random_user_agent():
     return random.choice(config.USER_AGENTS)
@@ -396,6 +402,7 @@ def generate_alternative_queries(original_query):
 
 @retry(wait=wait_exponential(multiplier=1, min=4, max=10), stop=stop_after_attempt(3))
 async def async_generate_gemini_response(prompt, model_name="gemini-2.0-flash", response_format="markdown"):
+    await rate_limit_model(model_name) #Apply rate limit
     parts = [{"role": "user", "parts": [{"text": prompt}]}]
     safety_settings = {
         "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
@@ -445,7 +452,7 @@ async def chat():
         user_message = data.get('message', '')
         image_data = data.get('image')
         custom_instruction = data.get('custom_instruction')
-        model_name = data.get('model_name', 'gemini-2.0-flash')
+        model_name = data.get('model_name', 'gemini-2.0-flash')  # Default model
 
         safety_settings = {
             "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
@@ -454,13 +461,20 @@ async def chat():
             "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
         }
 
+        # System instruction handling (prepend if new conversation)
         if custom_instruction and len(conversation_history) == 0:
-            conversation_history.append({"role": "user", "parts": [custom_instruction]})
-            conversation_history.append({"role": "model", "parts": ["Understood."] })
+             # Initialize conversation with system instruction
+            system_instruction = {"role": "system", "parts": [custom_instruction]}
+            conversation_history.append(system_instruction)
+            conversation_history.append({"role": "model", "parts": ["Understood."] }) # Add a confirmation
+
 
         parts = []
+        # Add existing conversation history
         for item in conversation_history:
-            parts.append({"role": item["role"], "parts": [{"text": part} for part in item["parts"]]})
+          parts.append({"role": item["role"], "parts": [{"text": part} for part in item["parts"]]})
+
+        # Add the current user message
         parts.append({"role": "user", "parts": [{"text": user_message}]})
 
         if image_data:
@@ -470,13 +484,16 @@ async def chat():
             else:
                 return jsonify({"error": "Failed to process image"}), 400
 
-        model = genai.GenerativeModel(model_name=model_name)
+        model = genai.GenerativeModel(model_name=model_name) # Use selected model
         response = model.generate_content(parts, safety_settings=safety_settings)
         response_text = response.text
+
+        # --- Post-processing ---
         response_text = re.sub(r'\n+', '\n\n', response_text)
         response_text = re.sub(r'  +', ' ', response_text)
         response_text = re.sub(r'^- ', '* ', response_text, flags=re.MULTILINE)
 
+        # Append user message and AI response to the conversation history
         conversation_history.append({"role": "user", "parts": [user_message]})
         conversation_history.append({"role": "model", "parts": [response_text]})
 
@@ -609,7 +626,6 @@ async def online_search_endpoint():
         logging.exception(f"Error in online search: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 @app.route('/api/deep_research', methods=['POST'])
 async def deep_research_endpoint():
     try:
@@ -619,10 +635,7 @@ async def deep_research_endpoint():
             return jsonify({"error": "No query provided"}), 400
 
         model_name = data.get('model_name', DEFAULT_DEEP_RESEARCH_MODEL)
-        if is_rate_limited(model_name):
-            rate_limit_data = deep_research_rate_limits[model_name]
-            wait_time = 60 / rate_limit_data["requests_per_minute"] - (time.time() - rate_limit_data["last_request"])
-            return jsonify({"error": f"Rate limit exceeded. Wait {wait_time:.1f}s.", "retry_after": wait_time}), 429
+        #Removed rate limit check here.  It's handled in async_generate_gemini_response
 
         start_time = time.time()
         search_engines_requested = data.get('search_engines', config.SEARCH_ENGINES)
@@ -665,10 +678,10 @@ async def deep_research_endpoint():
                             "Analyze the following research summaries to identify key themes and entities. "
                             "Suggest 3-5 new, more specific search queries that are *directly related* to the original topic. "
                             "Identify any gaps in the current research and suggest queries to address those gaps. "
-                            "Do not suggest overly broad or generic queries. Focus on refining the search.\n\n"
-                            "Research Summaries:\n" + "\n".join(all_summaries) + "\n\n"
+                            "Do not suggest overly broad or generic queries. Focus on refining the search.\"Research Summaries:\n" + "\n".join(all_summaries) + "\n\n"
                             "Provide refined search queries."
                         )
+
                         refined_response = await async_generate_gemini_response(refinement_prompt, model_name=model_name)
                         new_queries = [q.strip() for q in refined_response.split('\n') if q.strip()]
                         current_query = " ".join(new_queries[:3])  # Use top queries
@@ -678,285 +691,413 @@ async def deep_research_endpoint():
 
             # --- Final Report Generation ---
             if all_summaries:
-                final_prompt = (
-                    "DEEP RESEARCH REPORT: Synthesize a comprehensive report from web research on the topic: '{search_query}'. "
-                    "Integrate information from all iterations, identify major themes, compare different viewpoints, and provide a balanced and objective analysis. "
-                    "Discard any redundant or irrelevant information.  Prioritize clarity and conciseness. "
-                    "Aim for a well-structured report suitable for conversion to a 5-7 page PDF. "
-                    "Do *not* include any discussion of the research methods or tools used – focus solely on the findings.\n\n"
-                    "Research Summaries (from all iterations):\n" + "\n\n".join(all_summaries) + "\n\n"
-                    "Generate the report in Markdown format."
-                )
+                if "table" in data.get('output_format', '').lower():
+                    table_prompt = generate_table_prompt(search_query)
+                    final_prompt = (
+                        f"{table_prompt}\n\n"
+                        "Research Content:\n" + "\n\n".join(all_summaries) + "\n\n"
+                        "Generate the comparison table."  # Simplified, as instructions are in table_prompt
+                    )
+                else:
+                    final_prompt = (
+                        "DEEP RESEARCH REPORT: Synthesize a comprehensive report from web research on the topic: '{search_query}'. "
+                        "Integrate information from all iterations, identify major themes, compare different viewpoints, and provide a balanced and objective analysis. "
+                        "Discard any redundant or irrelevant information.  Prioritize clarity and conciseness. "
+                        "Aim for a well-structured report suitable for conversion to a 5-7 page PDF. "
+                        "Do *not* include any discussion of the research methods or tools used – focus solely on the findings.\n\n"
+                        "Research Summaries (from all iterations):\n" + "\n\n".join(all_summaries) + "\n\n"
+                        "Generate the report in Markdown format."
+                    )
+
+
                 final_explanation = await async_generate_gemini_response(final_prompt, response_format=output_format, model_name=model_name)
+
+                # --- Table Parsing and Fallback ---
+                if "table" in output_format.lower():
+                    try:
+                        parsed_table = parse_markdown_table(final_explanation)
+                        if parsed_table:
+                            final_explanation = parsed_table  # Use the parsed table
+                        else:  # Fallback: If parsing fails completely
+                            logging.warning("Table parsing failed.  Returning raw response.")
+                            final_explanation = {"error": "Failed to parse table", "raw_text": final_explanation}
+                    except Exception as e:
+                        logging.error(f"Error during table parsing: {e}")
+                        final_explanation = {"error": "Failed to parse table", "raw_text": final_explanation}
             else:
                 final_explanation = "No relevant content found for the given query."
 
-        global conversation_history
-        conversation_history.append({"role": "user", "parts": [f"Deep research query: {search_query}"]})
-        conversation_history.append({"role": "model", "parts": [final_explanation]})
+            global conversation_history
+            conversation_history.append({"role": "user", "parts": [f"Deep research query: {search_query}"]})
+            conversation_history.append({"role": "model", "parts": [final_explanation]})
 
-        end_time = time.time()
-        elapsed_time = end_time - start_time
+            end_time = time.time()
+            elapsed_time = end_time - start_time
 
-        if download_pdf:
-            pdf_buffer = await generate_pdf(search_query, final_explanation, all_references)
-            update_last_request_time(model_name)
-            sanitized_filename = quote_plus(search_query)
-            return send_file(
-                pdf_buffer,
-                as_attachment=True,
-                download_name=f"deep_research_{sanitized_filename}.pdf",
-                mimetype='application/pdf'
-            )
+            if download_pdf:
+                pdf_buffer = await generate_pdf(search_query, final_explanation if isinstance(final_explanation, str) else "\n".join(str(row) for row in final_explanation), all_references) #handles table data for pdf
+                sanitized_filename = quote_plus(search_query)
+                return send_file(
+                    pdf_buffer,
+                    as_attachment=True,
+                    download_name=f"deep_research_{sanitized_filename}.pdf",
+                    mimetype='application/pdf'
+                )
 
-        # --- JSON, CSV, and Markdown Responses (Similar to before) ---
-        response_data = {
-            "explanation": final_explanation,
-            "references": all_references,
-            "history": conversation_history,
-            "elapsed_time": f"{elapsed_time:.2f} seconds",
-            "extracted_data": all_extracted_data,
-        }
-
-        if output_format == 'json':
-            if isinstance(final_explanation, dict):  # Handle potential JSON error
-                response_data = final_explanation
-            else:
-                response_data = {"explanation": final_explanation} #Ensure it's a dict.
-            response_data.update({
+            # --- JSON, CSV, and Markdown Responses (Similar to before) ---
+            response_data = {
+                "explanation": final_explanation,
                 "references": all_references,
                 "history": conversation_history,
                 "elapsed_time": f"{elapsed_time:.2f} seconds",
-                "extracted_data": all_extracted_data
-            })
-            update_last_request_time(model_name)
+                "extracted_data": all_extracted_data,
+            }
+
+            if output_format == 'json':
+                if isinstance(final_explanation, dict):  # Handle potential JSON error
+                    response_data = final_explanation
+                elif isinstance(final_explanation, list): #handle table data
+                    response_data = {"table_data": final_explanation}
+                else:
+                    response_data = {"explanation": final_explanation} #Ensure it's a dict.
+                response_data.update({
+                    "references": all_references,
+                    "history": conversation_history,
+                    "elapsed_time": f"{elapsed_time:.2f} seconds",
+                    "extracted_data": all_extracted_data
+                })
+                return jsonify(response_data)
+
+            elif output_format == 'csv':
+                if isinstance(final_explanation, list):
+                    response_data = {"explanation": final_explanation}
+                elif isinstance(final_explanation, dict) and "raw_text" in final_explanation:
+                    response_data = {"explanation": final_explanation["raw_text"]}
+                else:
+                    response_data = {"explanation": final_explanation}
+                response_data.update({
+                    "references": all_references,
+                    "history": conversation_history,
+                    "elapsed_time": f"{elapsed_time:.2f} seconds",
+                    "extracted_data": all_extracted_data
+                })
+                return jsonify(response_data)
+
             return jsonify(response_data)
-
-        elif output_format == 'csv':
-            if isinstance(final_explanation, list):
-                response_data = {"explanation": final_explanation}
-            elif isinstance(final_explanation, dict) and "raw_text" in final_explanation:
-                response_data = {"explanation": final_explanation["raw_text"]}
-            else:
-                response_data = {"explanation": final_explanation}
-            response_data.update({
-                "references": all_references,
-                "history": conversation_history,
-                "elapsed_time": f"{elapsed_time:.2f} seconds",
-                "extracted_data": all_extracted_data
-            })
-            update_last_request_time(model_name)
-            return jsonify(response_data)
-
-
-        update_last_request_time(model_name)  # Update after successful response
-        return jsonify(response_data)
-
 
     except Exception as e:
         logging.exception(f"Error in deep research: {e}")  # Log full traceback
         return jsonify({"error": str(e)}), 500
 
 
+def generate_table_prompt(query):
+    """
+    Generates a prompt that enforces strict table formatting rules for consistent output.
+    """
+    prompt = (
+        f"Create a detailed comparison table analyzing: '{query}'\n\n"
+        "STRICT TABLE FORMATTING REQUIREMENTS:\n"
+        "1. Output must be ONLY a properly formatted Markdown table\n"
+        "2. Table must follow this EXACT structure:\n"
+        "   - Header row with clear column names\n"
+        "   - Separator row with exactly three dashes (---) per column\n"
+        "   - Data rows with consistent formatting\n"
+        "3. ALL rows (including header and data) must:\n"
+        "   - Start with a pipe (|)\n"
+        "   - End with a pipe (|)\n"
+        "   - Have exactly one pipe between each column\n"
+        "   - Have exactly one space after each pipe\n"
+        "   - Have exactly one space before each pipe\n"
+        "4. The separator row must:\n"
+        "   - Use exactly three dashes (---) for each column\n"
+        "   - Include alignment colons if needed (:---:)\n"
+        "5. Content rules:\n"
+        "   - Keep cell content concise (max 2-3 lines)\n"
+        "   - Use consistent capitalization\n"
+        "   - Avoid empty cells (use 'N/A' if needed)\n"
+        "   - No line breaks within cells\n\n"
+        "REQUIRED FORMAT EXAMPLE:\n"
+        "| Column 1 | Column 2 | Column 3 |\n"
+        "|----------|----------|----------|\n"
+        "| Data A   | Data B   | Data C   |\n"
+        "| Data D   | Data E   | Data F   |\n\n"
+        "GENERATE THE TABLE NOW:\n"
+        "- Use 3-5 relevant columns\n"
+        "- Include 4-8 data rows\n"
+        "- Ensure ALL content is properly aligned\n"
+        "- Verify each line follows the pipe and spacing rules exactly\n"
+        "Output ONLY the table, with NO additional text before or after."
+    )
+    return prompt
 
 def parse_markdown_table(markdown_table_string):
     """
-    Parses a Markdown table string and returns data as a list of lists.
-    Handles tables with or without separator lines.
+    Parses a Markdown table string with improved robustness.
+    Handles missing pipes, extra spaces, and inconsistent separators.
     """
-    lines = markdown_table_string.strip().split('\n')
-    data = []
+    lines = [line.strip() for line in markdown_table_string.split('\n') if line.strip()]
+    if not lines:
+        return []
+
+    table_data = []
+    header_detected = False  # Flag to track if we've found the header
 
     for line in lines:
-        row = [s.strip() for s in line.split('|') if s.strip()]
-        if row:  # Ignore empty rows
-            data.append(row)
+        # Clean up the line: Remove leading/trailing pipes AND extra spaces *around* pipes
+        line = line.strip().strip('|').replace(' | ', '|').replace('| ', '|').replace(' |', '|')
 
-    # If there's a separator line, remove it.  But we don't *require* it.
-    if len(data) > 1 and all(set(c) <= set('-| ') for c in data[1]):
-        data.pop(1)
+        # Split by pipe (now that we've handled spacing inconsistencies)
+        cells = [cell.strip() for cell in line.split('|')]
 
-    # Handle inconsistent column counts (fill with empty strings)
-    if data:  # Make sure data is not empty
-      max_cols = max(len(row) for row in data)
-      for row in data:
-          while len(row) < max_cols:
-              row.append('')  # Pad with empty strings
+        # Header detection (more flexible):  Look for a line with mostly dashes
+        if all(c in '-:| ' for c in line) and len(cells) > 1 and not header_detected:
+             # Consider it a separator line, but don't require it at a specific index.
+            header_detected = True
+            continue
 
-    return data
+        if cells:  # Add non-empty rows
+            table_data.append(cells)
 
+    # Ensure all rows have the same number of columns (as the *first* row)
+    if table_data:
+      max_cols = len(table_data[0])
+      normalized_data = []
+      for row in table_data:
+          normalized_data.append(row + [''] * (max_cols - len(row)))
+      return normalized_data
+    else:
+      return []
 
 async def generate_pdf(report_title, content, references):
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter,
-                            rightMargin=0.7*inch, leftMargin=0.7*inch,
-                            topMargin=0.7*inch, bottomMargin=0.7*inch)
+                          rightMargin=0.7*inch, leftMargin=0.7*inch,
+                          topMargin=0.7*inch, bottomMargin=0.7*inch)
     styles = getSampleStyleSheet()
 
-    # --- Dynamic Date ---
+    # Get current date
     today = date.today()
     formatted_date = today.strftime("%B %d, %Y")
 
-    # Define custom styles
-    title_style = ParagraphStyle(
-        'TitleStyle',
-        parent=styles['Heading1'],
-        fontSize=28,
-        leading=36,
-        spaceAfter=24,
-        alignment=TA_CENTER,
-        textColor=HexColor("#343a40"),
-        fontName='Helvetica-Bold'
-    )
+    # Custom Styles Definition
+    custom_styles = {
+        'Title': ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            leading=32,
+            spaceAfter=30,
+            alignment=TA_CENTER,
+            textColor=HexColor("#1a237e"),
+            fontName='Helvetica-Bold'
+        ),
+        'Heading1': ParagraphStyle(
+            'CustomHeading1',
+            parent=styles['Heading1'],
+            fontSize=18,
+            leading=24,
+            spaceBefore=24,
+            spaceAfter=16,
+            textColor=HexColor("#283593"),
+            fontName='Helvetica-Bold',
+            keepWithNext=True
+        ),
+        'Heading2': ParagraphStyle(
+            'CustomHeading2',
+            parent=styles['Heading2'],
+            fontSize=16,
+            leading=22,
+            spaceBefore=16,
+            spaceAfter=12,
+            textColor=HexColor("#3949ab"),
+            fontName='Helvetica-Bold',
+            keepWithNext=True
+        ),
+        'Paragraph': ParagraphStyle(
+            'CustomParagraph',
+            parent=styles['Normal'],
+            fontSize=11,
+            leading=16,
+            spaceAfter=12,
+            alignment=TA_JUSTIFY,
+            textColor=HexColor("#212121"),
+            firstLineIndent=0.25*inch
+        ),
+        'TableCell': ParagraphStyle(
+            'CustomTableCell',
+            parent=styles['Normal'],
+            fontSize=10,
+            leading=14,
+            spaceBefore=6,
+            spaceAfter=6,
+            textColor=HexColor("#212121")
+        ),
+        'Bullet': ParagraphStyle(
+            'CustomBullet',
+            parent=styles['Normal'],
+            fontSize=11,
+            leading=16,
+            leftIndent=0.5*inch,
+            rightIndent=0,
+            spaceBefore=6,
+            spaceAfter=6,
+            bulletIndent=0.3*inch,
+            textColor=HexColor("#212121"),
+            bulletFontName='Helvetica',
+            bulletFontSize=11
+        ),
+        'Reference': ParagraphStyle(
+            'CustomReference',
+            parent=styles['Normal'],
+            fontSize=10,
+            leading=14,
+            spaceAfter=6,
+            textColor=HexColor("#1565c0"),
+            alignment=TA_LEFT,
+            leftIndent=0.5*inch
+        ),
+        'Footer': ParagraphStyle(
+            'CustomFooter',
+            parent=styles['Italic'],
+            fontSize=9,
+            alignment=TA_CENTER,
+            textColor=HexColor("#757575"),
+            spaceBefore=36
+        )
+    }
 
-    heading1_style = ParagraphStyle(
-        'Heading1Style',
-        parent=styles['Heading1'],
-        fontSize=20,
-        leading=26,
-        spaceBefore=20,
-        spaceAfter=14,
-        textColor=HexColor("#0056b3"),
-        fontName='Helvetica-Bold',
-        keepWithNext=True
-    )
+    def clean_text(text):
+        # Remove markdown symbols while preserving content
+        text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)  # Bold
+        text = re.sub(r'\*(.*?)\*', r'\1', text)      # Italic
+        text = re.sub(r'`(.*?)`', r'\1', text)        # Code
+        text = re.sub(r'\[(.*?)\]\((.*?)\)', r'\1', text)  # Links
+        # Convert HTML entities
+        text = text.replace('&', '&').replace('<', '<').replace('>', '>')
+        return text.strip()
 
-    heading2_style = ParagraphStyle(
-        'Heading2Style',
-        parent=styles['Heading2'],
-        fontSize=16,
-        leading=20,
-        spaceBefore=14,
-        spaceAfter=8,
-        textColor=HexColor("#007bff"),
-        fontName='Helvetica-Bold',
-        keepWithNext=True
-    )
+    def process_table(table_text):
+        rows = [row.strip() for row in table_text.split('\n') if row.strip()]
+        if len(rows) < 2:  # Need at least header and separator
+            return None
 
-    paragraph_style = ParagraphStyle(
-        'ParagraphStyle',
-        parent=styles['Normal'],
-        fontSize=12,
-        leading=18,
-        spaceAfter=12,
-        alignment=TA_JUSTIFY,
-        textColor=HexColor("#212529"),
-        firstLineIndent=0.5*inch
-    )
+        # Process header
+        header = [clean_text(cell) for cell in rows[0].strip('|').split('|')]
+        
+        # Skip separator row
+        data_rows = []
+        for row in rows[2:]:  # Skip the separator row
+            cells = [clean_text(cell) for cell in row.strip('|').split('|')]
+            data_rows.append(cells)
 
-    bullet_style = ParagraphStyle(
-        'BulletStyle',
-        parent=styles['Normal'],
-        fontSize=12,
-        leading=18,
-        spaceAfter=8,
-        leftIndent=36,
-        bulletFontName='Helvetica',
-        bulletFontSize=12,
-        bulletColor=HexColor("#007bff"),
-        textColor=HexColor("#212529"),
-        firstLineIndent=0.5*inch
-    )
+        # Create table data with processed text
+        table_data = [[Paragraph(cell, custom_styles['TableCell']) for cell in header]]
+        for row in data_rows:
+            table_data.append([Paragraph(cell, custom_styles['TableCell']) for cell in row])
 
-    ref_style = ParagraphStyle(
-        'ReferenceStyle',
-        parent=styles['Normal'],
-        fontSize=11,
-        leading=14,
-        spaceAfter=6,
-        textColor=HexColor("#0056b3"),
-        underline=True,
-        alignment=TA_LEFT,
-        leftIndent=36
-    )
+        # Create table with styling
+        table_style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), HexColor("#f5f5f5")),
+            ('TEXTCOLOR', (0, 0), (-1, 0), HexColor("#1a237e")),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('TOPPADDING', (0, 0), (-1, 0), 12),
+            ('GRID', (0, 0), (-1, -1), 1, HexColor("#e0e0e0")),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [HexColor("#ffffff"), HexColor("#f8f9fa")]),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+            ('TOPPADDING', (0, 1), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
+        ])
 
-    footer_style = ParagraphStyle(
-        'FooterStyle',
-        parent=styles['Italic'],
-        fontSize=10,
-        alignment=TA_CENTER,
-        textColor=HexColor("#6c757d"),
-        spaceBefore=36,
-    )
-
-    # --- Table Styles (using TableStyle object) ---
-    table_base_style = [
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('GRID', (0, 0), (-1, -1), 1, HexColor("#d9d9d9")),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('LEFTPADDING', (0, 0), (-1, -1), 6),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-    ]
-
-    table_header_style = table_base_style + [
-        ('BACKGROUND', (0, 0), (-1, 0), HexColor("#007bff")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), HexColor("#ffffff")),
-    ]
-
+        col_widths = [doc.width/len(header) for _ in header]
+        table = Table(table_data, colWidths=col_widths)
+        table.setStyle(table_style)
+        return table
 
     story = []
-    story.append(Paragraph(f"{report_title} - {formatted_date}", title_style))
-    story.append(Spacer(1, 0.5*inch))
 
+    # Title and Date
+    story.append(Paragraph(report_title, custom_styles['Title']))
+    story.append(Paragraph(formatted_date, custom_styles['Footer']))
+    story.append(Spacer(1, 0.3*inch))
 
+    # Process content
+    current_table = []
+    in_table = False
+    lines = content.split('\n')
+    i = 0
 
-    # --- Improved Markdown Parsing and Table Handling ---
-    paragraphs = content.split('\n\n')
-    for paragraph_text in paragraphs:
-        # --- Table Handling (FIRST) ---
-        if paragraph_text.strip().startswith('|'):
-            table_data = parse_markdown_table(paragraph_text)
-            if table_data:
-                table = Table(table_data)
-                if len(table_data) > 1:
-                    table.setStyle(TableStyle(table_header_style))
-                else:
-                    table.setStyle(TableStyle(table_base_style))
-                story.append(table)
-                story.append(Spacer(1, 0.2 * inch))
+    while i < len(lines):
+        line = lines[i].strip()
+
+        if not line:
+            if in_table and current_table:
+                table = process_table('\n'.join(current_table))
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 0.2*inch))
+                current_table = []
+                in_table = False
+            story.append(Spacer(1, 0.1*inch))
+            i += 1
             continue
 
+        # Table detection and processing
+        if '|' in line and (line.count('|') > 1 or (i + 1 < len(lines) and '|' in lines[i + 1])):
+            in_table = True
+            current_table.append(line)
+        elif in_table:
+            if current_table:  # End of table
+                table = process_table('\n'.join(current_table))
+                if table:
+                    story.append(table)
+                    story.append(Spacer(1, 0.2*inch))
+            current_table = []
+            in_table = False
+            continue
+        # Headers
+        elif line.startswith('# '):
+            story.append(Paragraph(clean_text(line[2:]), custom_styles['Heading1']))
+        elif line.startswith('## '):
+            story.append(Paragraph(clean_text(line[3:]), custom_styles['Heading2']))
+        # Bullet points
+        elif line.startswith('* ') or line.startswith('- '):
+            story.append(Paragraph(f"• {clean_text(line[2:])}", custom_styles['Bullet']))
+        # Regular paragraphs
+        else:
+            if not in_table:
+                story.append(Paragraph(clean_text(line), custom_styles['Paragraph']))
 
-        # ---  Process *non-table* Markdown elements ---
-        lines = paragraph_text.splitlines()
-        for line in lines:
-            line = line.strip()
-            if line.startswith('# '):
-                story.append(Paragraph(line[2:].strip(), heading1_style))
-                story.append(Spacer(1, 0.1*inch))
-            elif line.startswith('## '):
-                story.append(Paragraph(line[3:].strip(), heading2_style))
-                story.append(Spacer(1, 0.1*inch))
+        i += 1
 
-            elif line.startswith('* '):
-                story.append(Paragraph(line.lstrip('* ').replace('*', ''), bullet_style, bulletText='•'))
-            elif line:
-                formatted_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', line)
-                formatted_line = re.sub(r'\*(.*?)\*', r'<i>\1</i>', formatted_line)
-                formatted_line = re.sub(r'[*]', '', formatted_line)
-                formatted_line = re.sub(r'\[(.*?)\]\((.*?)\)', r'<a href="\2">\1</a>', formatted_line)
-                story.append(Paragraph(formatted_line, paragraph_style))
-                story.append(Spacer(1, 0.1*inch))
+    # Process any remaining table
+    if current_table:
+        table = process_table('\n'.join(current_table))
+        if table:
+            story.append(table)
+            story.append(Spacer(1, 0.2*inch))
 
+    # References section
     if references:
         story.append(PageBreak())
-        story.append(Paragraph("References", heading1_style))
+        story.append(Paragraph("References", custom_styles['Heading1']))
         story.append(Spacer(1, 0.2*inch))
         for i, ref in enumerate(references, 1):
-            story.append(Paragraph(f"[{i}] <a href=\"{ref}\">{ref}</a>", ref_style))
-            story.append(Spacer(1, 0.1*inch))
+            story.append(Paragraph(f"[{i}] {ref}", custom_styles['Reference']))
 
-    footer_text = Paragraph(f"Generated by Kv - AI Companion & Deep Research Tool - {today.year}", footer_style)
-    story.append(footer_text)
+    # Footer
+    story.append(Spacer(1, 0.5*inch))
+    footer_text = f"Generated by Kv - AI Companion & Deep Research Tool • {formatted_date}"
+    story.append(Paragraph(footer_text, custom_styles['Footer']))
 
+    # Build PDF
     doc.build(story)
     buffer.seek(0)
     return buffer
-
 
 
 @app.route('/api/scrape_product', methods=['POST'])
