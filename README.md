@@ -151,6 +151,11 @@ Kv is a community project, and we welcome contributions of all kinds! Whether yo
 🐞 **Testing:** Report bugs, suggest improvements.  
 📢 **Advocacy:** Share Kv with the world!
 
+<div align="center">
+  <img src="https://media.giphy.com/media/26u4nJPf0JtQPdStq/giphy.gif" alt="Contribute Animation" width="40%">
+</div>
+
+
 ---
 
 ## 📜 License
