@@ -16,24 +16,41 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
 ## 🖼️ Screenshots - Experience the Kv Difference!
 
 1️⃣ **Sleek, Modern Chat Interface** 🗨️  
-   ![image](https://github.com/user-attachments/assets/2208d5ed-9ac2-47e7-981a-59ef01dee660)
+   ![image](https://github.com/user-attachments/assets/a459df87-90ef-4fb8-bb73-d257ea2ce631)
 
 
 2️⃣ **Dynamic Deep Research in Action** 🔍  
-   ![image](https://github.com/user-attachments/assets/1cf4633c-ff20-4fe3-a9f2-904a7d099407)
+
+   ![image](https://github.com/user-attachments/assets/b144240b-a04a-4a1e-bbe0-f0d35daabbf8)
+
+3️⃣ **Customizable Options & Tools - Your Research, Your Way** 🎛️  
+
+   ![image](https://github.com/user-attachments/assets/ce6d95ba-77d7-4a52-87fe-c63e63ac1322)
 
 
-3️⃣ **Customizable Options - Your Research, Your Way** 🎛️  
-   ![image](https://github.com/user-attachments/assets/39926498-d89f-4ef5-a33d-8e41ccee7bbe)
+4️⃣ **Responsive Design & Mobile Navigation**📱  
 
-   ![image](https://github.com/user-attachments/assets/67ab0b62-7939-47db-8eca-a82f4a884fc8)
+   ![image](https://github.com/user-attachments/assets/80ba4a4c-b79f-4083-92a3-8b226c8d8f38)
 
-  
 
-4️⃣ **Beautiful, Readable PDF Reports** 📄  
-  ![image](https://github.com/user-attachments/assets/9fddcd07-915b-4308-a437-89bfe1f4d8c7)
+5️⃣ **Beautiful, Readable PDF Reports** 📄  
 
- ![image](https://github.com/user-attachments/assets/ccff5ede-ea86-47ef-a320-c30dcc4dd94d)
+   ![image](https://github.com/user-attachments/assets/7fb74de0-d539-4851-8b7b-ddbceb35e7e8)
+   ![image](https://github.com/user-attachments/assets/e6a3a666-6492-408c-8936-ab5d634a9f46)
+   ![image](https://github.com/user-attachments/assets/cc394c29-61ac-4ccb-9020-79a4c5b233b8)
+   ![image](https://github.com/user-attachments/assets/19c78489-f772-4462-804d-7f4b8883b7f5)
+   ![image](https://github.com/user-attachments/assets/6e67fda8-2c44-40ce-8639-4a9db6bdbd1c)
+   ![image](https://github.com/user-attachments/assets/fcb5957e-52dc-4117-87b8-a3b5defa9827)
+   ![image](https://github.com/user-attachments/assets/222bb25a-f3fa-47f6-b6c0-88ccf4d19528)
+
+
+6️⃣ **Custom Instructions** 🤖
+
+![image](https://github.com/user-attachments/assets/00e96b41-6eeb-4247-abca-679c3dcaccf2)
+
+7️⃣ **Web Search** 🌐
+
+![image](https://github.com/user-attachments/assets/2993d8ff-c902-4551-99da-5e759bb49c1a)
 
 
 ---
@@ -43,114 +60,106 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
 ✨ **Zero API Costs:** Conduct extensive research without worrying about usage fees.  
 ✨ **Unrestricted Data Access:** Go beyond the limitations of traditional APIs.  
 ✨ **Iterative Deep Dives:** Kv refines its search strategy based on results, leading to truly comprehensive insights.  
-✨ **Fully Open-Source:** Transparent, customizable, and community-driven. Contribute and shape the future of Kv!  
+✨ **Versatile Research Tools:** Includes product scraping, job scraping, image analysis, sentiment analysis, and website summarization.  
+✨ **Fully Open-Source:** Transparent, customizable, and community-driven. Contribute and shape the future of Kv!
 
 ---
 
 ## 🚀 Key Features - Unleash the Power of AI
 
-✅ **Intelligent Web Scraping Engine:** Kv doesn't just fetch results; it understands them.  
-✅ **Multi-Search Engine Support:** Google, Bing, DuckDuckGo, Yahoo, Brave, and even LinkedIn!  
-✅ **AI-Powered Summarization:** Gemini condenses complex information into clear, concise summaries.  
-✅ **Iterative Research:** Kv automatically refines its search queries based on initial findings, diving deeper into your topic. *You* control the number of iterations!  
-✅ **Interactive Chat Interface:** A user-friendly chat experience makes research feel natural.  
-✅ **Advanced Customization:** Tailor your research with options for:
-   * **Model Selection:** Choose between Gemini 1.5 Flash and experimental models.
-   * **Search Engines:** Select which engines to use.
-   * **Output Format:** Get results in Markdown, JSON, or CSV.
-   * **Data Extraction:** Extract links and emails from web pages.
-   * **Iteration Count:** Set how many times the research should iterate.
-✅ **Dark & Light Mode:** Choose the theme that suits your style.  
-✅ **Beautiful PDF Reports:** Generate professional, well-formatted PDF reports of your research findings, complete with tables and references.  
-✅ **Image Support:** Upload images and use them in the chat.  
+✅ **Intelligent Web Scraping Engine**  
+✅ **Multi-Search Engine Support** (Google, Bing, DuckDuckGo, Yahoo, Brave, LinkedIn)  
+✅ **AI-Powered Summarization** (Gemini condenses complex information into clear summaries)  
+✅ **Iterative Research** (Kv automatically refines its search queries for deeper insights)  
+✅ **Interactive Chat Interface**  
+✅ **Versatile Tools** (Product Scraper, Job Scraper, Image Analysis, Sentiment Analysis, Website Summarizer)  
+✅ **Advanced Customization** (Model Selection, Search Engines, Output Format, Data Extraction, Iteration Count)  
+✅ **Responsive Design** (Works seamlessly on desktops, tablets, and mobile devices)  
+✅ **Dark & Light Mode**  
+✅ **Beautiful PDF Reports**  
+✅ **Image Support** (Upload images for analysis)
 
 ---
 
 ## 📥 Installation - Get Started in Minutes!
 
 ### Prerequisites 📌
+
 ✔️ **Python 3.8+** - [Download Here](https://www.python.org/downloads/)  
-✔️ **pip** - Usually included with Python installations.  
+✔️ **pip** - Usually included with Python installations.
 
 ### Installation Steps 🔧
 
-1️⃣ **Clone the Repository:**  
+1️⃣ **Clone the Repository:**
    ```bash
    git clone https://github.com/kvcops/Deep-Research-using-Gemini-api.git
    cd Deep-Research-using-Gemini-api
    ```
 
-2️⃣ **Create a Virtual Environment (Highly Recommended):**  
+2️⃣ **Create a Virtual Environment (Highly Recommended):**
    ```bash
    python3 -m venv venv  # Or python -m venv venv (depending on your system)
    source venv/bin/activate  # On Linux/macOS
    venv\Scripts\activate  # On Windows
    ```
 
-3️⃣ **Install Dependencies:**  
+3️⃣ **Install Dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4️⃣ **Get Your FREE Gemini API Key:**  
-   * Visit Google AI Studio.
-   * Create a new API key (it's free!).
+4️⃣ **Get Your FREE Gemini API Key:**
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key (it's free!).
 
-5️⃣ **Set Your API Key:**  
-   * Create a file named `.env` in the project's root directory.
-   * Add the following line to the `.env` file, replacing `YOUR_ACTUAL_GEMINI_API_KEY` with your actual key:
-   ```bash
-   GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY
-   ```
+5️⃣ **Set Your API Key:**
+   - Create a `.env` file in the project's root directory.
+   - Add the following line to `.env`:
+     ```bash
+     GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY
+     ```
 
-6️⃣ **Run Kv 🏃‍♂️💨**  
+6️⃣ **Run Kv 🏃‍♂️💨**
    ```bash
    python app.py
    ```
-
-🚀 Open your web browser and go to: `http://127.0.0.1:5000/`
+   🚀 Open your web browser and go to: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
 
 ---
 
 ## 🤖 Using Kv - Your Research Journey
 
-1️⃣ **Start a Conversation:** Type your research query into the chat box.  
-2️⃣ **Choose Your Adventure:**
-   * **"Send"**: For a quick, direct response from Gemini.
-   * **"Web Search"**: For a summary of information from multiple websites.
-   * **"Deep Dive & PDF"**: For iterative, in-depth research with a downloadable PDF report.
-3️⃣ **Customize (Optional):** Click the "Options" button to:
-   * Select your preferred Gemini model.
-   * Provide custom instructions to guide the AI.
-   * Choose your search engines.
-   * Set the number of deep research iterations.
-   * Toggle data extraction (links and emails).
-   * Choose your output format.
-4️⃣ **Clear Chat:** Use the "Clear Chat" button to start a new research session.
-5️⃣ **Theme:** Use the Theme button to switch between light and dark mode.
+1️⃣ **Navigation:** Desktop users can use the sidebar; mobile users can access navigation via the menu icon (☰).
+
+2️⃣ **AI Chat:** Type your query, send an image, or initiate a web search for AI-driven responses.
+
+3️⃣ **Deep Research:** Enter your topic, select options, and start the deep research process with iterative analysis.
+
+4️⃣ **Tools:** Utilize scrapers, sentiment analysis, and summarization tools for research.
+
+5️⃣ **Settings:** Customize AI instructions, model preferences, and more.
 
 ---
 
 ## 🤝 Contribute - Be Part of the Kv Evolution!
-
 Kv is a community project, and we welcome contributions of all kinds! Whether you're a coding wizard, a design guru, a documentation expert, or just passionate about AI research, you can make a difference.
 
 ### Ways to Contribute:
-💻 Code: Add new features, improve existing ones, fix bugs, optimize performance.  
-🎨 Design: Enhance the user interface and overall user experience.  
-📝 Documentation: Improve the README, write tutorials, create examples.  
-🐞 Testing: Find and report bugs, suggest improvements.  
-📢 Advocacy: Share Kv with the world!  
+💻 **Code:** Add features, improve existing ones, fix bugs.  
+🎨 **Design:** Enhance UI/UX.  
+📝 **Documentation:** Improve the README, write tutorials.  
+🐞 **Testing:** Report bugs, suggest improvements.  
+📢 **Advocacy:** Share Kv with the world!
 
 ---
 
 ## 📜 License
-Kv is proudly open-source and licensed under the MIT License. See the `LICENSE` file for more details.
+Kv is proudly open-source and licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
 
 ---
 
 ## 📞 Contact & Support
 📧 **Email:** 21131A05C6@gvpce.ac.in  
-👨‍💻 **Founder:** Connect with K. Vamsi Krishna on LinkedIn : ⭐ https://www.linkedin.com/in/karri-vamsi-krishna-966537251/ ⭐
+👨‍💻 **Founder:** [K. Vamsi Krishna](https://www.linkedin.com/in/karri-vamsi-krishna-966537251/)
 
-✨ Thank you for using Kv! Don't forget to star the repository if you find it helpful! ⭐ 🚀
+✨ **Thank you for using Kv! Don't forget to star the repository if you find it helpful! ⭐ 🚀**
