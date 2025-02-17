@@ -1,4 +1,4 @@
-Flask[async]==2.3.3  # Enable async support
+Flask[async]==2.3.3
 Flask-CORS==4.0.0
 google-generativeai==0.3.2
 python-dotenv==1.0.0
@@ -9,14 +9,17 @@ reportlab==4.0.4
 tenacity==8.2.3
 requests==2.31.0
 gunicorn==21.2.0
-Werkzeug==2.3.7  # Ensure compatibility with Flask
-
-typing-extensions==4.9.0  
-attrs==23.2.0  
-async-timeout==4.0.3  
-multidict==6.0.4  
-yarl==1.9.4  
-idna==3.6  
-frozenlist==1.4.1  
-soupsieve==2.5  
-Pillow==10.2.0  
+Werkzeug==2.3.7
+typing-extensions==4.9.0
+attrs==23.2.0
+async-timeout==4.0.3
+multidict==6.0.4
+yarl==1.9.4
+idna==3.6
+frozenlist==1.4.1
+soupsieve==2.5
+Pillow==10.2.0
+pdfminer.six==20221105
+docx2txt==0.8
+brotli==1.1.0
+urllib3==2.1.0
