@@ -46,7 +46,8 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
 
 6️⃣ **Custom Instructions** 🤖
 
-![image](https://github.com/user-attachments/assets/00e96b41-6eeb-4247-abca-679c3dcaccf2)
+![image](https://github.com/user-attachments/assets/76d31236-63b5-443b-85e1-9623a3d01abb)
+
 
 7️⃣ **Web Search** 🌐
 
