@@ -30,7 +30,7 @@ import math
 import concurrent.futures
 import brotli
 from pdfminer.high_level import extract_text as pdf_extract_text  # For PDF parsing
-import docx2txt # For docx processing
+import docx2txt  # For docx processing
 
 
 load_dotenv()
@@ -56,7 +56,7 @@ class Config:
     JOB_SEARCH_ENGINES = ["linkedin", "indeed", "glassdoor", "monster"]
     MAX_WORKERS = 10
     CACHE_ENABLED = True  # Enable/disable caching
-    CACHE = {} # Simple in-memory cache
+    CACHE = {}  # Simple in-memory cache
     CACHE_TIMEOUT = 300  # Cache timeout in seconds
 
 config = Config()
@@ -240,21 +240,31 @@ def scrape_brave(search_query):
     try:
         response = requests.get(brave_url, headers={'User-Agent': get_random_user_agent()}, timeout=config.REQUEST_TIMEOUT)
         logging.info(f"Brave Status Code: {response.status_code}")
+
         if response.status_code == 200:
+            # Check for Brotli encoding and decompress if necessary
             if response.headers.get('Content-Encoding') == 'br':
                 try:
                     content = brotli.decompress(response.content)
                     brave_soup = BeautifulSoup(content, 'html.parser')
                 except brotli.error as e:
                     logging.error(f"Error decoding Brotli content: {e}")
-                    return []
+                    return []  # Return empty list on failure
             else:
                 brave_soup = BeautifulSoup(response.text, 'html.parser')
 
+            # Extract links from the parsed HTML
             for a_tag in brave_soup.find_all('a', class_='result-title', href=True):
                 href = a_tag['href']
                 fixed_url = fix_url(href)
-                if fixed_url: search_results.append(fixed_url)
+                if fixed_url:
+                    search_results.append(fixed_url)
+
+        elif response.status_code == 429:
+            logging.warning("Brave rate limit hit (429).")  # Log the rate limit
+        else:
+            logging.warning(f"Brave search failed with status code: {response.status_code}")
+
     except Exception as e:
         logging.error(f"Error scraping Brave: {e}")
     return list(set(search_results))
@@ -531,17 +541,22 @@ def online_search_endpoint():
         search_query = data.get('query', '')
         if not search_query:
             return jsonify({"error": "No query"}), 400
+
         references = []
         search_results = []
         content_snippets = []
         search_engines_requested = data.get('search_engines', config.SEARCH_ENGINES)
+
         with concurrent.futures.ThreadPoolExecutor(max_workers=config.MAX_WORKERS) as executor:
+            # Perform initial search
             search_futures = [executor.submit(scrape_search_engine, search_query, engine) for engine in search_engines_requested]
             for future in concurrent.futures.as_completed(search_futures):
                 try:
                     search_results.extend(future.result())
                 except Exception as e:
                     logging.error(f"Search engine scrape error: {e}")
+
+            # If initial search fails, try alternative queries
             if not search_results:
                 logging.warning(f"Initial search failed: {search_query}. Trying alternatives.")
                 alternative_queries = generate_alternative_queries(search_query)
@@ -555,16 +570,20 @@ def online_search_endpoint():
                                 if result:
                                     search_results.extend(result)
                                     logging.info(f"Results found with alternative: {alt_query}")
-                                    break
+                                    break  # Stop once results are found
                             except Exception as e:
                                 logging.error(f"Alternative query scrape error: {e}")
-                        if search_results: break
+                        if search_results:
+                            break  # Stop once any alternative query returns results
                 else:
                     logging.warning("Gemini failed to generate alternatives.")
+
             if not search_results:
                 return jsonify({"error": "No results"}), 404
-            unique_search_results = {url: 'general' for url in search_results}
-            logging.debug(f"Unique URLs to fetch: {unique_search_results.keys()}")
+
+            # Fetch content from unique URLs
+            unique_search_results = list(set(search_results))  # Use a list for consistent order
+            logging.debug(f"Unique URLs to fetch: {unique_search_results}")
             fetch_futures = {executor.submit(fetch_page_content, url): url for url in unique_search_results}
             for future in concurrent.futures.as_completed(fetch_futures):
                 url = fetch_futures[future]
@@ -574,23 +593,54 @@ def online_search_endpoint():
                     references.extend(page_refs)
                 except Exception as e:
                     logging.error(f"Error fetching {url}: {e}")
+
+        # Combine content and generate summary
         combined_content = "\n\n".join(content_snippets)
-        prompt = (f"Analyze web content for: '{search_query}'. Extract key facts, figures, and details. Be concise. Content:\n\n{combined_content}\n\nProvide a fact-based summary.")
+        prompt = (f"Analyze web content for: '{search_query}'. Extract key facts, figures, and details. Be concise. "
+                  f"Content:\n\n{combined_content}\n\nProvide a fact-based summary.")
         explanation = generate_gemini_response(prompt)
+
+        # Update conversation history (serialize Content objects)
         global conversation_history
+
+        def serialize_content(content):
+            if isinstance(content, list):
+                return [serialize_content(item) for item in content]
+            elif hasattr(content, 'role') and hasattr(content, 'parts'): # Check if it's a Content object
+                return {
+                    "role": content.role,
+                    "parts": [part.text if hasattr(part, 'text') else str(part) for part in content.parts]
+                }
+            else:
+                return content  # Return as is if not a Content object
+
         conversation_history.append({"role": "user", "parts": [f"Online: {search_query}"]})
         conversation_history.append({"role": "model", "parts": [explanation]})
+        serialized_history = [serialize_content(item) for item in conversation_history]
+
+
 
          # Shorten URLs concurrently
         with concurrent.futures.ThreadPoolExecutor(max_workers=config.MAX_WORKERS) as executor:
             shortened_references = list(executor.map(get_shortened_url, references))
 
-        return jsonify({"explanation": explanation, "references": shortened_references, "history": conversation_history})
+        return jsonify({"explanation": explanation, "references": shortened_references, "history": serialized_history})
 
     except Exception as e:
         logging.exception(f"Online search error: {e}")
         return jsonify({"error": str(e)}), 500
 
+
+def serialize_content(content):
+            if isinstance(content, list):
+                return [serialize_content(item) for item in content]
+            elif hasattr(content, 'role') and hasattr(content, 'parts'): # Check if it's a Content object
+                return {
+                    "role": content.role,
+                    "parts": [part.text if hasattr(part, 'text') else str(part) for part in content.parts]
+                }
+            else:
+                return content  # Return as is if not a Content object
 @app.route('/api/deep_research', methods=['POST'])
 def deep_research_endpoint():
     try:
@@ -695,9 +745,14 @@ def deep_research_endpoint():
             else:
                 final_explanation = "No relevant content found for the given query."
 
+            # Update conversation history (serialize)
+            
+            
             global conversation_history
             conversation_history.append({"role": "user", "parts": [f"Deep research query: {search_query}"]})
             conversation_history.append({"role": "model", "parts": [final_explanation]})
+            serialized_history = [serialize_content(item) for item in conversation_history] # REUSE SERIALIZATION
+
 
             end_time = time.time()
             elapsed_time = end_time - start_time
@@ -718,45 +773,49 @@ def deep_research_endpoint():
             response_data = {
                 "explanation": final_explanation,
                 "references": all_references,
-                "history": conversation_history,
+                "history": serialized_history, # USE SERIALIZED
                 "elapsed_time": f"{elapsed_time:.2f} seconds",
                 "extracted_data": all_extracted_data,
             }
 
             if output_format == 'json':
                 if isinstance(final_explanation, dict):
-                    response_data = final_explanation
+                    response_data = final_explanation  # Already a dict
                 elif isinstance(final_explanation, list):
-                    response_data = {"table_data": final_explanation}
+                    response_data = {"table_data": final_explanation} # Table data
                 else:
                     response_data = {"explanation": final_explanation}
+
+                # Add other data to the JSON response
                 response_data.update({
                     "references": all_references,
-                    "history": conversation_history,
+                    "history": serialized_history,
                     "elapsed_time": f"{elapsed_time:.2f} seconds",
                     "extracted_data": all_extracted_data
                 })
                 return jsonify(response_data)
+
 
             elif output_format == 'csv':
                 if isinstance(final_explanation, list):
                     output = io.StringIO()
                     writer = csv.writer(output)
                     writer.writerows(final_explanation)
-                    response_data["explanation"] = output.getvalue()
+                    response_data["explanation"] = output.getvalue()  # CSV string
                 elif isinstance(final_explanation, dict) and "raw_text" in final_explanation:
-                    response_data = {"explanation": final_explanation["raw_text"]}
+                    response_data = {"explanation": final_explanation["raw_text"]} # Raw text if parsing failed
                 else:
-                    response_data = {"explanation": final_explanation}
+                    response_data = {"explanation": final_explanation}  #  raw markdown
 
                 response_data.update({
                     "references": all_references,
-                    "history": conversation_history,
+                    "history": serialized_history,
                     "elapsed_time": f"{elapsed_time:.2f} seconds",
                     "extracted_data": all_extracted_data
                 })
                 return jsonify(response_data)
-            return jsonify(response_data)
+
+            return jsonify(response_data) # Default: Markdown
 
     except Exception as e:
         logging.exception(f"Error in deep research: {e}")
@@ -1339,7 +1398,7 @@ def scrape_indeed_jobs(job_title, job_location, resume_text=None):
                         # --- Gemini Relevance Assessment ---
                         relevance_prompt = (
                             f"Assess relevance (Highly, Somewhat, Not): Job Description:\n{job_description}\n\nResume:\n{resume_text}\n\n"
-                            "Justification (1-2 sentences)."
+                                                        "Justification (1-2 sentences)."
                         )
                         relevance_assessment = generate_gemini_response(relevance_prompt)
 
