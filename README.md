@@ -13,6 +13,13 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
 
 ---
 
+## 🎥 Demo Video - Watch Kv in Action!
+
+[![Watch the demo](https://img.youtube.com/vi/UNdSUAgBMAc/0.jpg)](https://youtu.be/UNdSUAgBMAc?si=5pyp4qyNys8Y-GK7)
+
+
+---
+
 ## 🖼️ Screenshots - Experience Kv!
 
 1️⃣ **Sleek, Modern Chat Interface** 🗨️  
