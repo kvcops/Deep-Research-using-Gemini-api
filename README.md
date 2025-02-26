@@ -1,4 +1,9 @@
 <div align="center">
+
+<div align="center">
+  <h1> 🚀 Kv - Your Enhanced AI-Powered Deep Research & Job Search Companion 🌍🔍</h1>
+  <h3>Founded by <a href="https://www.linkedin.com/in/karri-vamsi-krishna-966537251/">K. Vamsi Krishna</a></h3>
+</div>
   
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=300&section=header&text=KV%20Platform&fontSize=90&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Research%20%26%20Job%20Search&descAlignY=55&descAlign=62" width="100%"/>
   
@@ -48,10 +53,7 @@
 
 <br />
 
-<div align="center">
-  <h1> 🚀 Kv - Your Enhanced AI-Powered Deep Research & Job Search Companion 🌍🔍</h1>
-  <h3>Founded by <a href="https://www.linkedin.com/in/karri-vamsi-krishna-966537251/">K. Vamsi Krishna</a></h3>
-</div>
+
 
 <br />
 
