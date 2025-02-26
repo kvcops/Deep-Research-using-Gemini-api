@@ -57,7 +57,7 @@
 
 <!-- Modern TOC -->
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=python,ai,github,react" />
+  <img src="https://skillicons.dev/icons?i=python,ai,github,fastapi" />
 </p>
 
 <details open>
