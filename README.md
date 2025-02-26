@@ -1,142 +1,356 @@
-# 🚀 Kv - Your Enhanced AI-Powered Deep Research & Job Search Companion 🌍🔍
+<div align="center">
+  
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=300&section=header&text=KV%20Platform&fontSize=90&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Research%20%26%20Job%20Search&descAlignY=55&descAlign=62" width="100%"/>
+  
+  <p align="center">
+    <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/stargazers">
+      <img src="https://img.shields.io/github/stars/kvcops/Deep-Research-using-Gemini-api?color=0088ff&style=for-the-badge&logo=github" alt="Stars" />
+    </a>
+    <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/network/members">
+      <img src="https://img.shields.io/github/forks/kvcops/Deep-Research-using-Gemini-api?color=0088ff&style=for-the-badge&logo=github" alt="Forks" />
+    </a>
+    <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/issues">
+      <img src="https://img.shields.io/github/issues/kvcops/Deep-Research-using-Gemini-api?color=0088ff&style=for-the-badge&logo=github" alt="Issues" />
+    </a>
+    <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License" />
+    </a>
+    <br />
+    <a href="https://www.python.org/">
+      <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?style=for-the-badge&logo=python&logoColor=white&color=informational" alt="Made with Python" />
+    </a>
+    <a href="https://developers.generativeai.google/">
+      <img src="https://img.shields.io/badge/Powered%20by-Gemini%20AI-00897B?style=for-the-badge&logo=google&logoColor=white" alt="Powered by Gemini AI" />
+    </a>
+    <a href="#">
+      <img src="https://custom-icon-badges.demolab.com/badge/maintained-actively-success.svg?style=for-the-badge&logoColor=white&logo=tools" alt="Actively Maintained" />
+    </a>
+  </p>
 
-[![Project Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/kvcops/Deep-Research-using-Gemini-api)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/Python->=3.8-blue.svg)](https://www.python.org/downloads/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/kvcops/Deep-Research-using-Gemini-api/graphs/commit-activity)
-[![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/kvcops/Deep-Research-using-Gemini-api)
+  <!-- Socials -->
+  <p align="center">
+    <a href="https://www.linkedin.com/in/karri-vamsi-krishna-966537251/">
+      <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+    </a>
+    <a href="mailto:21131A05C6@gvpce.ac.in">
+      <img src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" alt="Email"/>
+    </a>
+  </p>
 
-**👨‍💻 Founder:** K. Vamsi Krishna  
-**💡 Unlock the Power of Iterative Deep Research & Smart Job Search - Star Us on GitHub! ⭐**
+</div>
 
-Kv is a cutting-edge, **open-source** AI research and job search tool that combines **Google Gemini AI** with **web scraping** for deep research insights. With the addition of an **AI-powered job search feature**, Kv now helps users find relevant jobs based on their **resume, job title, location, and experience** while providing valuable insights such as **relevance, missing skills, and suitability analysis**. 🚀 If you find this tool useful, **please give us a star!** ⭐🙏
+<br />
 
----
+<!-- Animated GIF or SVG for attention -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/platane/snk/output/github-contribution-grid-snake-dark.svg" width="100%">
+</p>
 
-## 🎥 Demo Video - Watch Kv in Action!
+<br />
 
-[![Watch the demo](https://img.youtube.com/vi/UNdSUAgBMAc/0.jpg)](https://youtu.be/UNdSUAgBMAc?si=5pyp4qyNys8Y-GK7)
+<div align="center">
+  <h1> 🚀 Kv - Your Enhanced AI-Powered Deep Research & Job Search Companion 🌍🔍</h1>
+  <h3>Founded by <a href="https://www.linkedin.com/in/karri-vamsi-krishna-966537251/">K. Vamsi Krishna</a></h3>
+</div>
 
----
+<br />
 
-## 🖼️ Screenshots - Experience Kv!
+<!-- Modern TOC -->
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=python,ai,github,react" />
+</p>
 
-1️⃣ **Sleek, Modern Chat Interface** 🗨️  
-   ![image](https://github.com/user-attachments/assets/a459df87-90ef-4fb8-bb73-d257ea2ce631)
+<details open>
+<summary>📋 Table of Contents</summary>
+<br />
 
-2️⃣ **Dynamic Deep Research in Action** 🔍  
-   ![image](https://github.com/user-attachments/assets/b144240b-a04a-4a1e-bbe0-f0d35daabbf8)
+<div align="center">
 
-3️⃣ **AI-Powered Job Search** 🏢  
-   - Finds relevant jobs based on your **resume, job title, experience, and location**.
-   - Shows **job relevance, missing skills, and why a job suits you**.
-   - Helps you understand how to **improve your resume and skillset** for better opportunities.
+|    | Section                                | Description                          |
+|----|----------------------------------------|--------------------------------------|
+| 📺 | [Demo Video](#-demo-video)            | See KV in action                     |
+| 🌟 | [Key Features](#-key-features)        | What makes KV special                |
+| 🖼️ | [Screenshots](#-screenshots)           | Visual previews                      |
+| 🚀 | [Why Choose KV](#-why-choose-kv)      | Benefits & advantages                |
+| ⚙️ | [Installation](#%EF%B8%8F-installation) | Get up and running                   |
+| 🎮 | [Usage Guide](#-usage-guide)          | How to use KV effectively           |
+| 🤝 | [Contribution](#-contribution)        | Join our community                   |
+| 📄 | [License](#-license)                  | MIT License                          |
+| 📞 | [Contact & Support](#-contact--support) | Get in touch                        |
 
-4️⃣ **Customizable Research & Job Search Tools** 🎛️  
-   ![image](https://github.com/user-attachments/assets/ce6d95ba-77d7-4a52-87fe-c63e63ac1322)
+</div>
+</details>
 
-5️⃣ **Beautiful, Enhanced PDF Reports** 📄  
-   - Professionally formatted research & job search reports.
-   - Enhanced layout with improved readability.
-   - Includes **charts, insights, and AI-generated recommendations**.
+<br />
 
----
+<!-- Animated About Section -->
+<div align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&duration=3000&pause=1000&center=true&vCenter=true&multiline=true&width=600&height=100&lines=Discover+the+power+of+AI-driven+research;Find+your+perfect+job+match;Analyze+skills+and+close+gaps;All+in+one+open-source+platform" />
+</div>
 
-## 🔥 Why Kv? - Intelligent, Iterative, and Now AI-Powered Job Search
+<p align="center">
+  <b>KV</b> is a revolutionary open-source platform that combines the power of <b>Google Gemini AI</b> with advanced <b>web scraping</b> for unparalleled research and job search capabilities. KV goes beyond conventional tools to provide deep insights, analyze resumes, identify skill gaps, and help you find your ideal career path.
+</p>
 
-✨ **Zero API Costs:** Conduct extensive research and job searches without worrying about usage fees.  
-✨ **Unrestricted Data Access:** Go beyond the limitations of traditional APIs.  
-✨ **Iterative Deep Dives:** Kv refines its search strategy based on results, leading to truly comprehensive insights.  
-✨ **AI-Enhanced Job Search:** Helps you find jobs that match your profile while offering skill gap analysis.  
-✨ **Versatile Research & Job Tools:** Includes product scraping, job scraping, image analysis, sentiment analysis, and website summarization.  
-✨ **Fully Open-Source:** Transparent, customizable, and community-driven. Contribute and shape the future of Kv!  
+<br />
 
----
+## 📺 Demo Video
 
-## 🚀 Key Features - Unleash the Power of AI
+<div align="center">
+  <a href="https://youtu.be/UNdSUAgBMAc?si=5pyp4qyNys8Y-GK7">
+    <img src="https://img.shields.io/badge/Watch%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo" />
+  </a>
+</div>
 
-✅ **Intelligent Web Scraping Engine**  
-✅ **Multi-Search Engine Support** (Google, Bing, DuckDuckGo, LinkedIn)  
-✅ **AI-Powered Summarization & Deep Research**  
-✅ **Iterative Research & Job Search Optimization**  
-✅ **Job Search Relevance & Missing Skills Analysis**  
-✅ **Interactive Chat Interface**  
-✅ **Customizable AI Preferences & Output Format**  
-✅ **Beautiful PDF Reports with Insights**  
-✅ **Responsive UI with Dark & Light Mode**  
+<br />
 
----
+<!-- Features with icons -->
+## 🌟 Key Features
 
-## 📥 Installation - Get Started in Minutes!
+<div align="center">
 
-### Prerequisites 📌
-✔️ **Python 3.8+** - [Download Here](https://www.python.org/downloads/)  
-✔️ **pip** - Usually included with Python installations.
+| 🔥 Feature | 💫 Description |
+|:--:|:--|
+| <img src="https://img.icons8.com/color/48/000000/artificial-intelligence.png" width="30px"/> | **Advanced AI Integration** <br/> Leverages Google Gemini's powerful AI capabilities for deep analysis |
+| <img src="https://img.icons8.com/color/48/000000/spider-web.png" width="30px"/> | **Intelligent Web Scraping** <br/> Gathers comprehensive data from across the internet |
+| <img src="https://img.icons8.com/color/48/000000/search--v1.png" width="30px"/> | **Multi-Search Engine Support** <br/> Access Google, Bing, DuckDuckGo, and LinkedIn simultaneously |
+| <img src="https://img.icons8.com/color/48/000000/decision.png" width="30px"/> | **Iterative Research** <br/> Self-refining search strategies for more precise results |
+| <img src="https://img.icons8.com/color/48/000000/resume.png" width="30px"/> | **Resume Analysis** <br/> AI-powered evaluation of your resume with improvement suggestions |
+| <img src="https://img.icons8.com/color/48/000000/find-matching-job.png" width="30px"/> | **Job Match Algorithm** <br/> Finds ideal job opportunities based on your profile |
+| <img src="https://img.icons8.com/color/48/000000/skills.png" width="30px"/> | **Skill Gap Detection** <br/> Identifies missing skills needed for your target positions |
+| <img src="https://img.icons8.com/color/48/000000/pdf.png" width="30px"/> | **Professional Reports** <br/> Generates beautiful PDF reports with data visualizations |
+| <img src="https://img.icons8.com/color/48/000000/dark-mode.png" width="30px"/> | **UI Customization** <br/> Dark & light mode with responsive design for all devices |
 
-### Installation Steps 🔧
+</div>
 
-1️⃣ **Clone the Repository:**
-   ```bash
-   git clone https://github.com/kvcops/Deep-Research-using-Gemini-api.git
-   cd Deep-Research-using-Gemini-api
-   ```
+<br />
 
-2️⃣ **Create a Virtual Environment (Highly Recommended):**
-   ```bash
-   python3 -m venv venv  # Or python -m venv venv (depending on your system)
-   source venv/bin/activate  # On Linux/macOS
-   venv\Scripts\activate  # On Windows
-   ```
+## 🖼️ Screenshots
 
-3️⃣ **Install Dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+    <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" alt="Line">
+  </picture>
+</p>
 
-4️⃣ **Set Up Environment Variables:**
-   - Create a `.env` file in the project's root directory.
-   - Add the following line to `.env`:
-     ```bash
-     GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY
-     ```
+<div align="center">
+  <p><b>📱 Modern Chat Interface</b></p>
+  <img src="https://github.com/user-attachments/assets/a459df87-90ef-4fb8-bb73-d257ea2ce631" width="80%" style="border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.3);" />
+</div>
 
-5️⃣ **Run Kv 🏃‍♂️💨**
-   ```bash
-   uvicorn app:app --host 127.0.0.1 --port 8000 --reload
-   ```
-   🚀 Open your web browser and go to: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+    <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" alt="Line">
+  </picture>
+</p>
 
----
+<div align="center">
+  <p><b>🔍 Deep Research in Action</b></p>
+  <img src="https://github.com/user-attachments/assets/b144240b-a04a-4a1e-bbe0-f0d35daabbf8" width="80%" style="border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.3);" />
+</div>
 
-## 🤖 Using Kv - Your Research & Job Search Journey
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+    <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" alt="Line">
+  </picture>
+</p>
 
-1️⃣ **AI Chat:** Type queries, send images, or initiate deep research.  
-2️⃣ **Deep Research:** Enter topics, select options, and get refined AI-generated insights.  
-3️⃣ **AI Job Search:** Upload your resume, input job details, and get job recommendations.  
-4️⃣ **Skill Gap Analysis:** Understand which skills you need to improve for better job matches.  
-5️⃣ **PDF Reports:** Generate well-structured research & job reports with AI-powered insights.  
+<div align="center">
+  <p><b>⚙️ Customization Options</b></p>
+  <img src="https://github.com/user-attachments/assets/ce6d95ba-77d7-4a52-87fe-c63e63ac1322" width="80%" style="border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.3);" />
+</div>
 
----
+<br />
 
-## 🤝 Contribute - Be Part of the Kv Evolution!
-Kv is a community project, and we welcome contributions of all kinds! Whether you're a coding wizard, a design guru, a documentation expert, or just passionate about AI, you can make a difference.
+## 🚀 Why Choose KV
 
-### Ways to Contribute:
-💻 **Code:** Add features, improve existing ones, fix bugs.  
-🎨 **Design:** Enhance UI/UX.  
-📝 **Documentation:** Improve the README, write tutorials.  
-🐞 **Testing:** Report bugs, suggest improvements.  
-📢 **Advocacy:** Share Kv with the world!
+<div align="center">
+  <table>
+    <tr>
+      <th colspan="2">
+        <h3>🌟 Unique Advantages</h3>
+      </th>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/coins.png" width="30px"/></td>
+      <td><b>Zero API Costs</b><br/>All features available with no usage fees or hidden charges</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/open-source.png" width="30px"/></td>
+      <td><b>Fully Open Source</b><br/>Transparent code, community-driven development</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/data-protection.png" width="30px"/></td>
+      <td><b>Unrestricted Data Access</b><br/>No API limitations, broader data coverage</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/brain.png" width="30px"/></td>
+      <td><b>AI-Enhanced Job Matching</b><br/>Finds opportunities that truly match your profile</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/repository.png" width="30px"/></td>
+      <td><b>Versatile Research Tools</b><br/>Product analysis, image recognition, sentiment analysis, website summarization</td>
+    </tr>
+  </table>
+</div>
 
----
+<br />
 
-## 📜 License
-Kv is proudly open-source and licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
+## ⚙️ Installation
 
----
+<div align="center">
+  
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=kvcops/Deep-Research-using-Gemini-api)
+[![Run on Repl.it](https://replit.com/badge/github/kvcops/Deep-Research-using-Gemini-api)](https://replit.com/github/kvcops/Deep-Research-using-Gemini-api)
+
+</div>
+
+<br />
+
+<!-- Modern installation guide -->
+<div align="center">
+  <h3>⚡ Quick Setup</h3>
+</div>
+
+```bash
+# Clone repository
+git clone https://github.com/kvcops/Deep-Research-using-Gemini-api.git
+
+# Change directory
+cd Deep-Research-using-Gemini-api
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Create .env file with your API key
+echo "GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY" > .env
+
+# Launch KV
+uvicorn app:app --host 127.0.0.1 --port 8000 --reload
+```
+
+<div align="center">
+  <p>🌐 Open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your browser</p>
+</div>
+
+<br />
+
+## 🎮 Usage Guide
+
+
+
+<div align="center">
+  <h3>🚀 Get Started in 3 Easy Steps</h3>
+</div>
+
+<table align="center">
+  <tr>
+    <td align="center"><b>Step 1</b></td>
+    <td>Start a new chat session or research query</td>
+  </tr>
+  <tr>
+    <td align="center"><b>Step 2</b></td>
+    <td>Upload your resume for job search or enter research topic</td>
+  </tr>
+  <tr>
+    <td align="center"><b>Step 3</b></td>
+    <td>Review results, download reports, and implement recommendations</td>
+  </tr>
+</table>
+
+<br />
+
+## 🤝 Contribution
+
+<div align="center">
+  <img src="https://contrib.rocks/image?repo=kvcops/Deep-Research-using-Gemini-api" alt="Contributors" />
+</div>
+
+<div align="center">
+  <h4>We welcome all contributions! Here's how to get involved:</h4>
+</div>
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/code.png" width="30px"/></td>
+      <td><b>Code</b>: Fix bugs, add features, improve performance</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/design.png" width="30px"/></td>
+      <td><b>Design</b>: Improve UI/UX, create assets, enhance visual appeal</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/documents.png" width="30px"/></td>
+      <td><b>Documentation</b>: Help with guides, examples, API docs</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/bug.png" width="30px"/></td>
+      <td><b>Testing</b>: Report bugs, create test cases, QA features</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://img.icons8.com/color/48/000000/share.png" width="30px"/></td>
+      <td><b>Spreading the Word</b>: Share KV with others who might benefit</td>
+    </tr>
+  </table>
+</div>
+
+<div align="center">
+  <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/issues">
+    <img src="https://img.shields.io/badge/Report%20Bug-red?style=for-the-badge&logo=github" alt="Report Bug" />
+  </a>
+  <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api/issues">
+    <img src="https://img.shields.io/badge/Request%20Feature-blue?style=for-the-badge&logo=github" alt="Request Feature" />
+  </a>
+</div>
+
+<br />
+
+## 📄 License
+
+<div align="center">
+  
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+</div>
+
+<br />
 
 ## 📞 Contact & Support
-📧 **Email:** 21131A05C6@gvpce.ac.in  
-👨‍💻 **Founder:** [K. Vamsi Krishna](https://www.linkedin.com/in/karri-vamsi-krishna-966537251/)
 
-✨ **Thank you for using Kv! Don't forget to star the repository if you find it helpful! ⭐ 🚀**
+<div align="center">
+  <a href="https://www.linkedin.com/in/karri-vamsi-krishna-966537251/">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin" alt="LinkedIn" />
+  </a>
+  <a href="mailto:21131A05C6@gvpce.ac.in">
+    <img src="https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail" alt="Email" />
+  </a>
+</div>
+
+<br />
+
+<div align="center">
+  <p>✨ Thank you for using KV! ✨</p>
+  <p>If you found it helpful, please consider giving it a star! ⭐</p>
+  
+  <a href="https://github.com/kvcops/Deep-Research-using-Gemini-api">
+    <img src="https://img.shields.io/github/stars/kvcops/Deep-Research-using-Gemini-api?style=social" alt="GitHub stars" />
+  </a>
+  
+  <br /><br />
+  
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&section=footer" width="100%"/>
+</div>
