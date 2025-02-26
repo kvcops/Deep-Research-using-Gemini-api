@@ -1,4 +1,4 @@
-# 🚀 Kv - Your AI-Powered Deep Research Companion 🌍🔍
+# 🚀 Kv - Your Enhanced AI-Powered Deep Research & Job Search Companion 🌍🔍
 
 [![Project Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)](https://github.com/kvcops/Deep-Research-using-Gemini-api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,16 +7,15 @@
 [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/kvcops/Deep-Research-using-Gemini-api)
 
 **👨‍💻 Founder:** K. Vamsi Krishna  
-**💡 Unlock the Power of Iterative Deep Research - Star Us on GitHub! ⭐**
+**💡 Unlock the Power of Iterative Deep Research & Smart Job Search - Star Us on GitHub! ⭐**
 
-Kv is a powerful, **open-source** AI research tool that goes *beyond* simple searches. It combines the power of **Google Gemini** with intelligent **web scraping**, giving you in-depth insights without the hefty price tag of traditional API-based solutions. Kv performs **iterative deep dives**, refining its search queries based on initial findings, for truly comprehensive results. 🚀 If you find this tool useful, **please give us a star!** ⭐🙏
+Kv is a cutting-edge, **open-source** AI research and job search tool that combines **Google Gemini AI** with **web scraping** for deep research insights. With the addition of an **AI-powered job search feature**, Kv now helps users find relevant jobs based on their **resume, job title, location, and experience** while providing valuable insights such as **relevance, missing skills, and suitability analysis**. 🚀 If you find this tool useful, **please give us a star!** ⭐🙏
 
 ---
 
 ## 🎥 Demo Video - Watch Kv in Action!
 
 [![Watch the demo](https://img.youtube.com/vi/UNdSUAgBMAc/0.jpg)](https://youtu.be/UNdSUAgBMAc?si=5pyp4qyNys8Y-GK7)
-
 
 ---
 
@@ -25,74 +24,52 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
 1️⃣ **Sleek, Modern Chat Interface** 🗨️  
    ![image](https://github.com/user-attachments/assets/a459df87-90ef-4fb8-bb73-d257ea2ce631)
 
-
 2️⃣ **Dynamic Deep Research in Action** 🔍  
-
    ![image](https://github.com/user-attachments/assets/b144240b-a04a-4a1e-bbe0-f0d35daabbf8)
 
-3️⃣ **Customizable Options & Tools - Your Research, Your Way** 🎛️  
+3️⃣ **AI-Powered Job Search** 🏢  
+   - Finds relevant jobs based on your **resume, job title, experience, and location**.
+   - Shows **job relevance, missing skills, and why a job suits you**.
+   - Helps you understand how to **improve your resume and skillset** for better opportunities.
 
+4️⃣ **Customizable Research & Job Search Tools** 🎛️  
    ![image](https://github.com/user-attachments/assets/ce6d95ba-77d7-4a52-87fe-c63e63ac1322)
 
-
-4️⃣ **Responsive Design & Mobile Navigation**📱  
-
-   ![image](https://github.com/user-attachments/assets/80ba4a4c-b79f-4083-92a3-8b226c8d8f38)
-
-
-5️⃣ **Beautiful, Readable PDF Reports** 📄  
-
-   ![image](https://github.com/user-attachments/assets/7fb74de0-d539-4851-8b7b-ddbceb35e7e8)
-   ![image](https://github.com/user-attachments/assets/e6a3a666-6492-408c-8936-ab5d634a9f46)
-   ![image](https://github.com/user-attachments/assets/cc394c29-61ac-4ccb-9020-79a4c5b233b8)
-   ![image](https://github.com/user-attachments/assets/19c78489-f772-4462-804d-7f4b8883b7f5)
-   ![image](https://github.com/user-attachments/assets/6e67fda8-2c44-40ce-8639-4a9db6bdbd1c)
-   ![image](https://github.com/user-attachments/assets/fcb5957e-52dc-4117-87b8-a3b5defa9827)
-   ![image](https://github.com/user-attachments/assets/222bb25a-f3fa-47f6-b6c0-88ccf4d19528)
-
-
-6️⃣ **Custom Instructions** 🤖
-
-![image](https://github.com/user-attachments/assets/76d31236-63b5-443b-85e1-9623a3d01abb)
-
-
-7️⃣ **Web Search** 🌐
-
-![image](https://github.com/user-attachments/assets/2993d8ff-c902-4551-99da-5e759bb49c1a)
-
+5️⃣ **Beautiful, Enhanced PDF Reports** 📄  
+   - Professionally formatted research & job search reports.
+   - Enhanced layout with improved readability.
+   - Includes **charts, insights, and AI-generated recommendations**.
 
 ---
 
-## 🔥 Why Kv? - Intelligent, Iterative, and FREE Research
+## 🔥 Why Kv? - Intelligent, Iterative, and Now AI-Powered Job Search
 
-✨ **Zero API Costs:** Conduct extensive research without worrying about usage fees.  
+✨ **Zero API Costs:** Conduct extensive research and job searches without worrying about usage fees.  
 ✨ **Unrestricted Data Access:** Go beyond the limitations of traditional APIs.  
 ✨ **Iterative Deep Dives:** Kv refines its search strategy based on results, leading to truly comprehensive insights.  
-✨ **Versatile Research Tools:** Includes product scraping, job scraping, image analysis, sentiment analysis, and website summarization.  
-✨ **Fully Open-Source:** Transparent, customizable, and community-driven. Contribute and shape the future of Kv!
+✨ **AI-Enhanced Job Search:** Helps you find jobs that match your profile while offering skill gap analysis.  
+✨ **Versatile Research & Job Tools:** Includes product scraping, job scraping, image analysis, sentiment analysis, and website summarization.  
+✨ **Fully Open-Source:** Transparent, customizable, and community-driven. Contribute and shape the future of Kv!  
 
 ---
 
 ## 🚀 Key Features - Unleash the Power of AI
 
 ✅ **Intelligent Web Scraping Engine**  
-✅ **Multi-Search Engine Support** (Google, Bing, DuckDuckGo, Yahoo, Brave, LinkedIn)  
-✅ **AI-Powered Summarization** (Gemini condenses complex information into clear summaries)  
-✅ **Iterative Research** (Kv automatically refines its search queries for deeper insights)  
+✅ **Multi-Search Engine Support** (Google, Bing, DuckDuckGo, LinkedIn)  
+✅ **AI-Powered Summarization & Deep Research**  
+✅ **Iterative Research & Job Search Optimization**  
+✅ **Job Search Relevance & Missing Skills Analysis**  
 ✅ **Interactive Chat Interface**  
-✅ **Versatile Tools** (Product Scraper, Job Scraper, Image Analysis, Sentiment Analysis, Website Summarizer)  
-✅ **Advanced Customization** (Model Selection, Search Engines, Output Format, Data Extraction, Iteration Count)  
-✅ **Responsive Design** (Works seamlessly on desktops, tablets, and mobile devices)  
-✅ **Dark & Light Mode**  
-✅ **Beautiful PDF Reports**  
-✅ **Image Support** (Upload images for analysis)
+✅ **Customizable AI Preferences & Output Format**  
+✅ **Beautiful PDF Reports with Insights**  
+✅ **Responsive UI with Dark & Light Mode**  
 
 ---
 
 ## 📥 Installation - Get Started in Minutes!
 
 ### Prerequisites 📌
-
 ✔️ **Python 3.8+** - [Download Here](https://www.python.org/downloads/)  
 ✔️ **pip** - Usually included with Python installations.
 
@@ -116,41 +93,33 @@ Kv is a powerful, **open-source** AI research tool that goes *beyond* simple sea
    pip install -r requirements.txt
    ```
 
-4️⃣ **Get Your FREE Gemini API Key:**
-   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Create a new API key (it's free!).
-
-5️⃣ **Set Your API Key:**
+4️⃣ **Set Up Environment Variables:**
    - Create a `.env` file in the project's root directory.
    - Add the following line to `.env`:
      ```bash
      GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY
      ```
 
-6️⃣ **Run Kv 🏃‍♂️💨**
+5️⃣ **Run Kv 🏃‍♂️💨**
    ```bash
-   python app.py
+   uvicorn app:app --host 127.0.0.1 --port 8000 --reload
    ```
-   🚀 Open your web browser and go to: [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
+   🚀 Open your web browser and go to: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## 🤖 Using Kv - Your Research Journey
+## 🤖 Using Kv - Your Research & Job Search Journey
 
-1️⃣ **Navigation:** Desktop users can use the sidebar; mobile users can access navigation via the menu icon (☰).
-
-2️⃣ **AI Chat:** Type your query, send an image, or initiate a web search for AI-driven responses.
-
-3️⃣ **Deep Research:** Enter your topic, select options, and start the deep research process with iterative analysis.
-
-4️⃣ **Tools:** Utilize scrapers, sentiment analysis, and summarization tools for research.
-
-5️⃣ **Settings:** Customize AI instructions, model preferences, and more.
+1️⃣ **AI Chat:** Type queries, send images, or initiate deep research.  
+2️⃣ **Deep Research:** Enter topics, select options, and get refined AI-generated insights.  
+3️⃣ **AI Job Search:** Upload your resume, input job details, and get job recommendations.  
+4️⃣ **Skill Gap Analysis:** Understand which skills you need to improve for better job matches.  
+5️⃣ **PDF Reports:** Generate well-structured research & job reports with AI-powered insights.  
 
 ---
 
 ## 🤝 Contribute - Be Part of the Kv Evolution!
-Kv is a community project, and we welcome contributions of all kinds! Whether you're a coding wizard, a design guru, a documentation expert, or just passionate about AI research, you can make a difference.
+Kv is a community project, and we welcome contributions of all kinds! Whether you're a coding wizard, a design guru, a documentation expert, or just passionate about AI, you can make a difference.
 
 ### Ways to Contribute:
 💻 **Code:** Add features, improve existing ones, fix bugs.  
@@ -159,13 +128,6 @@ Kv is a community project, and we welcome contributions of all kinds! Whether yo
 🐞 **Testing:** Report bugs, suggest improvements.  
 📢 **Advocacy:** Share Kv with the world!
 
-<div align="center">
-  <img src="https://media.giphy.com/media/26u4nJPf0JtQPdStq/giphy.gif" alt="Contribute Animation" width="40%">
-</div>
-
----
-##   Article For More Information
--Visit this Link (https://dev.to/kvcops/kv-your-ai-powered-deep-research-companion-2ona)
 ---
 
 ## 📜 License
