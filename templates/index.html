@@ -1,3 +1,4 @@
+<!-- templates/index.html (Complete, Modified) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KV AI Assistant | Next-Gen Research Tool</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!--  Added Google Fonts (Inter and Roboto Mono)  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Include highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
     <style>
-/* ---  Root Variables --- */
+/* --- Root Variables --- */
 :root {
+    /* Dark Theme */
   --bg-primary: #000212;
   --bg-secondary: #0A0A1B;
   --accent-purple: #8B5CF6;
@@ -24,22 +33,48 @@
   --results-text: #e0e0e0;
   --results-link: #90caf9;
   --results-link-hover: #bbdefb;
-  /* Loading animation */
   --loading-animation-bg: rgba(139, 92, 246, 0.7);
-  /* Increased opacity */
   --loading-animation-text: #FFFFFF;
-  /* Message bubble */
   --user-bubble: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
   --ai-bubble: rgba(255, 255, 255, 0.05);
 }
 
-/* ---  General Styles --- */
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #edf2f7;
+  --accent-purple: #6c2bd9;
+  --accent-blue: #2563eb;
+  --accent-pink: #d926a9;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --card-bg: rgba(0, 0, 0, 0.02); /* Subtle background */
+  --blur-bg: rgba(0, 0, 0, 0.01);
+  --typing-indicator-bg: rgba(0, 0, 0, 0.05);
+  --typing-indicator-dot: #6c2bd9;
+  --results-border: rgba(108, 43, 217, 0.3);
+  --results-header-bg: rgba(108, 43, 217, 0.1);
+  --results-text: #4a5568;
+  --results-link: #2563eb;
+  --results-link-hover: #4299e1;
+  --loading-animation-bg: rgba(108, 43, 217, 0.7);
+  --loading-animation-text: #FFFFFF;
+  --user-bubble: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+  --ai-bubble: rgba(0, 0, 0, 0.03);
+}
+
+/* --- General Styles --- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
+/* Code and preformatted text styling  */
+code, pre {
+    font-family: 'Roboto Mono', monospace;
+}
+
 
 body {
   background: var(--bg-primary);
@@ -47,9 +82,11 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-image: radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 25%), radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15) 0%, transparent 25%);
+     /*Transition for theme change*/
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ---  App Container --- */
+/* --- App Container --- */
 .app-container {
   display: grid;
   grid-template-columns: 320px 1fr;
@@ -60,7 +97,7 @@ body {
   min-height: 100vh;
 }
 
-/* ---  Sidebar --- */
+/* --- Sidebar --- */
 .sidebar {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
@@ -102,7 +139,6 @@ body {
   white-space: nowrap;
   /* Prevent text wrapping */
 }
-
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
@@ -128,14 +164,14 @@ body {
   border-radius: 16px;
 }
 
-/* ---  Main Content --- */
+/* --- Main Content --- */
 .main-content {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* ---  Chat Container --- */
+/* --- Chat Container --- */
 .chat-container {
   background: var(--card-bg);
   border-radius: 24px;
@@ -268,7 +304,7 @@ body {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ---  Chat Input --- */
+/* --- Chat Input --- */
 .chat-input-container {
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.02);
@@ -316,16 +352,12 @@ body {
   white-space: nowrap;
 }
 
-.action-button i {
-  font-size: 1rem;
-}
-
 .action-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
 }
 
-/* ---  Tools Grid --- */
+/* --- Tools Grid --- */
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -650,11 +682,30 @@ body {
   /* z-index: 101;  Place above other content */
   transition: color 0.3s;
   /* Smooth color transition */
+    display: flex;
+    align-items: center;
 }
 
 .mobile-nav-toggle:focus {
   outline: none;
   color: var(--accent-purple);
+}
+/* Style for "bars" icon */
+.mobile-nav-toggle .fa-bars {
+    display: inline-block; /* Show by default */
+}
+
+/* Style for "times" icon (initially hidden) */
+.mobile-nav-toggle .fa-times {
+    display: none; /* Hidden by default */
+}
+/* Style for "times" icon */
+.mobile-nav-open .mobile-nav-toggle .fa-times{
+    display: inline-block;
+}
+/* Style for "bars" icon (Hidden) */
+.mobile-nav-open .mobile-nav-toggle .fa-bars{
+    display: none;
 }
 
 .mobile-nav {
@@ -802,46 +853,43 @@ body {
   border: none;
   border-radius: 15px;
   cursor: pointer;
-  transition: background-color: 0.3s;
+  transition: background-color 0.3s;
   margin-top: 0.5rem;
   display: block;
   text-align: left;
 }
 
 .dropdown-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255, 0.10);
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: #1f434b;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 8px 16px 0px rgb(32 114 89 / 79%);
   z-index: 1;
   border-radius: 8px;
-  padding: 0.5rem 0;
-  max-height: 200px;
-  overflow-y: auto;
+    padding: 0.5rem 0; /* Add some padding */
+  max-height: 200px; /* Limit height, add scroll */
+    overflow-y: auto;
 }
-
-.dropdown-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.dropdown-content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-}
-
-.dropdown-content::-webkit-scrollbar-thumb {
-  background-color: var(--accent-purple);
-  border-radius: 10px;
-}
-
-.dropdown-content::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-pink);
-}
+/* ---scrollbar for dropdown--- */
+    .dropdown-content::-webkit-scrollbar {
+        width: 6px; /*Width of the scrollbar*/
+    }
+    .dropdown-content::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05); /* color of the tracking area */
+        border-radius: 10px;
+    }
+    .dropdown-content::-webkit-scrollbar-thumb {
+        background-color: var(--accent-purple); /* color of the scroll thumb */
+        border-radius: 10px;
+    }
+    .dropdown-content::-webkit-scrollbar-thumb:hover {
+        background-color: var(--accent-pink);
+    }
 
 .dropdown-content a {
   color: var(--results-link);
@@ -852,1692 +900,1963 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: var(--results-link-hover);
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* --- Loading Animations --- */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--loading-animation-bg);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-  pointer-events: none;
-}
-
-.loading-overlay.active {
-  pointer-events: auto;
-}
-
-.loading-content {
-  text-align: center;
-  color: var(--loading-animation-text);
-  /* Add more styles to the loading content, make it visually distinct */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* Subtle shadow */
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Semi-transparent background */
-  max-width: 80%;
-  /* Limit width on larger screens */
-}
-
-/* General Loading Spinner for Tools */
-.tool-loading-spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid var(--accent-purple);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear infinite;
-  margin: 0.5rem auto;
-  /* Center and add margin */
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+    background-color: rgba(255,255,255, 0.1);
+    color: var(--results-link-hover);
   }
-  100% {
-    transform: rotate(360deg);
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
-}
-
-@keyframes fadeInOut {
-  0%,
-  100% {
-    opacity: 0.5;
+  
+  /* --- Loading Animations --- */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--loading-animation-bg);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+    pointer-events: none; /* Prevent interactions */
   }
-  50% {
-    opacity: 1;
+  
+  .loading-overlay.active {
+      pointer-events: auto; /* Re-enable interactions */
   }
-}
-
-/* --- Deep Research Loading --- */
-#deep-research-loading {
-  display: none;
-  text-align: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #1e1e2f, #2a2a40);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#deep-research-loading .loading-spinner {
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  border-left: 4px solid var(--accent-purple);
-  border-right: 4px solid var(--accent-purple);
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite, glow 2s ease-in-out infinite;
-  margin: 1rem auto;
-  position: relative;
-  box-shadow: 0 0 12px rgba(128, 0, 128, 0.5), 0 0 24px rgba(128, 0, 128, 0.3);
-}
-
-#deep-research-loading .loading-spinner::before,
-#deep-research-loading .loading-spinner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--accent-purple);
-  opacity: 0.5;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-#deep-research-loading .loading-spinner::after {
-  width: 10px;
-  height: 10px;
-  opacity: 0.8;
-  animation-delay: 0.5s;
-}
-
-#deep-research-loading p {
-  color: #ffffff;
-  font-family: 'Arial', sans-serif;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 1rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Animations */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+  
+  .loading-content {
+    text-align: center;
+    color: var(--loading-animation-text);
+    /* Add more styles to the loading content, make it visually distinct */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Subtle shadow */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    max-width: 80%;
+    /* Limit width on larger screens */
   }
-  100% {
-    transform: rotate(360deg);
+  
+  /* General Loading Spinner for Tools */
+  .tool-loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid var(--accent-purple);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0.5rem auto;
+    /* Center and add margin */
   }
-}
-
-@keyframes glow {
-  0%,
-  100% {
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes fadeInOut {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  /* --- Deep Research Loading --- */
+  #deep-research-loading {
+    display: none;  /* Hidden by default */
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  #deep-research-loading .loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid var(--accent-purple);
+    border-right: 4px solid var(--accent-purple);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite, glow 2s ease-in-out infinite;
+    margin: 1rem auto;
+    position: relative;
     box-shadow: 0 0 12px rgba(128, 0, 128, 0.5), 0 0 24px rgba(128, 0, 128, 0.3);
   }
-  50% {
-    box-shadow: 0 0 24px rgba(128, 0, 128, 0.8), 0 0 48px rgba(128, 0, 128, 0.5);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
+  
+  #deep-research-loading .loading-spinner::before,
+  #deep-research-loading .loading-spinner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-purple);
     opacity: 0.5;
+    animation: pulse 1.5s ease-in-out infinite;
   }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1;
+  
+  #deep-research-loading .loading-spinner::after {
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+    animation-delay: 0.5s;
   }
-}
-
-/* --- Chat Typing Indicator --- */
-.chat-typing-indicator {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--typing-indicator-bg);
-  border-radius: 20px;
-  margin-left: 1rem;
-  align-self: flex-start;
-  max-width: 80%;
-  border-bottom-left-radius: 4px;
-}
-
-.chat-typing-indicator span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--accent-blue);
-  margin: 0 2px;
-  animation: chatBounce 1.2s infinite;
-  opacity: 0.4;
-}
-
-.chat-typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.chat-typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes chatBounce {
-  0%,
-  80%,
-  100% {
-    transform: translateY(0);
+  
+  #deep-research-loading p {
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Animations */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes glow {
+    0%,
+    100% {
+      box-shadow: 0 0 12px rgba(128, 0, 128, 0.5), 0 0 24px rgba(128, 0, 128, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 24px rgba(128, 0, 128, 0.8), 0 0 48px rgba(128, 0, 128, 0.5);
+    }
+  }
+  
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+  }
+  
+  /* --- Chat Typing Indicator --- */
+  .chat-typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--typing-indicator-bg);
+    border-radius: 20px;
+    margin-left: 1rem;
+    align-self: flex-start;
+    max-width: 80%;
+    border-bottom-left-radius: 4px;
+  }
+  
+  .chat-typing-indicator span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-blue);
+    margin: 0 2px;
+    animation: chatBounce 1.2s infinite;
     opacity: 0.4;
   }
-  40% {
-    transform: translateY(-5px);
+  
+  .chat-typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .chat-typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes chatBounce {
+    0%,
+    80%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    40% {
+      transform: translateY(-5px);
+      opacity: 1;
+    }
+  }
+  
+  /* --- Product Scraping Loading --- */
+  .product-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center horizontally */
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    color: var(--accent-blue);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+  
+  .product-loading-dots span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--accent-blue);
+    margin: 0 3px;
+    animation: productBlink 1.4s infinite both;
+  }
+  
+  .product-loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .product-loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes productBlink {
+    0%,
+    80%,
+    100% {
+      opacity: 0.2;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+  
+  /* --- Job Scraping Loading --- */
+  .job-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.10), rgba(139, 92, 246, 0.10));
+      /* Pink/Purple */
+      color: var(--accent-pink);
+      font-weight: 500;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(236, 72, 153, 0.20);
+  }
+  /* --- spinner animation --- */
+  .job-loading-spinner{
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--accent-pink);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: jobRotate 1s linear infinite;
+      margin-right: 0.5rem;
+  }
+  
+  @keyframes jobRotate {
+      to {
+          transform: rotate(360deg);
+      }
+  }
+  
+  /* --- Notifications --- */
+  .notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;  /* Ensure it's above other elements */
+    display: none; /* Hidden by default */
+    opacity: 0;     /* Start fully transparent */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+    transform: translateY(-20px); /* Start slightly above */
+  }
+  
+  /* Class to show and animate the notification */
+  .notification.show {
+      display: block;  /* Show the element */
+      opacity: 1;      /* Fade in */
+      transform: translateY(0); /* Move to final position */
+  }
+  
+  .notification-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+  }
+  
+  .notification-close:hover {
     opacity: 1;
   }
-}
-
-/* ---  Product Scraping Loading --- */
-.product-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Center horizontally */
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-  color: var(--accent-blue);
-  font-weight: 500;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.product-loading-dots span {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--accent-blue);
-  margin: 0 3px;
-  animation: productBlink 1.4s infinite both;
-}
-
-.product-loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.product-loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes productBlink {
-  0%,
-  80%,
-  100% {
-    opacity: 0.2;
+  
+  .notification.success {
+    background: linear-gradient(135deg, #28a745, #218838); /* Green gradient */
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); /* Green shadow */
   }
-  40% {
-    opacity: 1;
+  
+  .notification.error {
+    background: linear-gradient(135deg, #dc3545, #c82333); /* Red gradient */
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3); /* Red shadow */
   }
-}
-
-/* --- Job Scraping Loading --- */
-.job-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1));
-  /* Pink/Purple */
-  color: var(--accent-pink);
-  font-weight: 500;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(236, 72, 153, 0.2);
-}
-
-.job-loading-spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid var(--accent-pink);
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: jobRotate 1s linear infinite;
-  margin-right: 0.5rem;
-}
-
-@keyframes jobRotate {
-  to {
-    transform: rotate(360deg);
+  /* --- Clear History Button --- */
+  .clear-history-button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.2s;
+    padding: 0.5rem;
+    border-radius: 10px;
   }
-}
-
-/* --- Notifications --- */
-.notification {
-  position: fixed;
-  /* Or 'absolute' within a relative container */
-  top: 1rem;
-  right: 1rem;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  /* Make sure it's above other elements */
-  display: none;
-  /* Hidden by default */
-  opacity: 0;
-  /* Start fully transparent */
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  /* Smooth transition */
-  transform: translateY(-20px);
-}
-
-/* Class to show and animate the notification */
-.notification.show {
-  display: block;
-  /* Show the element */
-  opacity: 1;
-  /* Fade in */
-  transform: translateY(0);
-}
-
-.notification-close {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.3s;
-}
-
-.notification-close:hover {
-  opacity: 1;
-}
-
-.notification.success {
-  background: linear-gradient(135deg, #28a745, #218838);
-  /* Green gradient */
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-
-.notification.error {
-  background: linear-gradient(135deg, #dc3545, #c82333);
-  /*red gradient*/
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-}
-
-/* --- Clear History Button --- */
-.clear-history-button {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 1rem;
-  transition: color 0.2s;
-  padding: 0.5rem;
-  border-radius: 10px;
-}
-
-.clear-history-button:hover {
-  color: var(--accent-pink);
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.mobile-nav-toggle,
-.sidebar-toggle {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border-radius: 50%;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 0;
-  padding: 0.5em;
-  transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
-  position: relative;
-  z-index: 10;
-}
-
-.mobile-nav-toggle:focus,
-.sidebar-toggle:focus {
-  outline: none;
-}
-
-/* Sidebar Toggle Button (for mobile) */
-.sidebar-toggle {
-  display: none;
-  /* Hidden by default, shown on mobile */
-}
-    </style>
-</head>
-<body>
-<div class="app-container">
-    <!-- Mobile Navigation Container -->
-    <div class="mobile-nav-container" id="mobile-nav-container">
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation">
-            <i class="fas fa-bars"></i>
-        </button>
-        <nav class="mobile-nav" id="mobile-nav">
-              <a href="#" class="nav-item active" data-section="chat">
-                    <i class="fas fa-brain"></i>
-                    AI Chat
+  
+  .clear-history-button:hover {
+    color: var(--accent-pink);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  /*Theme Switcher*/
+  .theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .theme-switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+  }
+  
+  .theme-switch input {
+    display: none;
+  }
+  
+  .slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--accent-purple);
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  /* Style for the sun/moon icons */
+  #theme-icon {
+      font-size: 1.2rem;  /* Adjust size as needed */
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 0.3s;
+       margin-left: 0.5rem;
+  }
+  
+  #theme-icon:hover {
+      color: var(--accent-pink);
+  }
+  /* Style the "bars" icon for the sidebar toggle */
+  .sidebar-toggle {
+      display: none; /* Hidden by default, shown on mobile */
+      /* Other styles for positioning and appearance */
+       -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+       border-radius: 50%;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 0;
+      padding: 0.5em;
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+  }
+  .mobile-nav-toggle:focus, .sidebar-toggle:focus{
+      outline: none;
+  }
+  
+  /* Add this to your existing CSS to handle drag-and-drop styling */
+  .drag-over {
+    border: 2px dashed var(--accent-purple) !important; /* Use !important to override other styles */
+    background-color: rgba(139, 92, 246, 0.1) !important; /* Light purple tint */
+  }
+  
+  /* Status messages inside input groups (for loading, etc.) */
+  .input-group .status-message {
+      font-size: 0.85rem; /* Slightly smaller font */
+      color: var(--text-secondary);
+      margin-top: 0.25rem; /* Space it a bit from the input/button */
+      text-align: center; /* Center-align the status */
+  }
+  
+  
+      </style>
+  </head>
+  <body>
+  <div class="app-container">
+      <!-- Mobile Navigation Container -->
+      <div class="mobile-nav-container" id="mobile-nav-container">
+          <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation">
+              <i class="fas fa-bars"></i>  <!--  "bars" icon  -->
+              <i class="fas fa-times"></i> <!-- "times" icon for close -->
+          </button>
+  
+          <nav class="mobile-nav" id="mobile-nav">
+                <a href="#" class="nav-item active" data-section="chat">
+                      <i class="fas fa-brain"></i>
+                      AI Chat
+                </a>
+                <a href="#" class="nav-item" data-section="research">
+                      <i class="fas fa-search"></i>
+                      Research
+                </a>
+                <a href="#" class="nav-item" data-section="tools">
+                      <i class="fas fa-magic"></i>
+                      Tools
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                      <i class="fas fa-cog"></i>
+                      Settings
+                </a>
+          </nav>
+      </div>
+  
+      <!-- Sidebar Toggle Button (for mobile) -->
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+          <i class="fas fa-bars"></i>
+      </button>
+      <!-- Sidebar -->
+      <aside class="sidebar">
+          <div class="logo">KV AI</div>
+           <!-- Theme Switcher -->
+          <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                  <input type="checkbox" id="checkbox" />
+                  <div class="slider round"></div>
+              </label>
+              <i id="theme-icon" class="fas fa-sun"></i>
+          </div>
+          <nav>
+             <a href="#" class="nav-item active" data-section="chat">
+                  <i class="fas fa-brain"></i>
+                  AI Chat
               </a>
               <a href="#" class="nav-item" data-section="research">
-                    <i class="fas fa-search"></i>
-                    Research
+                  <i class="fas fa-search"></i>
+                  Research
               </a>
               <a href="#" class="nav-item" data-section="tools">
-                    <i class="fas fa-magic"></i>
-                    Tools
+                  <i class="fas fa-magic"></i>
+                  Tools
               </a>
               <a href="#" class="nav-item" data-section="settings">
-                    <i class="fas fa-cog"></i>
-                    Settings
+                  <i class="fas fa-cog"></i>
+                  Settings
               </a>
-        </nav>
-    </div>
-
-    <!-- Sidebar Toggle Button (for mobile) -->
-    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
-        <i class="fas fa-bars"></i>
-    </button>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">KV AI</div>
-        <nav>
-           <a href="#" class="nav-item active" data-section="chat">
-                <i class="fas fa-brain"></i>
-                AI Chat
-            </a>
-            <a href="#" class="nav-item" data-section="research">
-                <i class="fas fa-search"></i>
-                Research
-            </a>
-            <a href="#" class="nav-item" data-section="tools">
-                <i class="fas fa-magic"></i>
-                Tools
-            </a>
-            <a href="#" class="nav-item" data-section="settings">
-                <i class="fas fa-cog"></i>
-                Settings
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Chat Section -->
-        <div class="chat-container" id="chat-section">
-            <div class="chat-header">
-                <div>
-                    <i class="fas fa-robot"></i>
-                    <h2>AI Assistant</h2>
-                </div>
-                <button class="clear-history-button" id="clear-history-button" aria-label="Clear Chat History">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-            <div class="chat-messages" id="chat-messages">
-                <!-- Messages will be inserted here -->
-            </div>
-            <div class="chat-input-container">
-                <div class="chat-input-wrapper">
-                    <input type="text" class="chat-input" id="message-input" placeholder="Type your message...">
-                    <button class="action-button" id="image-button" aria-label="Upload Image">
-                        <i class="fas fa-image"></i>
-                    </button>
-                    <input type="file" id="image-upload" accept="image/*">
-                    <button class="action-button" id="web-search-button" aria-label="Web Search">
-                        <i class="fas fa-globe"></i>
-                    </button>
-                    <button class="action-button" id="send-button" aria-label="Send Message">
-                        <i class="fas fa-paper-plane"></i>
-                        Send
-                    </button>
-                </div>
-                <!-- Image Preview Container -->
-                <div id="image-preview-container"></div>
-            </div>
-        </div>
-
-        <!-- Research Section -->
-        <section class="tool-card" id="research-section" style="display: none;">
-            <div class="tool-header">
-                <div class="tool-icon"><i class="fas fa-search"></i></div>
-                <h3>Deep Research</h3>
-            </div>
-            <div class="tool-content">
-                <div class="input-group">
-                    <label for="deep-research-query">Research Query:</label>
-                    <textarea id="deep-research-query" rows="3" placeholder="Enter your deep research query"></textarea>
-                </div>
-                <div class="input-group">
-                    <label>Search Engines:</label>
-                    <div class="search-engines-group">
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="google" checked> Google</label>
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="duckduckgo"> DuckDuckGo</label>
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="bing"> Bing</label>
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="yahoo"> Yahoo</label>
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="brave"> Brave</label>
-                        <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="linkedin"> LinkedIn</label>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="output-format">Output Format:</label>
-                    <select id="output-format">
-                        <option value="markdown">Markdown</option>
-                        <option value="json">JSON</option>
-                        <option value="csv">CSV</option>
-                        <option value="table">Table (Markdown)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="max-iterations">Max Iterations:</label>
-                    <input type="number" id="max-iterations" value="3" min="1" max="5">
-                </div>
-                <div class="input-group">
-                    <label>Options:</label>
-                    <div>
-                        <label class="checkbox-group"><input type="checkbox" id="extract-links"> Extract Links</label>
-                        <label class="checkbox-group"><input type="checkbox" id="extract-emails"> Extract Emails</label>
-                        <label class="checkbox-group"><input type="checkbox" id="download-pdf" checked> Download PDF Report</label>
-                    </div>
-                </div>
-                <button id="deep-research-button" class="action-button">Start Deep Research</button>
-
-                <!-- Deep Research Loading Container -->
-                <div id="deep-research-loading">
-                    <div class="loading-spinner"></div>
-                    <p>Performing Deep Research... 🚀🧠💡</p>
-                </div>
-
-            </div>
-
-            <div class="results-area" id="deep-research-results-area" style="display:none;">
-                <h3>Deep Research Results</h3>
-                <div id="deep-research-explanation"></div>
-                <ul id="deep-research-references"></ul>
-            </div>
-        </section>
-
-        <!-- Tools Section -->
-        <section class="tools-grid" id="tools-section" style="display: none;">
-            <!-- Product Scraper Tool -->
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <h3>Product Scraper</h3>
-                </div>
-                <div class="tool-content">
-                    <div class="input-group">
-                        <label for="product-query">Product Search:</label>
-                        <input type="text" id="product-query" placeholder="Enter product name">
-                    </div>
-                    <button id="scrape-product-button" class="action-button">Scrape</button>
-                    <!-- Product Scraping Loading Indicator -->
-                    <div class="product-loading" id="product-loading" style="display: none;">
-                        <div class="product-loading-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        Scraping...
-                    </div>
-                    <!-- Loading Spinner for Product Scraper-->
-                    <div class="tool-loading-spinner" id="product-loading-spinner" style="display: none;"></div>
-                </div>
-                <div id="product-scraping-results-area" style="display: none;" class="results-area">
-                    <h3>Product Scraping Results</h3>
-                    <div id="product-explanation"></div>
-                </div>
-            </div>
-
-            <!-- Job Scraper Tool -->
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <h3>Job Scraper</h3>
-                </div>
-                <div class="tool-content">
-                    <div class="input-group">
-                        <label for="job-title">Job Scraping:</label>
-                        <input type="text" id="job-title" placeholder="Job Title">
-                        <input type="text" id="job-location-indeed" placeholder="Job Location">
-                    </div>
-                    <!-- Resume Upload (Optional) -->
-                    <div class="input-group">
+          </nav>
+      </aside>
+  
+      <!-- Main Content -->
+      <main class="main-content">
+          <!-- Chat Section -->
+          <div class="chat-container" id="chat-section">
+              <div class="chat-header">
+                  <div>
+                      <i class="fas fa-robot"></i>
+                      <h2>AI Assistant</h2>
+                  </div>
+                  <button class="clear-history-button" id="clear-history-button" aria-label="Clear Chat History">
+                      <i class="fas fa-trash-alt"></i>
+                  </button>
+              </div>
+              <div class="chat-messages" id="chat-messages">
+                  <!-- Messages will be inserted here -->
+              </div>
+              <div class="chat-input-container">
+                  <div class="chat-input-wrapper">
+                      <input type="text" class="chat-input" id="message-input" placeholder="Type your message...">
+                      <button class="action-button" id="image-button" aria-label="Upload Image">
+                          <i class="fas fa-image"></i>
+                      </button>
+                      <input type="file" id="image-upload" accept="image/*">
+                      <button class="action-button" id="web-search-button" aria-label="Web Search">
+                          <i class="fas fa-globe"></i>
+                      </button>
+                      <button class="action-button" id="send-button" aria-label="Send Message">
+                          <i class="fas fa-paper-plane"></i>
+                          Send
+                      </button>
+                  </div>
+                  <!-- Image Preview Container -->
+                  <div id="image-preview-container"></div>
+              </div>
+          </div>
+  
+          <!-- Research Section -->
+          <section class="tool-card" id="research-section" style="display: none;">
+              <div class="tool-header">
+                  <div class="tool-icon"><i class="fas fa-search"></i></div>
+                  <h3>Deep Research</h3>
+              </div>
+              <div class="tool-content">
+                  <div class="input-group">
+                      <label for="deep-research-query">Research Query:</label>
+                      <textarea id="deep-research-query" rows="3" placeholder="Enter your deep research query"></textarea>
+                  </div>
+                  <div class="input-group">
+                      <label for="search-engines-select">Search Engines:</label>
+                       <div class="dropdown">
+                          <button class="dropdown-button" id = "search-engines-select">Select Engines</button>
+                          <div class="dropdown-content" id = "search-engines-list">
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="google" checked> Google</label>
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="duckduckgo"> DuckDuckGo</label>
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="bing"> Bing</label>
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="yahoo"> Yahoo</label>
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="brave"> Brave</label>
+                              <label class="checkbox-group"><input type="checkbox" name="deep_research_engine" value="linkedin"> LinkedIn</label>
+                          </div>
+                      </div>
+                  </div>
+  
+                  <div class="input-group">
+                      <label for="output-format">Output Format:</label>
+                      <select id="output-format">
+                          <option value="markdown">Markdown</option>
+                          <option value="json">JSON</option>
+                          <option value="csv">CSV</option>
+                          <option value="table">Table (Markdown)</option>
+                      </select>
+                  </div>
+                  <div class="input-group">
+                      <label for="max-iterations">Max Iterations:</label>
+                      <input type="number" id="max-iterations" value="3" min="1" max="5">
+                  </div>
+                  <div class="input-group">
+                      <label>Options:</label>
+                      <div>
+                          <label class="checkbox-group"><input type="checkbox" id="extract-links"> Extract Links</label>
+                          <label class="checkbox-group"><input type="checkbox" id="extract-emails"> Extract Emails</label>
+                          <label class="checkbox-group"><input type="checkbox" id="download-pdf" checked> Download PDF Report</label>
+                      </div>
+                  </div>
+                  <button id="deep-research-button" class="action-button">Start Deep Research</button>
+  
+                  <!-- Deep Research Loading Container -->
+                  <div id="deep-research-loading">
+                      <div class="loading-spinner"></div>
+                      <p>Performing Deep Research... 🚀🧠💡</p>
+                      <p id="deep-research-status" class="status-message"></p>  <!-- Status message -->
+                  </div>
+  
+              </div>
+  
+              <div class="results-area" id="deep-research-results-area" style="display:none;">
+                  <h3>Deep Research Results</h3>
+                  <div id="deep-research-explanation"></div>
+                  <ul id="deep-research-references"></ul>
+              </div>
+          </section>
+  
+          <!-- Tools Section -->
+          <section class="tools-grid" id="tools-section" style="display: none;">
+              <!-- Product Scraper Tool -->
+              <div class="tool-card">
+                  <div class="tool-header">
+                      <div class="tool-icon">
+                          <i class="fas fa-box"></i>
+                      </div>
+                      <h3>Product Scraper</h3>
+                  </div>
+                  <div class="tool-content">
+                      <div class="input-group">
+                          <label for="product-query">Product Search:</label>
+                          <input type="text" id="product-query" placeholder="Enter product name">
+                      </div>
+                      <button id="scrape-product-button" class="action-button">Scrape</button>
+                      <!-- Product Scraping Loading Indicator -->
+                      <div class="product-loading" id="product-loading" style="display: none;">
+                          <div class="product-loading-dots">
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                          </div>
+                          Scraping...
+                      </div>
+                      <!-- Loading Spinner for Product Scraper-->
+                      <div class="tool-loading-spinner" id="product-loading-spinner" style="display: none;"></div>
+                  </div>
+                  <div id="product-scraping-results-area" style="display: none;" class="results-area">
+                      <h3>Product Scraping Results</h3>
+                      <div id="product-explanation"></div>
+                  </div>
+              </div>
+  
+              <!-- Job Scraper Tool -->
+              <div class="tool-card">
+                  <div class="tool-header">
+                      <div class="tool-icon">
+                          <i class="fas fa-briefcase"></i>
+                      </div>
+                      <h3>Job Scraper</h3>
+                  </div>
+                  <div class="tool-content">
+                      <div class="input-group">
+                          <label for="job-title">Job Title (Optional):</label>
+                          <input type="text" id="job-title" placeholder="Enter job title (optional)">
+                      </div>
+  
+                      <div class="input-group">
+                          <label for="job-location-indeed">Job Location:</label>
+                          <input type="text" id="job-location-indeed" placeholder="Job Location">
+                      </div>
+  
+                      <div class="input-group">
+                          <label for="job-experience">Experience Level:</label>
+                          <select id="job-experience">
+                              <option value="">Any</option>
+                              <option value="fresher">Fresher</option>
+                              <option value="entry-level">Entry-Level</option>
+                              <option value="mid-level">Mid-Level</option>
+                              <option value="senior">Senior</option>
+                              <option value="executive">Executive</option>
+                          </select>
+                       </div>
+  
+                      <!-- Resume Upload (Optional) -->
+                      <div class="input-group" id="resume-upload-group">
                         <label for="resume-upload">Upload Resume (PDF, DOCX, TXT):</label>
-                        <input type="file" id="resume-upload" accept=".pdf,.docx,.txt">
-                    </div>
-                    <button id="scrape-jobs-button" class="action-button">Scrape Jobs</button>
-                    <!-- Job Scraping Loading Indicator -->
-                    <div class="job-loading" id="job-loading" style="display: none;">
-                        <div class="job-loading-spinner"></div>
-                        Searching...
-                    </div>
-                    <!-- Loading Spinner for Job Scraper -->
-                    <div class="tool-loading-spinner" id="job-loading-spinner" style="display: none;"></div>
-
-                </div>
-                <div id="jobs-scraping-results-area" style="display: none;" class="results-area">
-                    <h3>Jobs Scraping Results</h3>
-                    <div id="jobs-explanation"></div>
-                </div>
-            </div>
-
-            <!-- Image Analysis Tool -->
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-image"></i>
-                    </div>
-                    <h3>Image Analysis</h3>
-                </div>
-                <div class="tool-content">
-                    <div class="input-group">
-                        <label for="image-analysis-upload">Upload Image:</label>
-                        <input type="file" id="image-analysis-upload" accept="image/*">
-                    </div>
-                    <button id="analyze-image-button" class="action-button">Analyze Image</button>
-                    <!-- Image Analysis Results (Added) -->
-                    <div id="image-analysis-results-area" style="display: none;" class="results-area">
-                        <h3>Image Analysis Results</h3>
-                        <div id="image-analysis-results"></div>
-                    </div>
-                    <!-- Loading Spinner for Image Analysis -->
-                    <div class="tool-loading-spinner" id="image-analysis-loading-spinner" style="display: none;"></div>
-
-                </div>
-            </div>
-
-            <!-- Sentiment Analysis Tool -->
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-smile"></i>
-                    </div>
-                    <h3>Sentiment Analysis</h3>
-                </div>
-                <div class="tool-content">
-                    <div class="input-group">
-                        <label for="sentiment-text">Text for Analysis:</label>
-                        <textarea id="sentiment-text" rows="3" placeholder="Enter text..."></textarea>
-                    </div>
-                    <button id="analyze-sentiment-button" class="action-button">Analyze Sentiment</button>
-                    <!-- Sentiment Analysis Results (Added) -->
-                    <div id="sentiment-analysis-results-area" style="display: none;" class="results-area">
-                        <h3>Sentiment Analysis Results</h3>
-                        <div id="sentiment-analysis-results"></div>
-                    </div>
-                    <!-- Loading Spinner for Sentiment Analysis -->
-                    <div class="tool-loading-spinner" id="sentiment-analysis-loading-spinner" style="display: none;"></div>
-                </div>
-            </div>
-
-            <!-- Website Summarization Tool -->
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h3>Website Summarizer</h3>
-                </div>
-                <div class="tool-content">
-                    <div class="input-group">
-                        <label for="summarize-url">Website URL:</label>
-                        <input type="text" id="summarize-url" placeholder="Enter URL...">
-                    </div>
-                    <button id="summarize-website-button" class="action-button">Summarize Website</button>
-                    <!-- Website Summarization Results (Added) -->
-                    <div id="website-summarization-results-area" style="display: none;" class="results-area">
-                        <h3>Website Summarization Results</h3>
-                        <div id="website-summarization-results"></div>
-                    </div>
-                    <!-- Loading Spinner for Website Summarization -->
-                    <div class="tool-loading-spinner" id="website-summarization-loading-spinner" style="display: none;"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-</div>
-
-<!-- Settings Modal -->
-<div id="settings-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">×</span>
-        <h2>Settings</h2>
-        <div class="input-group">
-            <label for="custom-instruction">Custom Instruction:</label>
-            <textarea id="custom-instruction" rows="4" placeholder="Enter custom instructions for the AI..."></textarea>
-        </div>
-        <div class="input-group">
-            <label for="model-name">AI Model:</label>
-            <select id="model-name">
-                <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-                <option value="gemini-2.0-flash-thinking-exp-01-21">gemini-2.0-flash-thinking-exp-01-21</option>
-            </select>
-        </div>
-        <button id="save-settings-button" class="action-button">Save Settings</button>
-    </div>
-</div>
-
-<!-- Loading Overlay (Full Page) -->
-<div class="loading-overlay" id="loading-overlay">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p>Generating Report... 🚀🧠💡</p>
-    </div>
-</div>
-
-<!-- Notification Container -->
-<div id="notification-container"></div>
-
-<!-- Include marked.js library for Markdown parsing -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Element References ---
-    const chatMessages = document.getElementById('chat-messages');
-    const messageInput = document.getElementById('message-input');
-    const sendButton = document.getElementById('send-button');
-    const imageButton = document.getElementById('image-button');
-    const imageUpload = document.getElementById('image-upload');
-    const webSearchButton = document.getElementById('web-search-button');
-    const imagePreviewContainer = document.getElementById('image-preview-container');
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const clearHistoryButton = document.getElementById('clear-history-button'); // Clear history
-
-    const sidebarToggle = document.getElementById('sidebar-toggle'); // Sidebar toggle
-    const sidebar = document.querySelector('.sidebar');
-
-    // ---  Mobile Navigation  ---
-    const mobileNavContainer = document.getElementById('mobile-nav-container'); //Get Container
-    const mobileNav = document.getElementById('mobile-nav'); //Get Mobile Nav
-    const mobileNavToggle = document.getElementById('mobile-nav-toggle'); //Get Toggle
-
-    // Sections
-    const chatSection = document.getElementById('chat-section');
-    const researchSection = document.getElementById('research-section');
-    const toolsSection = document.getElementById('tools-section');
-    const settingsModal = document.getElementById('settings-modal');
-
-    // Deep Research
-    const deepResearchResultsArea = document.getElementById('deep-research-results-area');
-    const deepResearchExplanation = document.getElementById('deep-research-explanation');
-    const deepResearchReferences = document.getElementById('deep-research-references');
-    const deepResearchButton = document.getElementById('deep-research-button');
-    const deepResearchQueryInput = document.getElementById('deep-research-query');
-    const outputFormatSelect = document.getElementById('output-format');
-    const maxIterationsInput = document.getElementById('max-iterations');
-    const extractLinksCheckbox = document.getElementById('extract-links');
-    const extractEmailsCheckbox = document.getElementById('extract-emails');
-    const downloadPdfCheckbox = document.getElementById('download-pdf');
-    const deepResearchLoading = document.getElementById('deep-research-loading');
-
-    // Product Scraping
-    const productScrapingResultsArea = document.getElementById('product-scraping-results-area');
-    const productExplanation = document.getElementById('product-explanation');
-    const scrapeProductButton = document.getElementById('scrape-product-button');
-    const productQueryInput = document.getElementById('product-query');
-    const productLoading = document.getElementById('product-loading');
-    const productLoadingSpinner = document.getElementById('product-loading-spinner');
-
-    // Job Scraping
-    const jobsScrapingResultsArea = document.getElementById('jobs-scraping-results-area');
-    const jobsExplanation = document.getElementById('jobs-explanation');
-    const scrapeJobsButton = document.getElementById('scrape-jobs-button');
-    const jobTitleInput = document.getElementById('job-title');
-    const jobLocationIndeedInput = document.getElementById('job-location-indeed');
-    const resumeUpload = document.getElementById('resume-upload');
-    const jobLoading = document.getElementById('job-loading');
-    const jobLoadingSpinner = document.getElementById('job-loading-spinner');
-
-    // Image Analysis Tool
-    const imageAnalysisUpload = document.getElementById('image-analysis-upload');
-    const analyzeImageButton = document.getElementById('analyze-image-button');
-    const imageAnalysisResultsArea = document.getElementById('image-analysis-results-area');
-    const imageAnalysisResults = document.getElementById('image-analysis-results');
-    const imageAnalysisLoadingSpinner = document.getElementById('image-analysis-loading-spinner');
-
-    // Sentiment Analysis Tool
-    const sentimentText = document.getElementById('sentiment-text');
-    const analyzeSentimentButton = document.getElementById('analyze-sentiment-button');
-    const sentimentAnalysisResultsArea = document.getElementById('sentiment-analysis-results-area');
-    const sentimentAnalysisResults = document.getElementById('sentiment-analysis-results');
-    const sentimentAnalysisLoadingSpinner = document.getElementById('sentiment-analysis-loading-spinner');
-
-    // Website Summarization Tool
-    const summarizeUrl = document.getElementById('summarize-url');
-    const summarizeWebsiteButton = document.getElementById('summarize-website-button');
-    const websiteSummarizationResultsArea = document.getElementById('website-summarization-results-area');
-    const websiteSummarizationResults = document.getElementById('website-summarization-results');
-    const websiteSummarizationLoadingSpinner = document.getElementById('website-summarization-loading-spinner');
-
-    // Settings Modal
-    const settingsButton = document.querySelector('.nav-item[data-section="settings"]');
-
-    const closeModalButton = document.querySelector('.close-modal');
-    const saveSettingsButton = document.getElementById('save-settings-button');
-    const customInstructionInput = document.getElementById('custom-instruction');
-    const modelNameSelect = document.getElementById('model-name');
-
-    // ---  Variables ---
-    let conversationHistory = [];
-    let imageBase64 = null;
-    let customInstruction = '';
-    let selectedModel = 'gemini-2.0-flash';
-    let isWebSearchMode = false;
-    let typingIndicatorTimeout;
-    let resumeBase64 = null;
-
-    // ---  Utility Functions ---
-    // Show chat typing indicator
-    function showLoading() {
-      const typingIndicator = document.createElement('div');
-      typingIndicator.classList.add('chat-typing-indicator');
-      typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-      chatMessages.appendChild(typingIndicator);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function hideLoading() {
-      const typingIndicator = document.querySelector('.chat-typing-indicator');
-      if (typingIndicator) {
-        typingIndicator.remove();
+                          <input type="file" id="resume-upload" accept=".pdf,.docx,.txt">
+                      </div>
+                      <button id="scrape-jobs-button" class="action-button">Scrape Jobs</button>
+                      <!-- Job Scraping Loading Indicator -->
+                      <div class="job-loading" id="job-loading" style="display: none;">
+                          <div class="job-loading-spinner"></div>
+                          Searching...
+                          <p id="job-scraping-status" class="status-message"></p>
+                      </div>
+                      <!-- Loading Spinner for Job Scraper -->
+                      <div class="tool-loading-spinner" id="job-loading-spinner" style="display: none;"></div>
+  
+                  </div>
+                  <div id="jobs-scraping-results-area" style="display: none;" class="results-area">
+                      <h3>Jobs Scraping Results</h3>
+                      <div id="jobs-explanation"></div>
+                  </div>
+              </div>
+  
+              <!-- Image Analysis Tool -->
+              <div class="tool-card">
+                  <div class="tool-header">
+                      <div class="tool-icon">
+                          <i class="fas fa-image"></i>
+                      </div>
+                      <h3>Image Analysis</h3>
+                  </div>
+                  <div class="tool-content">
+                      <div class="input-group">
+                          <label for="image-analysis-upload">Upload Image:</label>
+                          <input type="file" id="image-analysis-upload" accept="image/*">
+                      </div>
+                      <button id="analyze-image-button" class="action-button">Analyze Image</button>
+                      <!-- Image Analysis Results (Added) -->
+                      <div id="image-analysis-results-area" style="display: none;" class="results-area">
+                          <h3>Image Analysis Results</h3>
+                          <div id="image-analysis-results"></div>
+                      </div>
+                      <!-- Loading Spinner for Image Analysis -->
+                      <div class="tool-loading-spinner" id="image-analysis-loading-spinner" style="display: none;"></div>
+  
+                  </div>
+              </div>
+  
+              <!-- Sentiment Analysis Tool -->
+              <div class="tool-card">
+                  <div class="tool-header">
+                      <div class="tool-icon">
+                          <i class="fas fa-smile"></i>
+                      </div>
+                      <h3>Sentiment Analysis</h3>
+                  </div>
+                  <div class="tool-content">
+                      <div class="input-group">
+                          <label for="sentiment-text">Text for Analysis:</label>
+                          <textarea id="sentiment-text" rows="3" placeholder="Enter text..."></textarea>
+                      </div>
+                      <button id="analyze-sentiment-button" class="action-button">Analyze Sentiment</button>
+                      <!-- Sentiment Analysis Results (Added) -->
+                      <div id="sentiment-analysis-results-area" style="display: none;" class="results-area">
+                          <h3>Sentiment Analysis Results</h3>
+                          <div id="sentiment-analysis-results"></div>
+                      </div>
+                      <!-- Loading Spinner for Sentiment Analysis -->
+                      <div class="tool-loading-spinner" id="sentiment-analysis-loading-spinner" style="display: none;"></div>
+                  </div>
+              </div>
+  
+              <!-- Website Summarization Tool -->
+              <div class="tool-card">
+                  <div class="tool-header">
+                      <div class="tool-icon">
+                          <i class="fas fa-globe"></i>
+                      </div>
+                      <h3>Website Summarizer</h3>
+                  </div>
+                  <div class="tool-content">
+                      <div class="input-group">
+                          <label for="summarize-url">Website URL:</label>
+                          <input type="text" id="summarize-url" placeholder="Enter URL...">
+                      </div>
+                      <button id="summarize-website-button" class="action-button">Summarize Website</button>
+                      <!-- Website Summarization Results (Added) -->
+                      <div id="website-summarization-results-area" style="display: none;" class="results-area">
+                          <h3>Website Summarization Results</h3>
+                          <div id="website-summarization-results"></div>
+                      </div>
+                      <!-- Loading Spinner for Website Summarization -->
+                      <div class="tool-loading-spinner" id="website-summarization-loading-spinner" style="display: none;"></div>
+                  </div>
+              </div>
+          </section>
+      </main>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal">
+      <div class="modal-content">
+          <span class="close-modal">×</span>
+          <h2>Settings</h2>
+          <div class="input-group">
+              <label for="custom-instruction">Custom Instruction:</label>
+              <textarea id="custom-instruction" rows="4" placeholder="Enter custom instructions for the AI..."></textarea>
+          </div>
+          <div class="input-group">
+              <label for="model-name">AI Model:</label>
+              <select id="model-name">
+                  <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+                  <option value="gemini-2.0-flash-thinking-exp-01-21">gemini-2.0-flash-thinking-exp-01-21</option>
+              </select>
+          </div>
+          <button id="save-settings-button" class="action-button">Save Settings</button>
+      </div>
+  </div>
+  
+  <!-- Loading Overlay (Full Page) -->
+  <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <p>Generating Report... 🚀🧠💡</p>
+      </div>
+  </div>
+  
+  <!-- Notification Container -->
+  <div id="notification-container"></div>
+  
+  <!-- Include marked.js and highlight.js libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- DOM Element References ---
+      const chatMessages = document.getElementById('chat-messages');
+      const messageInput = document.getElementById('message-input');
+      const sendButton = document.getElementById('send-button');
+      const imageButton = document.getElementById('image-button');
+      const imageUpload = document.getElementById('image-upload');
+      const webSearchButton = document.getElementById('web-search-button');
+      const imagePreviewContainer = document.getElementById('image-preview-container');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const clearHistoryButton = document.getElementById('clear-history-button'); // Clear history
+  
+      const sidebarToggle = document.getElementById('sidebar-toggle'); // Sidebar toggle
+      const sidebar = document.querySelector('.sidebar');
+  
+      // ---  Mobile Navigation  ---
+      const mobileNavContainer = document.getElementById('mobile-nav-container'); //Get Container
+      const mobileNav = document.getElementById('mobile-nav'); //Get Mobile Nav
+      const mobileNavToggle = document.getElementById('mobile-nav-toggle'); //Get Toggle
+  
+      // Sections
+      const chatSection = document.getElementById('chat-section');
+      const researchSection = document.getElementById('research-section');
+      const toolsSection = document.getElementById('tools-section');
+      const settingsModal = document.getElementById('settings-modal');
+  
+      // Deep Research
+      const deepResearchResultsArea = document.getElementById('deep-research-results-area');
+      const deepResearchExplanation = document.getElementById('deep-research-explanation');
+      const deepResearchReferences = document.getElementById('deep-research-references');
+      const deepResearchButton = document.getElementById('deep-research-button');
+      const deepResearchQueryInput = document.getElementById('deep-research-query');
+      const outputFormatSelect = document.getElementById('output-format');
+      const maxIterationsInput = document.getElementById('max-iterations');
+      const extractLinksCheckbox = document.getElementById('extract-links');
+      const extractEmailsCheckbox = document.getElementById('extract-emails');
+      const downloadPdfCheckbox = document.getElementById('download-pdf');
+      const deepResearchLoading = document.getElementById('deep-research-loading');
+      const deepResearchStatus = document.getElementById('deep-research-status'); // Status element
+  
+      // Product Scraping
+      const productScrapingResultsArea = document.getElementById('product-scraping-results-area');
+      const productExplanation = document.getElementById('product-explanation');
+      const scrapeProductButton = document.getElementById('scrape-product-button');
+      const productQueryInput = document.getElementById('product-query');
+      const productLoading = document.getElementById('product-loading');
+      const productLoadingSpinner = document.getElementById('product-loading-spinner');
+  
+      // Job Scraping
+      const jobsScrapingResultsArea = document.getElementById('jobs-scraping-results-area');
+      const jobsExplanation = document.getElementById('jobs-explanation');
+      const scrapeJobsButton = document.getElementById('scrape-jobs-button');
+      const jobTitleInput = document.getElementById('job-title');
+      const jobLocationIndeedInput = document.getElementById('job-location-indeed');
+      const resumeUpload = document.getElementById('resume-upload');
+      const jobLoading = document.getElementById('job-loading');
+      const jobLoadingSpinner = document.getElementById('job-loading-spinner');
+      const jobScrapingStatus = document.getElementById('job-scraping-status'); //status element
+      const jobExperienceSelect = document.getElementById('job-experience'); // Get the experience select
+  
+  
+      // Image Analysis Tool
+      const imageAnalysisUpload = document.getElementById('image-analysis-upload');
+      const analyzeImageButton = document.getElementById('analyze-image-button');
+      const imageAnalysisResultsArea = document.getElementById('image-analysis-results-area');
+      const imageAnalysisResults = document.getElementById('image-analysis-results');
+      const imageAnalysisLoadingSpinner = document.getElementById('image-analysis-loading-spinner');
+  
+      // Sentiment Analysis Tool
+      const sentimentText = document.getElementById('sentiment-text');
+      const analyzeSentimentButton = document.getElementById('analyze-sentiment-button');
+      const sentimentAnalysisResultsArea = document.getElementById('sentiment-analysis-results-area');
+      const sentimentAnalysisResults = document.getElementById('sentiment-analysis-results');
+      const sentimentAnalysisLoadingSpinner = document.getElementById('sentiment-analysis-loading-spinner');
+  
+      // Website Summarization Tool
+      const summarizeUrl = document.getElementById('summarize-url');
+      const summarizeWebsiteButton = document.getElementById('summarize-website-button');
+      const websiteSummarizationResultsArea = document.getElementById('website-summarization-results-area');
+      const websiteSummarizationResults = document.getElementById('website-summarization-results');
+      const websiteSummarizationLoadingSpinner = document.getElementById('website-summarization-loading-spinner');
+  
+      // Settings Modal
+      const settingsButton = document.querySelector('.nav-item[data-section="settings"]');
+  
+      const closeModalButton = document.querySelector('.close-modal');
+      const saveSettingsButton = document.getElementById('save-settings-button');
+      const customInstructionInput = document.getElementById('custom-instruction');
+      const modelNameSelect = document.getElementById('model-name');
+      const searchEngineSelect = document.getElementById('search-engines-select');
+      const searchEnginesList = document.getElementById('search-engines-list');
+  
+  
+  
+      // ---  Variables ---
+      let conversationHistory = [];
+      let imageBase64 = null;
+      let customInstruction = '';
+      let selectedModel = 'gemini-2.0-flash';
+      let isWebSearchMode = false;
+     // let resumeBase64 = null; // To store resume data if needed--No longer needed
+  
+      // ---  Utility Functions ---
+      // Show chat typing indicator
+      function showLoading() {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.classList.add('chat-typing-indicator');
+        typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+        chatMessages.appendChild(typingIndicator);
+        chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
       }
-    }
-
-    // Show/hide full page loading overlay
-    function showLoadingOverlay() {
-      loadingOverlay.classList.add('active');
-      loadingOverlay.style.display = 'flex';
-    }
-
-    function hideLoadingOverlay() {
-      loadingOverlay.classList.remove('active');
-      loadingOverlay.style.display = 'none';
-    }
-
-    // Show/hide deep research loading
-    function showDeepResearchLoading() {
-      deepResearchLoading.style.display = 'block';
-      deepResearchResultsArea.style.display = 'none';
-    }
-
-    function hideDeepResearchLoading() {
-      deepResearchLoading.style.display = 'none';
-    }
-
-    // Show/hide product scraping loading
-    function showProductLoading() {
-      // productLoading.style.display = 'flex'; // Old method - keep for now in case dots are prefered
-      productLoadingSpinner.style.display = 'block'; // New Spinner
-      productScrapingResultsArea.style.display = 'none';
-    }
-
-    function hideProductLoading() {
-      // productLoading.style.display = 'none';
-      productLoadingSpinner.style.display = 'none';
-    }
-
-    // Show/hide job scraping loading
-    function showJobLoading() {
-      // jobLoading.style.display = 'flex';
-      jobLoadingSpinner.style.display = 'block';
-      jobsScrapingResultsArea.style.display = 'none';
-    }
-
-    function hideJobLoading() {
-      // jobLoading.style.display = 'none';
-      jobLoadingSpinner.style.display = 'none';
-    }
-
-    // Show/Hide Image Analysis Loading
-    function showImageAnalysisLoading() {
-      imageAnalysisLoadingSpinner.style.display = 'block';
-      imageAnalysisResultsArea.style.display = 'none';
-    }
-
-    function hideImageAnalysisLoading() {
-      imageAnalysisLoadingSpinner.style.display = 'none';
-    }
-
-    // Show/Hide Sentiment Analysis Loading
-    function showSentimentAnalysisLoading() {
-      sentimentAnalysisLoadingSpinner.style.display = 'block';
-      sentimentAnalysisResultsArea.style.display = 'none';
-    }
-
-    function hideSentimentAnalysisLoading() {
-      sentimentAnalysisLoadingSpinner.style.display = 'none';
-    }
-
-    // Show/Hide Website Summarization Loading
-    function showWebsiteSummarizationLoading() {
-      websiteSummarizationLoadingSpinner.style.display = 'block';
-      websiteSummarizationResultsArea.style.display = 'none';
-    }
-
-    function hideWebsiteSummarizationLoading() {
-      websiteSummarizationLoadingSpinner.style.display = 'none';
-    }
-
-    // Function to display notifications
-    function showNotification(message, type = 'info') { // Default type is 'info'
-      const container = document.getElementById('notification-container');
-      if (!container) return;
-      const notification = document.createElement('div');
-      notification.classList.add('notification', type); // Add type as a class
-      notification.textContent = message;
-      const closeButton = document.createElement('button');
-      closeButton.classList.add('notification-close');
-      closeButton.innerHTML = '×'; // "x" symbol
-      closeButton.addEventListener('click', () => {
-        notification.remove();
-      });
-      notification.appendChild(closeButton);
-      container.appendChild(notification);
-      // Trigger reflow to ensure the transition works correctly
-      void notification.offsetWidth;
-      // Show the notification
-      notification.classList.add('show');
-      // Automatically hide after 5 seconds
-      setTimeout(() => {
-        notification.classList.remove('show');
-        // Remove the element from the DOM after the transition ends
-        setTimeout(() => notification.remove(), 500);
-      }, 5000);
-    }
-
-    // --- Message Display Functions ---
-    function appendMessage(message, sender) {
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-      const messageText = document.createElement('div');
-      messageText.innerHTML = marked.parse(message);
-      messageDiv.appendChild(messageText);
-      const timestamp = new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      const timestampDiv = document.createElement('div');
-      timestampDiv.classList.add('message-timestamp');
-      timestampDiv.textContent = timestamp;
-      messageDiv.appendChild(timestampDiv);
-
-      // Add copy button (except for image messages)
-      if (!message.startsWith("<img")) {
-        const copyButton = document.createElement('button');
-        copyButton.classList.add('copy-button');
-        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-        copyButton.title = "Copy to Clipboard";
-        copyButton.addEventListener('click', () => {
-          navigator.clipboard.writeText(message).then(() => {
-            showNotification('Message copied!', 'success');
-          }).catch(err => {
-            showNotification('Failed to copy message.', 'error');
-            console.error('Failed to copy: ', err);
-          });
-        });
-        messageDiv.appendChild(copyButton);
-      }
-
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function appendImageMessage(base64Image, sender) {
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-      const imageElement = document.createElement('img');
-      imageElement.src = base64Image;
-      imageElement.alt = 'Uploaded Image';
-      messageDiv.appendChild(imageElement);
-
-      const timestamp = new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      const timestampDiv = document.createElement('div');
-      timestampDiv.classList.add('message-timestamp');
-      timestampDiv.textContent = timestamp;
-      messageDiv.appendChild(timestampDiv);
-
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    // --- Utility function to create table HTML ---
-    function generateTableHTML(tableData) {
-      if (!Array.isArray(tableData) || tableData.length === 0) {
-        return "<p>No table data available.</p>";
-      }
-
-      let html = '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
-      // Headers
-      html += '<thead><tr>';
-      tableData[0].forEach(header => {
-        html += `<th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">${header}</th>`;
-      });
-      html += '</tr></thead>';
-
-      // Body
-      html += '<tbody>';
-      for (let i = 1; i < tableData.length; i++) {
-        html += '<tr>';
-        tableData[i].forEach(cell => {
-          html += `<td style="border: 1px solid #ddd; padding: 8px;">${cell}</td>`;
-        });
-        html += '</tr>';
-      }
-      html += '</tbody></table>';
-      return html;
-    }
-
-    // --- Function to create and add an image preview ---
-    function addImagePreview(imageData) {
-      const previewDiv = document.createElement('div');
-      previewDiv.classList.add('image-preview');
-
-      const img = document.createElement('img');
-      img.src = imageData;
-      previewDiv.appendChild(img);
-
-      const removeButton = document.createElement('button');
-      removeButton.classList.add('remove-image');
-      removeButton.innerHTML = '×';
-      removeButton.addEventListener('click', () => {
-        previewDiv.remove();
-        imageBase64 = null;
-      });
-      previewDiv.appendChild(removeButton);
-      imagePreviewContainer.appendChild(previewDiv);
-    }
-
-    // Function to create and add a dropdown for references
-    function addReferencesDropdown(references) {
-      if (!references || references.length === 0) {
-        return;
-      }
-
-      const dropdownDiv = document.createElement('div');
-      dropdownDiv.classList.add('dropdown');
-
-      const button = document.createElement('button');
-      button.classList.add('dropdown-button');
-      button.textContent = 'References';
-      dropdownDiv.appendChild(button);
-
-      const contentDiv = document.createElement('div');
-      contentDiv.classList.add('dropdown-content');
-      references.forEach(ref => {
-        const a = document.createElement('a');
-        a.href = ref;
-        a.textContent = ref;
-        a.target = '_blank'; // Open in new tab
-        contentDiv.appendChild(a);
-      });
-      dropdownDiv.appendChild(contentDiv);
-      chatMessages.appendChild(dropdownDiv);
-    }
-
-    // --- Event Handlers ---
-    // Chat
-    async function handleSendMessage() {
-      const messageText = messageInput.value.trim();
-      if (messageText || imageBase64) {
-        appendMessage(messageText, 'user');
-        if (imageBase64) {
-          appendImageMessage(imageBase64, 'user');
-        }
-        messageInput.value = '';
-        showLoading();
-        let payload;
-        if (isWebSearchMode) {
-          // Web search request
-          payload = {
-            query: messageText,
-            search_engines: ["google", "duckduckgo", "bing", "yahoo", "brave"]
-          };
-
-          try {
-            const response = await fetch('/api/online', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-              const data = await response.json();
-              appendMessage(data.explanation, 'ai');
-
-              // Display references in dropdown
-              if (data.references && Array.isArray(data.references)) {
-                addReferencesDropdown(data.references);
-              }
-              conversationHistory = data.history;
-            } else {
-              const errorData = await response.json();
-              appendMessage(`Error: ${errorData.error || 'Web search failed'}`, 'ai');
-              showNotification(`Error: ${errorData.error || 'Web search failed'}`, 'error'); // Show error notification
-            }
-
-          } catch (error) {
-            appendMessage('Error: Could not connect to the server for web search.', 'ai');
-            showNotification('Error: Could not connect to the server for web search.', 'error'); // Show error notification
-            console.error('Fetch error:', error);
-
-          } finally {
-            hideLoading();
-            isWebSearchMode = false;
-            webSearchButton.classList.remove('active');
-            messageInput.placeholder = "Type your message...";
-          }
-          return;
-
-        } else {
-          // Regular chat request
-          payload = {
-            message: messageText,
-            image: imageBase64,
-            custom_instruction: customInstruction,
-            model_name: selectedModel
-          };
-
-          try {
-            const response = await fetch('/api/chat', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-              const data = await response.json();
-              appendMessage(data.response, 'ai');
-              conversationHistory = data.history;
-            } else {
-              const errorData = await response.json();
-              appendMessage(`Error: ${errorData.error || 'Something went wrong'}`, 'ai');
-              showNotification(`Error: ${errorData.error || 'Something went wrong'}`, 'error'); // Show error notification
-            }
-          } catch (error) {
-            appendMessage('Error: Could not connect to the server.', 'ai');
-            showNotification('Error: Could not connect to the server.', 'error'); //Show error notification
-            console.error('Fetch error:', error);
-
-          } finally {
-            hideLoading();
-          }
-        }
-        imageBase64 = null;
-        imagePreviewContainer.innerHTML = '';
-      }
-    }
-
-    sendButton.addEventListener('click', handleSendMessage);
-
-    messageInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        handleSendMessage();
-      }
-    });
-
-    imageButton.addEventListener('click', () => {
-      imageUpload.click();
-    });
-
-    imageUpload.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imageBase64 = e.target.result;
-          addImagePreview(imageBase64);
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // Web Search Button
-    webSearchButton.addEventListener('click', () => {
-      isWebSearchMode = true;
-      messageInput.placeholder = "Enter your web search query...";
-      messageInput.focus();
-      webSearchButton.classList.add('active');
-    });
-
-    // Clear history
-    clearHistoryButton.addEventListener('click', async () => {
-      try {
-        const response = await fetch('/api/clear', {
-          method: 'POST'
-        });
-        if (response.ok) {
-          conversationHistory = [];
-          chatMessages.innerHTML = ''; // Clear the displayed messages
-          showNotification('Chat history cleared!', 'success'); // Show success notification
-        } else {
-          showNotification('Failed to clear chat history.', 'error'); // Show error notification
-        }
-      } catch (error) {
-        console.error("Error clearing history:", error);
-        showNotification('Failed to clear chat history.', 'error'); // Show error notification
-      }
-    });
-
-    // --- Research Functionality ---
-    deepResearchButton.addEventListener('click', async () => {
-      const query = deepResearchQueryInput.value.trim();
-      if (!query) {
-        alert('Please enter a deep research query.');
-        return;
-      }
-
-      const selectedEngines = Array.from(document.querySelectorAll('input[name="deep_research_engine"]:checked'))
-        .map(checkbox => checkbox.value);
-      const outputFormat = outputFormatSelect.value;
-      const maxIterations = parseInt(maxIterationsInput.value, 10);
-      const extractLinks = extractLinksCheckbox.checked;
-      const extractEmails = extractEmailsCheckbox.checked;
-      const downloadPdf = downloadPdfCheckbox.checked;
-
-      showDeepResearchLoading();
-
-      deepResearchResultsArea.style.display = 'none';
-      deepResearchExplanation.innerHTML = '';
-      deepResearchReferences.innerHTML = '';
-
-      const payload = {
-        query: query,
-        search_engines: selectedEngines,
-        output_format: outputFormat,
-        max_iterations: maxIterations,
-        extract_links: extractLinks,
-        extract_emails: extractEmails,
-        download_pdf: downloadPdf
-      };
-
-      try {
-        const response = await fetch('/api/deep_research', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          if (downloadPdf && outputFormat !== 'json' && outputFormat !== 'csv' && outputFormat !== 'table') {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `deep_research_report_${Date.now()}.pdf`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            deepResearchExplanation.textContent = 'PDF report downloaded successfully.';
-            showNotification('PDF report downloaded successfully.', 'success'); //Success notification
-
-          } else {
-            const data = await response.json();
-
-            if (outputFormat === 'json') {
-              deepResearchExplanation.textContent = JSON.stringify(data.explanation, null, 2);
-            } else if (outputFormat === 'csv') {
-              if (Array.isArray(data.explanation)) {
-                deepResearchExplanation.textContent = data.explanation.map(row => row.join(',')).join('\n');
-              } else if (typeof data.explanation === 'string') {
-                deepResearchExplanation.textContent = data.explanation;
-              } else if (data.explanation && data.explanation.raw_text) {
-                deepResearchExplanation.textContent = data.explanation.raw_text;
-              } else {
-                deepResearchExplanation.textContent = "No CSV data received.";
-              }
-            } else if (outputFormat === 'table' && Array.isArray(data.explanation)) {
-              const tableHTML = generateTableHTML(data.explanation);
-              deepResearchExplanation.innerHTML = tableHTML;
-
-            } else {
-              deepResearchExplanation.innerHTML = marked.parse(data.explanation);
-            }
-
-            deepResearchReferences.innerHTML = '';
-            data.references.forEach(ref => {
-              const li = document.createElement('li');
-              const a = document.createElement('a');
-              a.href = ref;
-              a.textContent = ref;
-              a.target = '_blank';
-              li.appendChild(a);
-              deepResearchReferences.appendChild(li);
-            });
-            conversationHistory = data.history;
-          }
-          deepResearchResultsArea.style.display = 'block';
-
-        } else {
-          const errorData = await response.json();
-          deepResearchExplanation.textContent = `Error: ${errorData.error || 'Deep research failed'}`;
-          deepResearchResultsArea.style.display = 'block';
-          showNotification(`Error: ${errorData.error || 'Deep research failed'}`, 'error'); //Error notification
-        }
-      } catch (error) {
-        deepResearchExplanation.textContent = 'Error: Could not perform deep research.';
-        deepResearchResultsArea.style.display = 'block';
-        showNotification('Error: Could not perform deep research.', 'error');
-        console.error('Fetch error:', error);
-      } finally {
-        hideDeepResearchLoading();
-      }
-    });
-
-    // --- Scraping Tools Functionality ---
-    // Product Scraping
-    scrapeProductButton.addEventListener('click', async () => {
-      const query = productQueryInput.value.trim();
-      if (!query) {
-        alert('Please enter a product query.');
-        return;
-      }
-
-      showProductLoading();
-      productScrapingResultsArea.style.display = 'none';
-      productExplanation.innerHTML = '';
-
-      try {
-        const response = await fetch('/api/scrape_product', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            query: query
-          })
-        });
-        if (response.ok) {
-          const data = await response.json();
-          productExplanation.innerHTML = marked.parse(data.summary || "No results found.");
-          productScrapingResultsArea.style.display = 'block';
-
-        } else {
-          const errorData = await response.json();
-          productExplanation.textContent = `Error: ${errorData.error || 'Product scraping failed'}`;
-          productScrapingResultsArea.style.display = 'block';
-          showNotification(`Error: ${errorData.error || 'Product scraping failed'}`, 'error'); // Show error notification
-        }
-      } catch (error) {
-        productExplanation.textContent = 'Error: Could not scrape product information.';
-        productScrapingResultsArea.style.display = 'block';
-        showNotification('Error: Could not scrape product information.', 'error'); // Show error notification
-
-        console.error('Fetch error:', error);
-      } finally {
-        hideProductLoading();
-      }
-    });
-
-    // Job Scraping
-    scrapeJobsButton.addEventListener('click', async () => {
-      const jobTitle = jobTitleInput.value.trim();
-      const jobLocation = jobLocationIndeedInput.value.trim();
-      if (!jobTitle) {
-        alert('Please enter a job title.');
-        return;
-      }
-
-      showJobLoading();
-      jobsScrapingResultsArea.style.display = 'none';
-      jobsExplanation.innerHTML = '';
-
-      const file = resumeUpload.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          resumeBase64 = e.target.result;
-
-          try {
-            const response = await fetch('/api/scrape_jobs', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                job_title: jobTitle,
-                job_location: jobLocation,
-                resume: resumeBase64
-              })
-            });
-            if (response.ok) {
-              const data = await response.json();
-              jobsExplanation.innerHTML = marked.parse(data.summary || "No jobs found.");
-              jobsScrapingResultsArea.style.display = 'block';
-            } else {
-              const errorData = await response.json();
-              jobsExplanation.textContent = `Error: ${errorData.error || 'Jobs scraping failed'}`;
-              jobsScrapingResultsArea.style.display = 'block';
-              showNotification(`Error: ${errorData.error || 'Jobs scraping failed'}`, 'error');
-            }
-          } catch (error) {
-            jobsExplanation.textContent = 'Error: Could not scrape job listings.';
-            jobsScrapingResultsArea.style.display = 'block';
-            showNotification('Error: Could not scrape job listings.', 'error');
-            console.error('Fetch error:', error);
-          } finally {
-            hideJobLoading();
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        try {
-          const response = await fetch('/api/scrape_jobs', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              job_title: jobTitle,
-              job_location: jobLocation
-            })
-          });
-          if (response.ok) {
-            const data = await response.json();
-            jobsExplanation.innerHTML = marked.parse(data.summary || "No jobs found.");
-            jobsScrapingResultsArea.style.display = 'block';
-
-          } else {
-            const errorData = await response.json();
-            jobsExplanation.textContent = `Error: ${errorData.error || 'Jobs scraping failed'}`;
-            jobsScrapingResultsArea.style.display = 'block';
-            showNotification(`Error: ${errorData.error || 'Jobs scraping failed'}`, 'error');
-          }
-        } catch (error) {
-          jobsExplanation.textContent = 'Error: Could not scrape job listings.';
-          jobsScrapingResultsArea.style.display = 'block';
-          showNotification('Error: Could not scrape job listings.', 'error');
-          console.error('Fetch error:', error);
-        } finally {
-          hideJobLoading();
+  
+      function hideLoading() {
+        const typingIndicator = document.querySelector('.chat-typing-indicator');
+        if (typingIndicator) {
+          typingIndicator.remove();
         }
       }
-    });
-
-    // Image Analysis Tool
-    analyzeImageButton.addEventListener('click', async () => {
-      const file = imageAnalysisUpload.files[0];
-      if (!file) {
-        alert('please upload an image to analyze.');
-        return;
+  
+      function showLoadingOverlay() {
+        loadingOverlay.classList.add('active');
+        loadingOverlay.style.display = 'flex';
       }
-      showImageAnalysisLoading(); //Show loading
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const imageData = e.target.result;
-
+  
+      function hideLoadingOverlay() {
+        loadingOverlay.classList.remove('active');
+        loadingOverlay.style.display = 'none';
+      }
+  
+      function showDeepResearchLoading() {
+        deepResearchLoading.style.display = 'block';
+        deepResearchResultsArea.style.display = 'none'; // Hide results while loading
+      }
+  
+      function hideDeepResearchLoading() {
+        deepResearchLoading.style.display = 'none';
+      }
+  
+      function showProductLoading() {
+        // productLoading.style.display = 'flex'; // Old method - keep for now in case dots are prefered
+        productLoadingSpinner.style.display = 'block'; // New Spinner
+        productScrapingResultsArea.style.display = 'none';
+      }
+  
+      function hideProductLoading() {
+        // productLoading.style.display = 'none';
+        productLoadingSpinner.style.display = 'none';
+      }
+  
+      function showJobLoading() {
+        // jobLoading.style.display = 'flex';
+        jobLoadingSpinner.style.display = 'block';
+        jobsScrapingResultsArea.style.display = 'none';
+      }
+  
+      function hideJobLoading() {
+        // jobLoading.style.display = 'none';
+        jobLoadingSpinner.style.display = 'none';
+      }
+  
+      // Show/Hide Image Analysis Loading
+      function showImageAnalysisLoading() {
+        imageAnalysisLoadingSpinner.style.display = 'block';
         imageAnalysisResultsArea.style.display = 'none';
-        imageAnalysisResults.innerHTML = '';
-
-        try {
-          const response = await fetch('/api/analyze_image', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              image: imageData
-            })
+      }
+  
+      function hideImageAnalysisLoading() {
+        imageAnalysisLoadingSpinner.style.display = 'none';
+      }
+  
+      // Show/Hide Sentiment Analysis Loading
+      function showSentimentAnalysisLoading() {
+        sentimentAnalysisLoadingSpinner.style.display = 'block';
+        sentimentAnalysisResultsArea.style.display = 'none';
+      }
+  
+      function hideSentimentAnalysisLoading() {
+        sentimentAnalysisLoadingSpinner.style.display = 'none';
+      }
+  
+      // Show/Hide Website Summarization Loading
+      function showWebsiteSummarizationLoading() {
+        websiteSummarizationLoadingSpinner.style.display = 'block';
+        websiteSummarizationResultsArea.style.display = 'none';
+      }
+  
+      function hideWebsiteSummarizationLoading() {
+        websiteSummarizationLoadingSpinner.style.display = 'none';
+      }
+  
+      // Function to display notifications
+      function showNotification(message, type = 'info') { // Default type is 'info'
+        const container = document.getElementById('notification-container');
+        if (!container) return; // Exit if container doesn't exist
+  
+        const notification = document.createElement('div');
+        notification.classList.add('notification', type); // Add type as a class
+        notification.textContent = message;
+  
+        const closeButton = document.createElement('button');
+        closeButton.classList.add('notification-close');
+        closeButton.innerHTML = '×'; // "x" symbol (you can use an image or icon too)
+        closeButton.addEventListener('click', () => {
+          notification.remove(); // Remove the notification on close button click
+        });
+        notification.appendChild(closeButton);
+        container.appendChild(notification);
+        // Trigger reflow to ensure the transition works correctly
+        void notification.offsetWidth;
+          // Show the notification
+        notification.classList.add('show');
+        // Automatically hide after 5 seconds (adjust as needed)
+        setTimeout(() => {
+          notification.classList.remove('show');
+          // Remove the element from the DOM after the transition ends
+          setTimeout(() => notification.remove(), 500); // Match the transition duration
+        }, 5000);
+      }
+  
+  
+  
+      // --- Message Display Functions ---
+      function appendMessage(message, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+        const messageText = document.createElement('div');
+        messageText.innerHTML = marked.parse(message);  // Use marked.parse
+          // Apply syntax highlighting *after* parsing Markdown
+          messageText.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightElement(block);
           });
-
-          if (response.ok) {
-            const data = await response.json();
-            imageAnalysisResults.innerHTML = marked.parse(data.description);
-            imageAnalysisResultsArea.style.display = 'block';
-          } else {
-            const errorData = await response.json();
-            imageAnalysisResults.textContent = `Error: ${errorData.error || 'Image analysis failed'}`;
-            imageAnalysisResultsArea.style.display = 'block';
-            showNotification(`Error: ${errorData.error || 'Image analysis failed'}`, 'error');
-          }
-
-        } catch (error) {
-          imageAnalysisResults.textContent = 'Error: Could not analyze image';
-          imageAnalysisResultsArea.style.display = 'block';
-          showNotification('Error: Could not analyze image.', 'error');
-          console.error('Fetch error:', error);
-        } finally {
-          hideImageAnalysisLoading(); // Hide loading
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Sentiment Analysis Tool
-    analyzeSentimentButton.addEventListener('click', async () => {
-      const text = sentimentText.value.trim();
-      if (!text) {
-        alert("Please enter text to analyze");
-        return;
-      }
-
-      showSentimentAnalysisLoading(); // Show loading
-      sentimentAnalysisResultsArea.style.display = 'none';
-      sentimentAnalysisResults.innerHTML = '';
-
-      try {
-        const response = await fetch('/api/analyze_sentiment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            text: text
-          })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          sentimentAnalysisResults.textContent = data.sentiment;
-          sentimentAnalysisResultsArea.style.display = 'block';
-        } else {
-          const errorData = await response.json();
-          sentimentAnalysisResults.textContent = `Error: ${errorData.error || 'Sentiment analysis failed'}`;
-          sentimentAnalysisResultsArea.style.display = 'block';
-          showNotification(`Error: ${errorData.error || 'Sentiment analysis failed'}`, 'error');
-        }
-      } catch (error) {
-        sentimentAnalysisResults.textContent = "Error: Could not analyze sentiment.";
-        sentimentAnalysisResultsArea.style.display = 'block';
-        showNotification('Error: Could not analyze sentiment.', 'error');
-        console.error('Fetch error', error);
-      } finally {
-        hideSentimentAnalysisLoading(); // Hide loading
-      }
-    });
-
-    // Website Summarization Tool
-    summarizeWebsiteButton.addEventListener('click', async () => {
-      const url = summarizeUrl.value.trim();
-      if (!url) {
-        alert("Please enter a URL to summarize.");
-        return;
-      }
-      showWebsiteSummarizationLoading(); // Show Loading
-      websiteSummarizationResultsArea.style.display = 'none';
-      websiteSummarizationResults.innerHTML = '';
-      try {
-        const response = await fetch('/api/summarize_website', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            url: url
-          })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          websiteSummarizationResults.innerHTML = marked.parse(data.summary);
-          websiteSummarizationResultsArea.style.display = 'block';
-        } else {
-          const errorData = await response.json();
-          websiteSummarizationResults.textContent = `Error: ${errorData.error || 'Website summarization failed'}`;
-          websiteSummarizationResultsArea.style.display = 'block';
-          showNotification(`Error: ${errorData.error || 'Website summarization failed'}`, 'error');
-        }
-
-      } catch (error) {
-        websiteSummarizationResults.textContent = 'Error: Could not summarize website.';
-        websiteSummarizationResultsArea.style.display = 'block';
-        showNotification('Error: Could not summarize website.', 'error');
-        console.error("Fetch error:", error);
-      } finally {
-        hideWebsiteSummarizationLoading(); // Hide loading
-      }
-    });
-    // Helper function to show a specific section
-    function showSection(sectionId) {
-      chatSection.style.display = 'none';
-      researchSection.style.display = 'none';
-      toolsSection.style.display = 'none';
-      settingsModal.style.display = 'none';
-
-      if (sectionId === 'chat') {
-        chatSection.style.display = 'flex';
-      } else if (sectionId === 'research') {
-        researchSection.style.display = 'block';
-      } else if (sectionId === 'tools') {
-        toolsSection.style.display = 'grid';
-      } else if (sectionId === 'settings') {
-        settingsModal.style.display = 'block';
-      }
-    }
-
-    // --- Navigation ---
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-      item.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        // Remove active class from all nav items (both sidebar and mobile)
-        navItems.forEach(nav => nav.classList.remove('active'));
-        document.querySelectorAll('.mobile-nav .nav-item').forEach(nav => nav.classList.remove('active'));
-
-
-        // Add active class to the clicked item.  Check if we're in mobile view
-        if (window.innerWidth <= 768) {
-             // Find *corresponding* item in mobile nav, add active there.
-            const correspondingMobileNavItem = document.querySelector(`.mobile-nav .nav-item[data-section="${item.dataset.section}"]`);
-            if(correspondingMobileNavItem){
-                correspondingMobileNavItem.classList.add('active');
+        messageDiv.appendChild(messageText);
+  
+       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timestampDiv = document.createElement('div');
+        timestampDiv.classList.add('message-timestamp');
+        timestampDiv.textContent = timestamp;
+        messageDiv.appendChild(timestampDiv);
+  
+              // Add copy button (except for image messages)
+              if (!message.startsWith("<img")) {
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-button');
+                copyButton.innerHTML = '<i class="fas fa-copy"></i>'; // Use Font Awesome
+                copyButton.title = "Copy to Clipboard";
+                copyButton.addEventListener('click', () => {
+                  navigator.clipboard.writeText(message).then(() => {
+                    showNotification('Message copied!', 'success'); // Show success notification
+                  }).catch(err => {
+                    showNotification('Failed to copy message.', 'error'); // Show error notification
+                    console.error('Failed to copy: ', err);
+                  });
+                });
+                messageDiv.appendChild(copyButton);
+              }
+        
+              chatMessages.appendChild(messageDiv);
+              chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll
             }
+        
+            function appendImageMessage(base64Image, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+                const imageElement = document.createElement('img');
+                imageElement.src = base64Image;
+                imageElement.alt = 'Uploaded Image';
+                messageDiv.appendChild(imageElement);
+                // Add timestamp (NEW)
+                const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const timestampDiv = document.createElement('div');
+                timestampDiv.classList.add('message-timestamp');
+                timestampDiv.textContent = timestamp;
+                messageDiv.appendChild(timestampDiv);
+        
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; //auto scroll
+            }
+        
+            // --- Utility function to create table HTML ---
+            function generateTableHTML(tableData) {
+              if (!Array.isArray(tableData) || tableData.length === 0) {
+                return "<p>No table data available.</p>";
+              }
+        
+              let html = '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+              // Headers
+              html += '<thead><tr>';
+              tableData[0].forEach(header => {
+                html += `<th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">${header}</th>`;
+              });
+              html += '</tr></thead>';
+        
+              // Body
+              html += '<tbody>';
+              for (let i = 1; i < tableData.length; i++) {
+                html += '<tr>';
+                tableData[i].forEach(cell => {
+                  html += `<td style="border: 1px solid #ddd; padding: 8px;">${cell}</td>`;
+                });
+                html += '</tr>';
+              }
+              html += '</tbody></table>';
+              return html;
+            }
+        
+            // Function to create and add a dropdown for references
+            function addReferencesDropdown(references) {
+              if (!references || references.length === 0) {
+                return;
+              }
+        
+              const dropdownDiv = document.createElement('div');
+              dropdownDiv.classList.add('dropdown');
+        
+              const button = document.createElement('button');
+              button.classList.add('dropdown-button');
+              button.textContent = 'References';
+              dropdownDiv.appendChild(button);
+        
+              const contentDiv = document.createElement('div');
+              contentDiv.classList.add('dropdown-content');
+              references.forEach(ref => {
+                const a = document.createElement('a');
+                a.href = ref;
+                a.textContent = ref;
+                a.target = '_blank'; // Open in new tab
+                contentDiv.appendChild(a);
+              });
+              dropdownDiv.appendChild(contentDiv);
+              chatMessages.appendChild(dropdownDiv);
+            }
+        
+             // Function to handle both file selection and drag-and-drop
+            function handleFile(file) {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (file.type.startsWith('image/')) {
+                            imageBase64 = e.target.result;
+                            addImagePreview(imageBase64); // Only for image uploads in chat
+                        } else if (file.name.match(/\.(pdf|docx?|txt)$/i)) { // Check for job scraping
+                          // For job scraping, don't set imageBase64
+                          // Instead read the file, for the resume. No need to store in a global variable.
+                           reader.readAsArrayBuffer(file); //correct way to handle files for this project
+        
+                        }
+                    };
+        
+                    if (file.type.startsWith('image/')) {
+                      reader.readAsDataURL(file); // For image preview
+                    } else {
+                      reader.readAsArrayBuffer(file); // For resume, read as ArrayBuffer and it goes to form data
+                    }
+        
+                }
+            }
+            // Drag and drop event handlers (for image upload and resume upload)
+            function addDragAndDrop(element, fileInput) {
+                element.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    element.classList.add('drag-over');
+                });
+        
+                element.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    element.classList.remove('drag-over');
+                });
+        
+                element.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    element.classList.remove('drag-over');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        fileInput.files = files;  // Set files to the hidden input
+                        handleFile(files[0]); // and process
+                    }
+                });
+            }
+             // Add drag and drop to image upload area (chat)
+            addDragAndDrop(imageButton, imageUpload);
+             // Add drag-and-drop functionality to image analysis tool
+            addDragAndDrop(document.getElementById('image-analysis-upload').parentNode, document.getElementById('image-analysis-upload'));
+            // Add drag and drop for resume upload
+            addDragAndDrop(resumeUpload.parentNode, resumeUpload);
+        
+        
+        
+        
+            // --- Event Handlers ---
+        
+            // Chat
+            async function handleSendMessage() {
+              const messageText = messageInput.value.trim();
+              if (messageText || imageBase64) {
+                appendMessage(messageText, 'user');
+                if (imageBase64) {
+                  appendImageMessage(imageBase64, 'user');
+                }
+                messageInput.value = '';
+                showLoading();
+                let payload;
+        
+                if (isWebSearchMode) {
+                  // Web search request
+                  payload = {
+                    query: messageText,
+                    search_engines: ["google", "duckduckgo", "bing", "yahoo", "brave"] //default search engines
+                  };
+        
+                  try {
+                    const response = await fetch('/api/online', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(payload)
+                    });
+        
+                    if (response.ok) {
+                      const data = await response.json();
+                      appendMessage(data.explanation, 'ai');
+        
+                      // Display references in dropdown
+                      if (data.references && Array.isArray(data.references)) {
+                        addReferencesDropdown(data.references);
+                      }
+        
+                      conversationHistory = data.history; // Update conversation history
+                    } else {
+                      // Handle error from the server
+                      const errorData = await response.json();
+                      appendMessage(`Error: ${errorData.detail || 'Web search failed'}`, 'ai');
+                        showNotification(`Error: ${errorData.detail || 'Web search failed'}`, 'error'); // Show error notification
+                    }
+        
+                  } catch (error) {
+                    appendMessage('Error: Could not connect to the server for web search.', 'ai');
+                    showNotification('Error: Could not connect to the server for web search.', 'error'); // Show error notification
+                    console.error('Fetch error:', error);
+        
+                  } finally {
+                    hideLoading(); // Always hide loading
+                    isWebSearchMode = false; // Reset web search mode
+                    webSearchButton.classList.remove('active'); // Reset button style
+                    messageInput.placeholder = "Type your message...";  // Restore placeholder
+                  }
+                  return; // Exit, as this was a web search
+        
+                } else {
+                  // Regular chat request
+                  payload = {
+                    message: messageText,
+                    image: imageBase64, // Include image data if present
+                    custom_instruction: customInstruction,
+                    model_name: selectedModel
+                  };
+        
+                  try {
+                    const response = await fetch('/api/chat', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify(payload)
+                    });
+        
+                    if (response.ok) {
+                      const data = await response.json();
+                      appendMessage(data.response, 'ai'); // Display AI response
+                      conversationHistory = data.history; // Update history
+                    } else {
+                      const errorData = await response.json();
+                      appendMessage(`Error: ${errorData.detail || 'Something went wrong'}`, 'ai');
+                      showNotification(`Error: ${errorData.detail || 'Something went wrong'}`, 'error'); // Show error notification
+                    }
+                  } catch (error) {
+                    appendMessage('Error: Could not connect to the server.', 'ai');
+                     showNotification('Error: Could not connect to the server.', 'error'); //Show error notification
+                    console.error('Fetch error:', error);
+        
+                  } finally {
+                    hideLoading(); // Always hide loading
+                  }
+                }
+                imageBase64 = null; // Clear image data after sending
+                imagePreviewContainer.innerHTML = ''; // Clear image previews
+              }
+            }
+        
+            sendButton.addEventListener('click', handleSendMessage);
+        
+            //  Enter key to send a message, Shift+Enter for a new line
+            messageInput.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                handleSendMessage();
+              }
+            });
+        
+            // Image Button
+            imageButton.addEventListener('click', () => {
+              imageUpload.click(); // Trigger file input
+            });
+        
+            imageUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                 //added to create preveiw
+                 if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (e) => {
+                      imageBase64 = e.target.result;
+                      addImagePreview(imageBase64);
+                  };
+                  reader.readAsDataURL(file);
+              }
+                //handleFile(file); // Use handleFile, not addImagePreview directly  --commented bcz, preview function handled separately
+        
+            });
+          // Function to add image previews
+          function addImagePreview(base64Image) {
+              const previewDiv = document.createElement('div');
+              previewDiv.classList.add('image-preview');
+  
+              const img = document.createElement('img');
+              img.src = base64Image;
+              previewDiv.appendChild(img);
+  
+              const removeButton = document.createElement('button');
+              removeButton.classList.add('remove-image');
+              removeButton.textContent = '×';
+              removeButton.addEventListener('click', () => {
+                  previewDiv.remove();
+                  imageBase64 = null; // Clear image data
+                   // Reset the file input (to allow re-uploading the same image)
+                  imageUpload.value = '';
+              });
+              previewDiv.appendChild(removeButton);
+              imagePreviewContainer.appendChild(previewDiv);
+          }
+        
+        
+            // Web Search Button
+            webSearchButton.addEventListener('click', () => {
+              isWebSearchMode = true; // Set web search mode
+              messageInput.placeholder = "Enter your web search query...";
+              messageInput.focus(); // Focus on the input
+              webSearchButton.classList.add('active'); //  button style
+            });
+        
+            // Clear history
+            clearHistoryButton.addEventListener('click', async () => {
+              try {
+                const response = await fetch('/api/clear', { method: 'POST' });
+                if (response.ok) {
+                  conversationHistory = []; // Clear history
+                  chatMessages.innerHTML = ''; // Clear the displayed messages
+                  showNotification('Chat history cleared!', 'success'); // Show success notification
+                } else {
+                  showNotification('Failed to clear chat history.', 'error'); // Show error notification
+                }
+              } catch (error) {
+                console.error("Error clearing history:", error);
+                showNotification('Failed to clear chat history.', 'error'); // Show error notification
+              }
+            });
+        
+        
+              // --- Deep Research Functionality ---
+        
+            deepResearchButton.addEventListener('click', async () => {
+              const query = deepResearchQueryInput.value.trim();
+              if (!query) {
+                alert('Please enter a deep research query.');
+                return;
+              }
+        
+                // Collect selected search engines
+                const selectedEngines = Array.from(document.querySelectorAll('input[name="deep_research_engine"]:checked'))
+                .map(checkbox => checkbox.value);
+                const outputFormat = outputFormatSelect.value;
+                const maxIterations = parseInt(maxIterationsInput.value, 10);
+                const extractLinks = extractLinksCheckbox.checked;
+                const extractEmails = extractEmailsCheckbox.checked;
+                const downloadPdf = downloadPdfCheckbox.checked;
+        
+              showDeepResearchLoading();
+              deepResearchStatus.textContent = ''; // Clear status
+        
+              // Clear previous results
+              deepResearchResultsArea.style.display = 'none';
+              deepResearchExplanation.innerHTML = '';
+              deepResearchReferences.innerHTML = '';
+        
+              const payload = {
+                query: query,
+                search_engines: selectedEngines, // Pass selected engines
+                output_format: outputFormat,
+                max_iterations: maxIterations,
+                extract_links: extractLinks,
+                extract_emails: extractEmails,
+                download_pdf: downloadPdf
+              };
+        
+              try {
+                const response = await fetch('/api/deep_research', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(payload)
+                });
+        
+                if (response.ok) {
+                    if (downloadPdf && outputFormat !== 'json' && outputFormat !== 'csv' && outputFormat !== 'table') {
+                    // It's a PDF download
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `deep_research_report_${Date.now()}.pdf`; // Better filename
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                     deepResearchExplanation.textContent = 'PDF report downloaded successfully.';
+                    showNotification('PDF report downloaded successfully.', 'success'); //Success notification
+        
+                  }
+                  else {
+                    const data = await response.json();
+                    // Display status information
+                    deepResearchStatus.textContent = `Iteration: ${data.iteration} - Refining with: ${data.current_query}`;
+        
+                    if (outputFormat === 'json') {
+                      deepResearchExplanation.textContent = JSON.stringify(data.explanation, null, 2); // Pretty print JSON
+                    } else if (outputFormat === 'csv') {
+                        if (Array.isArray(data.explanation)) {
+                        deepResearchExplanation.textContent = data.explanation.map(row => row.join(',')).join('\n');
+                      } else if(typeof data.explanation === 'string') {
+                          deepResearchExplanation.textContent = data.explanation;
+                      } else if (data.explanation && data.explanation.raw_text){
+                        deepResearchExplanation.textContent = data.explanation.raw_text;  // Raw text
+                      }
+        
+                        else {
+                        deepResearchExplanation.textContent = "No CSV data received.";
+                      }
+        
+                    } else if (outputFormat === 'table' && Array.isArray(data.explanation)) {
+                      const tableHTML = generateTableHTML(data.explanation);
+                      deepResearchExplanation.innerHTML = tableHTML;
+        
+                    } else {
+                      deepResearchExplanation.innerHTML = marked.parse(data.explanation);
+                        // Apply syntax highlighting *after* setting innerHTML
+                        deepResearchExplanation.querySelectorAll('pre code').forEach((block) => {
+                            hljs.highlightElement(block);
+                        });
+                    }
+        
+                    deepResearchReferences.innerHTML = ''; // Clear previous references
+                    data.references.forEach(ref => {
+                      const li = document.createElement('li');
+                      const a = document.createElement('a');
+                      a.href = ref;
+                      a.textContent = ref;
+                      a.target = '_blank';  // Open in new tab
+                      li.appendChild(a);
+                      deepResearchReferences.appendChild(li);
+                    });
+                    conversationHistory = data.history; // Update history
+                  }
+                    deepResearchResultsArea.style.display = 'block';
+        
+                } else {
+                  const errorData = await response.json();
+                  deepResearchExplanation.textContent = `Error: ${errorData.detail || 'Deep research failed'}`;
+                  deepResearchResultsArea.style.display = 'block';
+                    showNotification(`Error: ${errorData.detail || 'Deep research failed'}`, 'error'); //Error notification
+                }
+              } catch (error) {
+                deepResearchExplanation.textContent = 'Error: Could not perform deep research.';
+                deepResearchResultsArea.style.display = 'block';
+                showNotification('Error: Could not perform deep research.', 'error');
+                console.error('Fetch error:', error);
+              } finally {
+                hideDeepResearchLoading();
+              }
+            });
+        
+            // --- Scraping Tools Functionality ---
+        
+            // Product Scraping
+            scrapeProductButton.addEventListener('click', async () => {
+              const query = productQueryInput.value.trim();
+              if (!query) {
+                alert('Please enter a product query.');
+                return;
+              }
+        
+              showProductLoading();
+              productScrapingResultsArea.style.display = 'none';
+              productExplanation.innerHTML = '';
+        
+              try {
+                const response = await fetch('/api/scrape_product', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    query: query
+                  })
+                });
+                if (response.ok) {
+                  const data = await response.json();
+                  productExplanation.innerHTML = marked.parse(data.summary || "No results found.");
+                   // Apply syntax highlighting *after* setting innerHTML
+                    productExplanation.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+                  productScrapingResultsArea.style.display = 'block';
+        
+                } else {
+                  const errorData = await response.json();
+                  productExplanation.textContent = `Error: ${errorData.detail || 'Product scraping failed'}`;
+                  productScrapingResultsArea.style.display = 'block';
+                  showNotification(`Error: ${errorData.detail || 'Product scraping failed'}`, 'error'); // Show error notification
+                }
+              } catch (error) {
+                productExplanation.textContent = 'Error: Could not scrape product information.';
+                productScrapingResultsArea.style.display = 'block';
+                showNotification('Error: Could not scrape product information.', 'error'); // Show error notification
+        
+                console.error('Fetch error:', error);
+              } finally {
+                hideProductLoading();
+              }
+            });
+        
+        
+               // Job Scraping
+            scrapeJobsButton.addEventListener('click', async () => {
+              const jobTitle = jobTitleInput.value.trim();  //Allow empty
+              const jobLocation = jobLocationIndeedInput.value.trim();
+              const jobExperience = jobExperienceSelect.value; // Get experience level
+              //removed:  if (!jobTitle) ...
+  
+              showJobLoading();
+              jobsScrapingResultsArea.style.display = 'none';
+              jobsExplanation.innerHTML = '';
+              jobScrapingStatus.textContent = ''; // Clear previous status
+        
+        
+              const file = resumeUpload.files[0];
+                let formData = new FormData(); // Use FormData for file uploads
+                  if(jobTitle) { // Only append if not empty
+                      formData.append('job_title', jobTitle);
+                  }
+                formData.append('job_location', jobLocation);
+                formData.append('job_experience', jobExperience); // New form field
+  
+                if (file) {
+                  formData.append('resume', file);  // Append the file directly
+                }
+        
+              try {
+                  const response = await fetch('/api/scrape_jobs', {
+                    method: 'POST',
+                    body: formData  // Send the FormData
+                    // Don't set Content-Type header, let browser handle it with FormData
+                  });
+                  if (response.ok) {
+                    const data = await response.json();
+                      jobsScrapingResultsArea.style.display = 'block';
+                        jobsExplanation.innerHTML = '<ul>';
+        
+                      let jobsFound = 0;
+                      if (data.jobs && Array.isArray(data.jobs)) {
+                          for (const job of data.jobs) {
+                              jobsFound++;
+                              const listItem = document.createElement('li');
+        
+                              // Format job data (more readable + relevance details)
+                              listItem.innerHTML = `
+                                  <strong><a href="${job.url}" target="_blank">${job.title}</a></strong><br>
+                                  Company: ${job.company || 'N/A'}<br>
+                                  Location: ${job.location || 'N/A'}<br>
+                                  Relevance: ${(job.relevance * 100).toFixed(2)}%<br>
+                                  Experience: ${job.experience}<br>
+                                  ${job.missing_skills && job.missing_skills.length > 0 ?
+                                  `Missing Skills: ${job.missing_skills.join(', ')}<br>` : ''}
+                                  ${job.justification ? `Justification: ${job.justification}<br>` : ''}
+        
+                                  <br>
+                              `;
+                              jobsExplanation.appendChild(listItem);
+        
+                          }
+                          jobScrapingStatus.textContent = `Found ${jobsFound} jobs.`; //total jobs found
+                      }
+                       else {
+                            jobsExplanation.innerHTML = '<p>No relevant jobs found.</p>'; // Handle no jobs
+                        }
+                        jobsExplanation.innerHTML += '</ul>';
+        
+        
+                  } else {
+                    const errorData = await response.json();
+                    jobsExplanation.textContent = `Error: ${errorData.detail || 'Jobs scraping failed'}`;
+                    jobsScrapingResultsArea.style.display = 'block';
+                    showNotification( `Error: ${errorData.detail || 'Jobs scraping failed'}`, 'error');
+                  }
+                } catch (error) {
+                  jobsExplanation.textContent = 'Error: Could not scrape job listings.';
+                  jobsScrapingResultsArea.style.display = 'block';
+                  showNotification('Error: Could not scrape job listings.', 'error');
+                  console.error('Fetch error:', error);
+                } finally {
+                  hideJobLoading();
+                }
+            });
+        
+            // Image Analysis Tool
+            analyzeImageButton.addEventListener('click', async () => {
+              const file = imageAnalysisUpload.files[0];
+              if (!file) {
+                alert('please upload an image to analyze.');
+                return;
+              }
+              showImageAnalysisLoading(); //Show loading
+              const reader = new FileReader();
+              reader.onload = async (e) => {
+                const imageData = e.target.result;
+        
+                imageAnalysisResultsArea.style.display = 'none';
+                imageAnalysisResults.innerHTML = '';
+        
+                try {
+                  const response = await fetch('/api/analyze_image', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      image: imageData
+                    })
+                  });
+        
+                  if (response.ok) {
+                    const data = await response.json();
+                    imageAnalysisResults.innerHTML = marked.parse(data.description);
+                    // Apply syntax highlighting *after* setting innerHTML
+                    imageAnalysisResults.querySelectorAll('pre code').forEach((block) => {
+                        hljs.highlightElement(block);
+                    });
+        
+                    imageAnalysisResultsArea.style.display = 'block';
+                  } else {
+                    const errorData = await response.json();
+                    imageAnalysisResults.textContent = `Error: ${errorData.detail || 'Image analysis failed'}`;
+                    imageAnalysisResultsArea.style.display = 'block';
+                    showNotification( `Error: ${errorData.detail || 'Image analysis failed'}`, 'error');
+                  }
+        
+                } catch (error) {
+                  imageAnalysisResults.textContent = 'Error: Could not analyze image';
+                  imageAnalysisResultsArea.style.display = 'block';
+                  showNotification('Error: Could not analyze image.', 'error');
+                  console.error('Fetch error:', error);
+                } finally {
+                  hideImageAnalysisLoading(); // Hide loading
+                }
+              };
+              reader.readAsDataURL(file); // Read the image as a Data URL
+            });
 
-
-        } else {
-           item.classList.add('active'); // Normal sidebar
-        }
-
-
-
-        const sectionId = item.dataset.section;
-        showSection(sectionId);
-
-        // Close mobile nav after clicking (optional)
-        if (mobileNavContainer.classList.contains('mobile-nav-open')) {
-          mobileNavContainer.classList.remove('mobile-nav-open');
-        }
-      });
-    });
-      // --- Mobile Nav Toggle ---
-    mobileNavToggle.addEventListener('click', () => {
-      // mobileNav.classList.toggle('open'); //No longer directly toggling 'open'
-       mobileNavContainer.classList.toggle('mobile-nav-open'); // Toggle the container
-    });
-
-    // --- Settings Modal ---
-    settingsButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      settingsModal.style.display = 'block';
-      //Also close the mobile nav
-      if (mobileNavContainer.classList.contains('mobile-nav-open')) {
-          mobileNavContainer.classList.remove('mobile-nav-open');
-        }
-
-    });
-
-    closeModalButton.addEventListener('click', () => {
-      settingsModal.style.display = 'none';
-    });
-
-    saveSettingsButton.addEventListener('click', () => {
-      customInstruction = customInstructionInput.value;
-      selectedModel = modelNameSelect.value;
-
-      showNotification('Settings saved!', 'success'); //Success notification
-
-      settingsModal.style.display = 'none';
-    });
-
-    // --- Sidebar Toggle (for mobile) ---
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-    });
-
-
-
-    // --- Initialization ---
-    if (typeof marked !== 'undefined') {
-      marked.setOptions({
-        breaks: true,
-        gfm: true,
-        sanitize: true
-      });
-    } else {
-      console.warn('marked.js is not loaded. Markdown rendering will not work.');
-    }
-    // Select initial section (AI Chat)
-    showSection('chat');
-  });
+                      // Sentiment Analysis Tool
+          analyzeSentimentButton.addEventListener('click', async () => {
+            const text = sentimentText.value.trim();
+            if (!text) {
+              alert("Please enter text to analyze");
+              return;
+            }
+      
+            showSentimentAnalysisLoading(); // Show loading
+            sentimentAnalysisResultsArea.style.display = 'none'; // Hide previous results on button click.
+            sentimentAnalysisResults.innerHTML = ''; // Clear previous
+      
+            try {
+              const response = await fetch('/api/analyze_sentiment', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  text: text
+                })
+              });
+      
+              if (response.ok) {
+                const data = await response.json();
+                sentimentAnalysisResults.textContent = data.sentiment;
+                sentimentAnalysisResultsArea.style.display = 'block'; // Show results
+              } else {
+                const errorData = await response.json();
+                sentimentAnalysisResults.textContent = `Error: ${errorData.detail || 'Sentiment analysis failed'}`;
+                sentimentAnalysisResultsArea.style.display = 'block';
+                  showNotification( `Error: ${errorData.detail || 'Sentiment analysis failed'}`, 'error');
+              }
+            } catch (error) {
+              sentimentAnalysisResults.textContent = "Error: Could not analyze sentiment.";
+              sentimentAnalysisResultsArea.style.display = 'block';
+                showNotification( 'Error: Could not analyze sentiment.', 'error');
+              console.error('Fetch error', error);
+            } finally {
+              hideSentimentAnalysisLoading(); // Hide loading
+            }
+          });
+      
+          // Website Summarization Tool
+          summarizeWebsiteButton.addEventListener('click', async () => {
+            const url = summarizeUrl.value.trim();
+            if (!url) {
+              alert("Please enter a URL to summarize.");
+              return;
+            }
+            showWebsiteSummarizationLoading(); // Show Loading
+            websiteSummarizationResultsArea.style.display = 'none';
+            websiteSummarizationResults.innerHTML = ''; // Clear previous content.
+            try {
+              const response = await fetch('/api/summarize_website', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  url: url
+                })
+              });
+      
+              if (response.ok) {
+                const data = await response.json();
+                websiteSummarizationResults.innerHTML = marked.parse(data.summary);
+                 // Apply syntax highlighting *after* setting innerHTML
+                  websiteSummarizationResults.querySelectorAll('pre code').forEach((block) => {
+                      hljs.highlightElement(block);
+                  });
+                websiteSummarizationResultsArea.style.display = 'block'; // Show results
+              } else {
+                const errorData = await response.json();
+                websiteSummarizationResults.textContent = `Error: ${errorData.detail || 'Website summarization failed'}`;
+                websiteSummarizationResultsArea.style.display = 'block';
+                  showNotification( `Error: ${errorData.detail || 'Website summarization failed'}`, 'error');
+              }
+      
+            } catch (error) {
+              websiteSummarizationResults.textContent = 'Error: Could not summarize website.';
+              websiteSummarizationResultsArea.style.display = 'block';
+              showNotification('Error: Could not summarize website.', 'error');
+              console.error("Fetch error:", error);
+            } finally {
+              hideWebsiteSummarizationLoading(); // Hide loading
+            }
+          });
+          // Helper function to show a specific section
+          function showSection(sectionId) {
+            // Hide all sections first
+            chatSection.style.display = 'none';
+            researchSection.style.display = 'none';
+            toolsSection.style.display = 'none';
+            settingsModal.style.display = 'none';
+      
+            // Show the selected section
+            if (sectionId === 'chat') {
+              chatSection.style.display = 'flex';  // Use flex for chat
+            } else if (sectionId === 'research') {
+              researchSection.style.display = 'block';
+            } else if (sectionId === 'tools') {
+              toolsSection.style.display = 'grid'; // Use grid for tools
+            } else if (sectionId === 'settings') {
+              settingsModal.style.display = 'block';
+            }
+          }
+      
+          // --- Navigation ---
+          const navItems = document.querySelectorAll('.nav-item');
+          navItems.forEach(item => {
+            item.addEventListener('click', (event) => {
+              event.preventDefault();
+      
+              // Remove active class from all nav items (both sidebar and mobile)
+              navItems.forEach(nav => nav.classList.remove('active'));
+              document.querySelectorAll('.mobile-nav .nav-item').forEach(nav => nav.classList.remove('active'));
+      
+      
+              // Add active class to the clicked item.  Check if we're in mobile view
+              if (window.innerWidth <= 768) {
+                   // Find *corresponding* item in mobile nav, add active there.
+                  const correspondingMobileNavItem = document.querySelector(`.mobile-nav .nav-item[data-section="${item.dataset.section}"]`);
+                  if(correspondingMobileNavItem){
+                      correspondingMobileNavItem.classList.add('active');
+                  }
+      
+      
+              } else {
+                 item.classList.add('active'); // Normal sidebar
+              }
+      
+      
+      
+              const sectionId = item.dataset.section;
+              showSection(sectionId);
+      
+              // Close mobile nav after clicking (optional)
+              if (mobileNavContainer.classList.contains('mobile-nav-open')) {
+                mobileNavContainer.classList.remove('mobile-nav-open');
+              }
+            });
+          });
+            // --- Mobile Nav Toggle ---
+          mobileNavToggle.addEventListener('click', () => {
+            // mobileNav.classList.toggle('open'); //No longer directly toggling 'open'
+             mobileNavContainer.classList.toggle('mobile-nav-open'); // Toggle the container
+          });
+      
+          // --- Settings Modal ---
+          settingsButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            settingsModal.style.display = 'block';
+            //Also close the mobile nav
+            if (mobileNavContainer.classList.contains('mobile-nav-open')) {
+                mobileNavContainer.classList.remove('mobile-nav-open');
+              }
+      
+          });
+      
+          closeModalButton.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+          });
+      
+          saveSettingsButton.addEventListener('click', () => {
+            customInstruction = customInstructionInput.value; // Save custom instruction
+            selectedModel = modelNameSelect.value; // Save selected model
+      
+            showNotification('Settings saved!', 'success'); //Success notification
+      
+            settingsModal.style.display = 'none'; // Hide modal
+          });
+      
+          // --- Sidebar Toggle (for mobile) ---
+          sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+          });
+      
+      
+      
+          // --- Theme Switcher ---
+          const themeToggle = document.getElementById('checkbox'); // the toggle
+          const themeIcon = document.getElementById('theme-icon'); // sun/moon
+      
+          // Function to set the theme
+          function setTheme(theme) {
+              if (theme === 'light') {
+                  document.documentElement.setAttribute('data-theme', 'light'); // Add attribute
+                  themeIcon.classList.remove('fa-sun');
+                  themeIcon.classList.add('fa-moon');
+                  localStorage.setItem('theme', 'light'); // Save to local storage
+              } else {
+                  document.documentElement.removeAttribute('data-theme'); // Remove attribute
+                  themeIcon.classList.remove('fa-moon'); //show sun
+                  themeIcon.classList.add('fa-sun');
+                  localStorage.setItem('theme', 'dark'); // Save to local storage
+              }
+          }
+      
+          // Event listener for the theme toggle
+          themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+              setTheme('light');
+            } else {
+              setTheme('dark');
+            }
+          });
+      
+          // Initialize theme based on saved preference
+          const currentTheme = localStorage.getItem('theme');
+          if (currentTheme) {
+              if (currentTheme === 'light') {
+                  themeToggle.checked = true; // Set the checkbox state
+                  setTheme('light'); // and set the theme.
+              }
+              //  else is implicitly dark, no need to do anything extra
+      
+          } else {
+              // Default to dark theme if no preference is stored
+              setTheme('dark'); // Ensure the default is applied
+          }
+      
+          // --- Initialization ---
+      
+          if (typeof marked !== 'undefined') {
+            marked.setOptions({
+              breaks: true, //Interpret \n as <br>
+              gfm: true, // Use Git Flavored Markdown
+              sanitize: true // Sanitize HTML to prevent XSS
+            });
+          } else {
+            console.warn('marked.js is not loaded. Markdown rendering will not work.');
+          }
+           //search engine dropdown functionality
+          searchEngineSelect.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              searchEnginesList.style.display = searchEnginesList.style.display === 'block' ? 'none' : 'block';
+      
+          });
+           // Close dropdown when click outside
+          document.addEventListener('click', (event) => {
+              if (!searchEngineSelect.contains(event.target)) {
+                  searchEnginesList.style.display = 'none';
+              }
+          });
+            // Prevent closing when clicking inside the dropdown options
+          searchEnginesList.addEventListener('click', (e) => {
+          e.stopPropagation();
+           });
+          showSection('chat'); // AI Chat at start
+      
+            // Initial highlighting (for code blocks that might be present on initial load)
+          hljs.highlightAll();
+          // Add drag and drop to image upload area (chat)
+          addDragAndDrop(imageButton, imageUpload);
+           // Add drag-and-drop functionality to image analysis tool
+          addDragAndDrop(document.getElementById('image-analysis-upload').parentNode, document.getElementById('image-analysis-upload'));
+          // Add drag and drop for resume upload
+          addDragAndDrop(resumeUpload.parentNode, resumeUpload);
+        });
 </script>
 </body>
 </html>
