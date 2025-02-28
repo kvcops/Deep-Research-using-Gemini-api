@@ -203,16 +203,6 @@
 
 ## ⚙️ Installation
 
-<div align="center">
-  
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=kvcops/Deep-Research-using-Gemini-api)
-[![Run on Repl.it](https://replit.com/badge/github/kvcops/Deep-Research-using-Gemini-api)](https://replit.com/github/kvcops/Deep-Research-using-Gemini-api)
-
-</div>
-
-<br />
-
 <!-- Modern installation guide -->
 <div align="center">
   <h3>⚡ Quick Setup</h3>
