@@ -1532,7 +1532,7 @@ def scrape_job_site(job_title: str, job_location: str, resume_text: Optional[str
 
     search_results = []
     start = 0  #  pagination
-    MAX_PAGES = 50  # Limit pages to prevent infinite loops.  Adjust as needed.
+    MAX_PAGES = 10  # Limit pages to prevent infinite loops.  Adjust as needed.
 
     while True:
         params = params_func(job_title, job_location, start, experience_level) # Pass experience
