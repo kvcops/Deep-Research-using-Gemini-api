@@ -1,7 +1,6 @@
 <div align="center">
 
-<!-- Animated Header with 3D Effect -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:3a1c71,50:d76d77,100:ffaf7b&height=300&section=header&text=KV%20Platform&fontSize=90&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Research%20%26%20Job%20Search&descAlignY=55&descAlign=62&fontColor=ffffff" width="100%"/>
+
 
 <h1>
   <img src="https://media.giphy.com/media/3oriNVc5SDGwV8cR8c/giphy.gif" width="30px" height="30px">
